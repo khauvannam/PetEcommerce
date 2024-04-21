@@ -1,0 +1,36 @@
+﻿services:
+  
+  identity.api:
+    image: identity.api
+    build:
+      context: .
+      dockerfile: Identity.API/Dockerfile
+    ports:
+      - "8081:8080"
+  
+  
+  order.api:
+    image: order.api
+    build:
+      context: .
+      dockerfile: Order.API/Dockerfile
+    ports:
+      - "8082:8080"
+
+  product.api:
+    image: product.api
+    build:
+      context: .
+      dockerfile: Product.API/Dockerfile
+    ports:
+      - "8083:8080"
+  
+  gateway.api:
+    image: gateway.api
+    build:
+      context: .
+      dockerfile: Gateway.API/Dockerfile
+    ports:
+      - "8080:8080"
+  
+ 
