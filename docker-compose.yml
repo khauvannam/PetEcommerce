@@ -1,36 +1,89 @@
-﻿services:
+﻿networks:
+  sql-server:
+    name: sql-server.network
   
-  identity.api:
-    image: identity.api
-    build:
-      context: .
-      dockerfile: Identity.API/Dockerfile
-    ports:
-      - "8081:8080"
-  
-  
-  order.api:
-    image: order.api
-    build:
-      context: .
-      dockerfile: Order.API/Dockerfile
-    ports:
-      - "8082:8080"
+  mongodb:
+    name: mongodb.network
 
-  product.api:
-    image: product.api
-    build:
-      context: .
-      dockerfile: Product.API/Dockerfile
-    ports:
-      - "8083:8080"
+
+volumes:
+  mssql-data:
+    driver: local
+  mongodb-data:
+    driver: local
+
+services:
   
   gateway.api:
+    container_name: gateway.api-container
     image: gateway.api
     build:
       context: .
       dockerfile: Gateway.API/Dockerfile
     ports:
-      - "8080:8080"
+      - 8080:8080
   
- 
+  identity.api:
+    container_name: identity.api-container
+    image: identity.api
+    build:
+      context: .
+      dockerfile: Identity.API/Dockerfile
+    depends_on:
+      - sql.server
+    environment:
+      - DB_HOST=sql.server
+    ports:
+      - 8081:8080
+    networks:
+      - sql-server
+  
+  order.api:
+    container_name: order.api-container
+    image: order.api
+    build:
+      context: .
+      dockerfile: Order.API/Dockerfile
+    ports:
+      - 8082:8080
+
+  product.api:
+    container_name: product.api-container
+    image: product.api
+    build:
+      context: .
+      dockerfile: Product.API/Dockerfile
+    depends_on:
+      - mongodb.server
+    ports:
+      - 8083:8080
+    networks:
+      - mongodb
+  
+  sql.server:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: sql-server.container
+    environment:
+      ACCEPT_EULA: Y
+      SA_PASSWORD: Nam09189921
+      MSSQL_PID: Express
+    ports:
+      - 1433:1433
+    volumes:
+      - mssql-data:/var/opt/mssql
+    networks:
+      - sql-server
+  
+  mongodb.server:
+    image: mongo
+    container_name: mongodb.container
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+    ports:
+      - 27017:27017
+    volumes:
+      - mongodb-data:/data/db
+    networks:
+      - mongodb
+

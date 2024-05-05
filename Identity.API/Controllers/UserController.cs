@@ -1,5 +1,6 @@
 ﻿using Identity.API.Features.Users;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Identity.API.Controllers;
@@ -8,15 +9,16 @@ namespace Identity.API.Controllers;
 [ApiController]
 public class UserController(ISender sender) : ControllerBase
 {
-    [HttpPost("register")]
-    public async Task<IActionResult> RegisterUser(Register.Command command)
+    [HttpPost("hello")]
+    [AllowAnonymous]
+    public Task<IActionResult> Hello()
     {
-        var validationResult = await new Register.Validator().ValidateAsync(command);
-        if (!validationResult.IsValid)
-        {
-            // Handle validation errors
-            return BadRequest(validationResult.Errors);
-        }
+        return Task.FromResult<IActionResult>(Ok("hello"));
+    }
+
+    [HttpPost("Register")]
+    public async Task<IActionResult> RegisterUser([FromBody] Register.Command command)
+    {
         var result = await sender.Send(command);
         if (result.IsFailure)
         {

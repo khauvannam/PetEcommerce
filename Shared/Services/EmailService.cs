@@ -22,9 +22,8 @@ public static class EmailService
         MimeEntity body
     )
     {
-        var messages = new Message();
-        var address = messages.CreateAddress(username, email);
-        var result = messages.CreateMessage(address, subject, body);
+        var address = Message.CreateAddress(username, email);
+        var result = Message.CreateMessage(address, subject, body);
         return result;
     }
 }

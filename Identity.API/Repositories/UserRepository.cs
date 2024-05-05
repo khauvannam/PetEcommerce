@@ -27,9 +27,14 @@ internal class UserRepository(
             SecurityStamp = command.SecurityStamp,
             PhoneNumber = command.PhoneNumber
         };
+        var city = command.Address.City;
+        var street = command.Address.Street;
+        var zipCode = command.Address.ZipCode;
+        var address = Address.Create(street, city, zipCode);
+        user.UpdateAddress(address);
 
         var result = await userManager.CreateAsync(user, command.Password!);
-        if (result.Succeeded)
+        if (!result.Succeeded)
         {
             return Result.Failure(UserErrors.WentWrong);
         }

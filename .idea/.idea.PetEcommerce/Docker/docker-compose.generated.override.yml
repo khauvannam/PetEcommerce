@@ -15,7 +15,7 @@ services:
     image: "gateway.api:dev"
     ports: []
     volumes:
-    - "C:\\Users\\ADMIN\\.nuget\\packages:/home/app/.nuget/packages"
+    - "C:\\Users\\ADMIN\\.nuget\\packages:/root/.nuget/packages"
     - "D:\\Microservice Project\\PetEcommerce\\Gateway.API:/app:rw"
     - "D:\\Microservice Project\\PetEcommerce:/src:rw"
     working_dir: "/app"
@@ -34,7 +34,7 @@ services:
     image: "identity.api:dev"
     ports: []
     volumes:
-    - "C:\\Users\\ADMIN\\.nuget\\packages:/home/app/.nuget/packages"
+    - "C:\\Users\\ADMIN\\.nuget\\packages:/root/.nuget/packages"
     - "D:\\Microservice Project\\PetEcommerce\\Identity.API:/app:rw"
     - "D:\\Microservice Project\\PetEcommerce:/src:rw"
     working_dir: "/app"

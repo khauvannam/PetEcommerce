@@ -7,4 +7,16 @@
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     </PropertyGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\Basket.Application\Basket.Application.csproj" />
+      <ProjectReference Include="..\Basket.Domain\Basket.Domain.csproj" />
+      <ProjectReference Include="..\Basket.Infrastructure\Basket.Infrastructure.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Include="..\.dockerignore">
+        <Link>.dockerignore</Link>
+      </Content>
+    </ItemGroup>
+
 </Project>

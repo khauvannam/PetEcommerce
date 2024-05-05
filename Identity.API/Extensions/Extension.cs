@@ -1,7 +1,6 @@
 ﻿using FluentValidation;
 using Identity.API.Databases;
 using Identity.API.Entities;
-using Identity.API.Features.Users;
 using Identity.API.Interfaces;
 using Identity.API.Repositories;
 using Microsoft.AspNetCore.Identity;
@@ -14,7 +13,9 @@ public static class Extension
 {
     public static void AddDatabase(this WebApplicationBuilder builder)
     {
-        var conn = builder.Configuration.GetConnectionString("Default");
+        var dbHost = Environment.GetEnvironmentVariable("DB_HOST")!;
+        var conn =
+            $"Data Source=sql.server:1433;Initial Catalog=UserDatabase;User ID=sa;Password=Nam09189921;TrustServerCertificate=True;";
         builder.Services.AddDbContext<UserDbContext>(opt => opt.UseSqlServer(conn));
     }
 
