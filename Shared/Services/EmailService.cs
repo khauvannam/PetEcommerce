@@ -10,7 +10,7 @@ public static class EmailService
     {
         using var client = new SmtpClient();
         await client.ConnectAsync("smtp.gmail.com", 587, true);
-        await client.AuthenticateAsync("singgaporestore220803@gmail.com", "durl yqkn ohhq slvw");
+        await client.AuthenticateAsync("singgaporestore220803@gmail.com", "");
         await client.SendAsync(message);
         await client.DisconnectAsync(true);
     }
