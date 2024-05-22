@@ -1,78 +1,59 @@
 # This is a generated file. Not intended for manual editing.
 services:
-  gateway.api:
+  gateway_api:
     build:
       context: "D:\\Microservice Project\\PetEcommerce"
-      dockerfile: "Gateway.API/Dockerfile"
+      dockerfile: "Gateway_API/Dockerfile"
       target: "base"
     command: []
     entrypoint:
     - "dotnet"
-    - "/app/bin/Debug/net8.0/Gateway.API.dll"
+    - "/app/bin/Debug/net8.0/Gateway_API.dll"
     environment:
       ASPNETCORE_ENVIRONMENT: "Development"
       DOTNET_USE_POLLING_FILE_WATCHER: "true"
-    image: "gateway.api:dev"
+    image: "gateway_api:dev"
     ports: []
     volumes:
     - "C:\\Users\\ADMIN\\.nuget\\packages:/root/.nuget/packages"
-    - "D:\\Microservice Project\\PetEcommerce\\Gateway.API:/app:rw"
+    - "D:\\Microservice Project\\PetEcommerce\\Gateway_API:/app:rw"
     - "D:\\Microservice Project\\PetEcommerce:/src:rw"
     working_dir: "/app"
-  identity.api:
+  identity_api:
     build:
       context: "D:\\Microservice Project\\PetEcommerce"
-      dockerfile: "Identity.API/Dockerfile"
-      target: "base"
+      dockerfile: "Identity_API/Dockerfile"
+      target: "bas"
     command: []
     entrypoint:
     - "dotnet"
-    - "/app/bin/Debug/net8.0/Identity.API.dll"
+    - "/app/bin/Debug/net8.0/Identity_API.dll"
     environment:
       ASPNETCORE_ENVIRONMENT: "Development"
       DOTNET_USE_POLLING_FILE_WATCHER: "true"
-    image: "identity.api:dev"
+    image: "identity_api:dev"
     ports: []
     volumes:
     - "C:\\Users\\ADMIN\\.nuget\\packages:/root/.nuget/packages"
-    - "D:\\Microservice Project\\PetEcommerce\\Identity.API:/app:rw"
+    - "D:\\Microservice Project\\PetEcommerce\\Identity_API:/app:rw"
     - "D:\\Microservice Project\\PetEcommerce:/src:rw"
     working_dir: "/app"
-  order.api:
+  product_api:
     build:
       context: "D:\\Microservice Project\\PetEcommerce"
-      dockerfile: "Order.API/Dockerfile"
+      dockerfile: "Product_API/Dockerfile"
       target: "base"
     command: []
     entrypoint:
     - "dotnet"
-    - "/app/bin/Debug/net8.0/Order.API.dll"
+    - "/app/bin/Debug/net8.0/Product_API.dll"
     environment:
       ASPNETCORE_ENVIRONMENT: "Development"
       DOTNET_USE_POLLING_FILE_WATCHER: "true"
-    image: "order.api:dev"
+    image: "product_api:dev"
     ports: []
     volumes:
     - "C:\\Users\\ADMIN\\.nuget\\packages:/home/app/.nuget/packages"
-    - "D:\\Microservice Project\\PetEcommerce\\Order.API:/app:rw"
-    - "D:\\Microservice Project\\PetEcommerce:/src:rw"
-    working_dir: "/app"
-  product.api:
-    build:
-      context: "D:\\Microservice Project\\PetEcommerce"
-      dockerfile: "Product.API/Dockerfile"
-      target: "base"
-    command: []
-    entrypoint:
-    - "dotnet"
-    - "/app/bin/Debug/net8.0/Product.API.dll"
-    environment:
-      ASPNETCORE_ENVIRONMENT: "Development"
-      DOTNET_USE_POLLING_FILE_WATCHER: "true"
-    image: "product.api:dev"
-    ports: []
-    volumes:
-    - "C:\\Users\\ADMIN\\.nuget\\packages:/home/app/.nuget/packages"
-    - "D:\\Microservice Project\\PetEcommerce\\Product.API:/app:rw"
+    - "D:\\Microservice Project\\PetEcommerce\\Product_API:/app:rw"
     - "D:\\Microservice Project\\PetEcommerce:/src:rw"
     working_dir: "/app"

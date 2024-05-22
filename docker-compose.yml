@@ -1,12 +1,4 @@
-﻿networks:
-  sql-server:
-    name: sql-server.network
-  
-  mongodb:
-    name: mongodb.network
-
-
-volumes:
+﻿volumes:
   mssql-data:
     driver: local
   mongodb-data:
@@ -14,76 +6,68 @@ volumes:
 
 services:
   
-  gateway.api:
-    container_name: gateway.api-container
-    image: gateway.api
+  identity_api:
+    container_name: identity_api.container
+    image: identity_api
     build:
       context: .
-      dockerfile: Gateway.API/Dockerfile
-    ports:
-      - 8080:8080
-  
-  identity.api:
-    container_name: identity.api-container
-    image: identity.api
-    build:
-      context: .
-      dockerfile: Identity.API/Dockerfile
+      dockerfile: Identity_API/Dockerfile
     depends_on:
-      - sql.server
+      - sql_server
     environment:
-      - DB_HOST=sql.server
+      - DB_HOST=sql_server
+      - DB_PASSWORD=Nam09189921
     ports:
       - 8081:8080
     networks:
-      - sql-server
+      - sql_server.networks
   
-  order.api:
-    container_name: order.api-container
-    image: order.api
+  
+  product_api:
+    container_name: product_api.container
+    image: product_api
     build:
       context: .
-      dockerfile: Order.API/Dockerfile
-    ports:
-      - 8082:8080
-
-  product.api:
-    container_name: product.api-container
-    image: product.api
-    build:
-      context: .
-      dockerfile: Product.API/Dockerfile
+      dockerfile: Product_API/Dockerfile
     depends_on:
-      - mongodb.server
+      - mongodb_server
+      - azurite
     ports:
       - 8083:8080
-    networks:
-      - mongodb
   
-  sql.server:
+  sql_server:
     image: mcr.microsoft.com/mssql/server:2022-latest
-    container_name: sql-server.container
+    container_name: sql_server.container
     environment:
       ACCEPT_EULA: Y
       SA_PASSWORD: Nam09189921
       MSSQL_PID: Express
     ports:
-      - 1433:1433
+      - 8084:1433
     volumes:
       - mssql-data:/var/opt/mssql
     networks:
-      - sql-server
+      - sql_server.networks
   
-  mongodb.server:
+  mongodb_server:
     image: mongo
-    container_name: mongodb.container
+    container_name: mongodb_server.container
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: example
     ports:
-      - 27017:27017
+      - 27018:27017
     volumes:
       - mongodb-data:/data/db
-    networks:
-      - mongodb
+  
+  azurite:
+    container_name: azurite
+    image: mcr.microsoft.com/azure-storage/azurite
+    ports:
+      - 8880:10000
+    restart: always
+    volumes:
+      - D:/Azurite/blob-data:/data
 
+networks:
+  sql_server.networks:

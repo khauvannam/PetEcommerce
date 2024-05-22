@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Shared.Entities.Services;
 using Shared.Extensions.Configurations;
 using Shared.Extensions.JwtHandlers;
-using Shared.Shared;
 
 namespace Shared.Extensions;
 
