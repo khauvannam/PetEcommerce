@@ -1,11 +1,12 @@
 ﻿using Identity.API.Databases;
-using Identity.API.Entities;
+using Identity.API.Domain.Tokens;
+using Identity.API.Domain.Users;
 using Identity.API.Errors;
 using Identity.API.Features.Users;
 using Identity.API.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using MimeKit;
-using Shared.Entities.Results;
+using Shared.Domain.Results;
 using Shared.Extensions.JwtHandlers;
 using Shared.Services;
 

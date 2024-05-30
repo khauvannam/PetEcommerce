@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Identity.API.Domain.Users;
 
-namespace Identity.API.Entities;
+namespace Identity.API.Domain.Tokens;
 
 public class RefreshToken
 {

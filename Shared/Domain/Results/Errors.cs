@@ -1,4 +1,4 @@
-﻿namespace Shared.Entities.Results;
+﻿namespace Shared.Domain.Results;
 
 public static class Errors
 {

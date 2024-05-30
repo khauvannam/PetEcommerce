@@ -1,4 +1,4 @@
-﻿namespace Shared.Entities.Bases;
+﻿namespace Shared.Domain.Bases;
 
 public abstract class ValueObject : IEquatable<ValueObject>
 {

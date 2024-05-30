@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Shared.Entities.Services;
+using Shared.Domain.Services;
 using Shared.Extensions.Configurations;
 using Shared.Extensions.JwtHandlers;
 

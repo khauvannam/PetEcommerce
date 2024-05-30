@@ -1,7 +1,8 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Shared.Entities.Bases;
+﻿using Identity.API.Domain.Tokens;
+using Microsoft.AspNetCore.Identity;
+using Shared.Domain.Bases;
 
-namespace Identity.API.Entities;
+namespace Identity.API.Domain.Users;
 
 public class User : IdentityUser
 {

@@ -2,7 +2,7 @@
 using System.Security.Claims;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
-using Shared.Entities.Services;
+using Shared.Domain.Services;
 
 namespace Shared.Extensions.JwtHandlers;
 

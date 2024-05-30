@@ -5,6 +5,7 @@ using Identity.API.Databases;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -12,9 +13,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Identity.API.Migrations
 {
     [DbContext(typeof(UserDbContext))]
-    partial class UserDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240510151020_Initial")]
+    partial class Initial
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -23,7 +26,7 @@ namespace Identity.API.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Identity.API.Domain.RefreshToken", b =>
+            modelBuilder.Entity("Identity.API.Entities.RefreshToken", b =>
                 {
                     b.Property<string>("TokenId")
                         .HasMaxLength(255)
@@ -50,7 +53,7 @@ namespace Identity.API.Migrations
                     b.ToTable("RefreshTokens");
                 });
 
-            modelBuilder.Entity("Identity.API.Domain.User", b =>
+            modelBuilder.Entity("Identity.API.Entities.User", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -102,7 +105,7 @@ namespace Identity.API.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
-                    b.ComplexProperty<Dictionary<string, object>>("Address", "Identity.API.Domain.User.Address#Address", b1 =>
+                    b.ComplexProperty<Dictionary<string, object>>("Address", "Identity.API.Entities.User.Address#Address", b1 =>
                         {
                             b1.IsRequired();
 
@@ -271,11 +274,11 @@ namespace Identity.API.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("Identity.API.Domain.RefreshToken", b =>
+            modelBuilder.Entity("Identity.API.Entities.RefreshToken", b =>
                 {
-                    b.HasOne("Identity.API.Domain.User", "User")
+                    b.HasOne("Identity.API.Entities.User", "User")
                         .WithOne("RefreshToken")
-                        .HasForeignKey("Identity.API.Domain.RefreshToken", "UserId")
+                        .HasForeignKey("Identity.API.Entities.RefreshToken", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -293,7 +296,7 @@ namespace Identity.API.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("Identity.API.Domain.User", null)
+                    b.HasOne("Identity.API.Entities.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -302,7 +305,7 @@ namespace Identity.API.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("Identity.API.Domain.User", null)
+                    b.HasOne("Identity.API.Entities.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -317,7 +320,7 @@ namespace Identity.API.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Identity.API.Domain.User", null)
+                    b.HasOne("Identity.API.Entities.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -326,14 +329,14 @@ namespace Identity.API.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("Identity.API.Domain.User", null)
+                    b.HasOne("Identity.API.Entities.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Identity.API.Domain.User", b =>
+            modelBuilder.Entity("Identity.API.Entities.User", b =>
                 {
                     b.Navigation("RefreshToken");
                 });

@@ -14,7 +14,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Databases\" />
+      <Folder Include="Endpoints\" />
       <Folder Include="Errors\" />
       <Folder Include="Extensions\" />
       <Folder Include="Features\Categories\" />

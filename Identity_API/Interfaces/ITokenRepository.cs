@@ -1,6 +1,6 @@
-﻿using Identity.API.Entities;
+﻿using Identity.API.Domain.Tokens;
 using Identity.API.Features.Tokens;
-using Shared.Entities.Results;
+using Shared.Domain.Results;
 
 namespace Identity.API.Interfaces;
 

@@ -1,4 +1,4 @@
-﻿using Shared.Entities.Results;
+﻿using Shared.Domain.Results;
 
 namespace Identity.API.Interfaces;
 

@@ -1,10 +1,11 @@
-﻿using Product_API.Features.Products;
-using Shared.Entities.Results;
+﻿using Product_API.Domain;
+using Product_API.Features.Products;
+using Shared.Domain.Results;
 
 namespace Product_API.Interfaces;
 
 public interface IProductRepository
 {
-    Task<Result<Entities.Product>> CreateProduct(CreateProduct.Command command);
+    Task<Result<Product>> CreateProduct(CreateProduct.Command command);
     Task<Result> DeleteProduct();
 }

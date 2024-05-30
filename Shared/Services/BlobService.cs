@@ -1,5 +1,5 @@
 ﻿using Azure.Storage.Blobs;
-using Shared.Entities.Services;
+using Shared.Domain.Services;
 
 namespace Shared.Services;
 

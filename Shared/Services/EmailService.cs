@@ -1,6 +1,6 @@
 ﻿using MailKit.Net.Smtp;
 using MimeKit;
-using Shared.Entities.Services;
+using Shared.Domain.Services;
 
 namespace Shared.Services;
 

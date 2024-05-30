@@ -1,4 +1,5 @@
-﻿using Identity.API.Entities;
+﻿using Identity.API.Domain.Tokens;
+using Identity.API.Domain.Users;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 

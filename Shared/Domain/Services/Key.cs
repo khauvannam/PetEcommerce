@@ -1,4 +1,4 @@
-﻿namespace Shared.Entities.Services;
+﻿namespace Shared.Domain.Services;
 
 public static class Key
 {

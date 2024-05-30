@@ -1,11 +1,12 @@
 ﻿using System.Security.Claims;
 using Identity.API.Databases;
-using Identity.API.Entities;
+using Identity.API.Domain.Tokens;
+using Identity.API.Domain.Users;
 using Identity.API.Errors;
 using Identity.API.Features.Tokens;
 using Identity.API.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using Shared.Entities.Results;
+using Shared.Domain.Results;
 using Shared.Extensions.JwtHandlers;
 
 namespace Identity.API.Repositories;

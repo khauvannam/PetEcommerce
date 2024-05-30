@@ -1,6 +1,6 @@
 ﻿using MediatR;
-using Product_API.Entities;
-using Shared.Entities.Results;
+using Product_API.Domain;
+using Shared.Domain.Results;
 
 namespace Product_API.Features.Products;
 

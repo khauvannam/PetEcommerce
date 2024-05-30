@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using Identity.API.Interfaces;
 using MediatR;
-using Shared.Entities.Results;
+using Shared.Domain.Results;
 
 namespace Identity.API.Features.Tokens;
 
