@@ -1,5 +1,4 @@
 ﻿using Carter;
-using FluentValidation;
 using MediatR;
 using Product_API.Domain.Products;
 using Product_API.Interfaces;
@@ -7,16 +6,9 @@ using Shared.Domain.Results;
 
 namespace Product_API.Features.Products;
 
-public static class CreateProduct
+public static class GetProductById
 {
-    public record Command(
-        string Name,
-        OriginalPrice OriginalPrice,
-        DateTime CreatedAt,
-        DateTime UpdatedAt,
-        ProductCategory ProductCategory,
-        List<ProductVariant> ProductVariants
-    ) : IRequest<Result<Product>>;
+    public record Command(string ProductId) : IRequest<Result<Product>>;
 
     public class Handler(IProductRepository repository) : IRequestHandler<Command, Result<Product>>
     {
@@ -25,27 +17,26 @@ public static class CreateProduct
             CancellationToken cancellationToken
         )
         {
-            return await repository.CreateProduct(request);
+            return await repository.GetProductById(request.ProductId, cancellationToken);
         }
     }
 
-    public class Validator : AbstractValidator<Product> { }
-
-    public class EndPoint : ICarterModule
+    public class Endpoint : ICarterModule
     {
         public void AddRoutes(IEndpointRouteBuilder app)
         {
-            app.MapPost(
-                "/product",
-                async (ISender sender, Command command) =>
+            app.MapGet(
+                "/product/{productId}",
+                async (string productId, ISender sender) =>
                 {
+                    var command = new Command(productId);
                     var result = await sender.Send(command);
                     if (result.IsFailure)
                     {
                         return Results.BadRequest(result.ErrorTypes);
                     }
 
-                    return Results.Ok();
+                    return Results.Ok(result.Value);
                 }
             );
         }

@@ -8,16 +8,10 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <PackageReference Include="Carter" Version="8.2.1" />
       <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.9.1" />
       <PackageReference Include="MediatR" Version="12.2.0" />
       <PackageReference Include="MongoDB.Driver" Version="2.25.0" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Endpoints\" />
-      <Folder Include="Errors\" />
-      <Folder Include="Extensions\" />
-      <Folder Include="Features\Categories\" />
     </ItemGroup>
 
     <ItemGroup>

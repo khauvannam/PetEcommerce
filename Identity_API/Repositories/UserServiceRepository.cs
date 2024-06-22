@@ -5,7 +5,7 @@ using Shared.Domain.Results;
 
 namespace Identity.API.Repositories;
 
-public class UserValidateRepository(UserDbContext dbContext) : IUserValidateRepository
+public class UserServiceRepository(UserDbContext dbContext) : IUserServiceRepository
 {
     public async Task<Result<bool>> IsEmailUniqueAsync(string email)
     {

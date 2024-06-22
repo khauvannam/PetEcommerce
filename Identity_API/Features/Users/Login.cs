@@ -19,7 +19,7 @@ public static class Login
             CancellationToken cancellationToken
         )
         {
-            var validatorResult = await validator.ValidateAsync(request);
+            var validatorResult = await validator.ValidateAsync(request, cancellationToken);
             if (!validatorResult.IsValid)
             {
                 return Result.Failure<LoginResponseDto>(

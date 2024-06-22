@@ -36,7 +36,7 @@ public static class Extension
 
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<ITokenRepository, TokenRepository>();
-        services.AddScoped<IUserValidateRepository, UserValidateRepository>();
+        services.AddScoped<IUserServiceRepository, UserServiceRepository>();
         services.AddTransient<JwtHandler>();
     }
 }

@@ -16,7 +16,7 @@ public static class Register
         public string? Password { get; init; }
         public string? PhoneNumber { get; init; }
         public string SecurityStamp { get; init; } = Guid.NewGuid().ToString();
-        public Address Address { get; init; } = Address.Create("1", "1", "1");
+        public Address Address { get; init; } = null!;
     }
 
     internal sealed class Handler(IUserRepository repository, IValidator<Command> validator)
@@ -43,7 +43,7 @@ public static class Register
 
     public sealed class Validator : AbstractValidator<Command>
     {
-        public Validator(IUserValidateRepository repository)
+        public Validator(IUserServiceRepository repository)
         {
             RuleFor(u => u.Email).EmailAddress().WithMessage("Your email isn't accepted");
 
@@ -69,7 +69,7 @@ public static class Register
                 .MustAsync(
                     async (username, _) =>
                     {
-                        var result = await repository.IsEmailUniqueAsync(username!);
+                        var result = await repository.IsUsernameUniqueAsync(username!);
                         return result.Value;
                     }
                 )

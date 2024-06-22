@@ -14,7 +14,7 @@ public class TokenController(ISender sender) : ControllerBase
         var result = await sender.Send(command);
         if (result.IsFailure)
         {
-            return BadRequest(result.ErrorType);
+            return BadRequest(result.ErrorTypes);
         }
         return Ok(result);
     }
@@ -25,7 +25,7 @@ public class TokenController(ISender sender) : ControllerBase
         var result = await sender.Send(command);
         if (result.IsFailure)
         {
-            return BadRequest(result.ErrorType);
+            return BadRequest(result.ErrorTypes);
         }
         return Ok(result);
     }

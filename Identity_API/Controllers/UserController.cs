@@ -22,7 +22,7 @@ public class UserController(ISender sender) : ControllerBase
         var result = await sender.Send(command);
         if (result.IsFailure)
         {
-            return BadRequest(result.ErrorType);
+            return BadRequest(result.ErrorTypes);
         }
         return Ok("User is created successfully");
     }
@@ -33,7 +33,7 @@ public class UserController(ISender sender) : ControllerBase
         var result = await sender.Send(command);
         if (result.IsFailure)
         {
-            return BadRequest(result.ErrorType);
+            return BadRequest(result.ErrorTypes);
         }
 
         return Ok(result);
@@ -45,7 +45,7 @@ public class UserController(ISender sender) : ControllerBase
         var result = await sender.Send(command);
         if (result.IsFailure)
         {
-            return BadRequest(result.ErrorType);
+            return BadRequest(result.ErrorTypes);
         }
 
         return Ok(result);
@@ -57,7 +57,7 @@ public class UserController(ISender sender) : ControllerBase
         var result = await sender.Send(command);
         if (result.IsFailure)
         {
-            return BadRequest(result.ErrorType);
+            return BadRequest(result.ErrorTypes);
         }
         return Ok(result);
     }
