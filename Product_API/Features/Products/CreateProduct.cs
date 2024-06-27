@@ -11,11 +11,8 @@ public static class CreateProduct
 {
     public record Command(
         string Name,
-        OriginalPrice OriginalPrice,
-        DateTime CreatedAt,
-        DateTime UpdatedAt,
         ProductCategory ProductCategory,
-        List<ProductVariant> ProductVariants
+        List<ProductVariantRequest> ProductVariants
     ) : IRequest<Result<Product>>;
 
     public class Handler(IProductRepository repository) : IRequestHandler<Command, Result<Product>>
@@ -45,7 +42,7 @@ public static class CreateProduct
                         return Results.BadRequest(result.ErrorTypes);
                     }
 
-                    return Results.Ok();
+                    return Results.Ok(result.Value);
                 }
             );
         }

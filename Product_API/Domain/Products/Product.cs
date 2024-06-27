@@ -1,37 +1,35 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+using Shared.Domain.Bases;
 
 namespace Product_API.Domain.Products;
 
-public class Product
+public class Product : AggregateRoot
 {
-    private Product(string name, OriginalPrice originalPrice, ProductCategory productCategory)
+    private Product(string name, ProductCategory productCategory)
     {
-        ProductId = Guid.NewGuid().ToString();
         Name = name;
-        OriginalPrice = originalPrice;
         CreatedAt = DateTime.Now;
         UpdatedAt = DateTime.Now;
         ProductCategory = productCategory;
     }
 
     [BsonId]
-    public string ProductId { get; }
+    public string ProductId => Id;
     public string Name { get; private set; }
-    public OriginalPrice OriginalPrice { get; private set; }
     public DateTime CreatedAt { get; private set; }
     public DateTime UpdatedAt { get; private set; }
     public ProductCategory ProductCategory { get; private set; }
     public List<ProductVariant> ProductVariants { get; } = [];
-    public static Product Create(string name, OriginalPrice originalPrice, ProductCategory productCategory)
+
+    public static Product Create(string name, ProductCategory productCategory)
     {
-        return new(name, originalPrice, productCategory);
+        return new(name, productCategory);
     }
 
-    public void UpdateProduct(string name, OriginalPrice originalPrice, ProductCategory productCategory)
+    public void UpdateProduct(string name, ProductCategory productCategory)
     {
         Name = name;
-        OriginalPrice = originalPrice;
         UpdatedAt = DateTime.Now;
         UpdateCategory(productCategory);
     }
@@ -50,6 +48,6 @@ public class Product
 
         ProductCategory = other;
     }
-    
 }
+
 public record ProductCategory(string CategoryId, BsonDocument Details);

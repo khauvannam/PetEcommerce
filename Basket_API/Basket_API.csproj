@@ -8,12 +8,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Basket_Application\Basket_Application.csproj" />
-      <ProjectReference Include="..\Basket_Domain\Basket_Domain.csproj" />
-      <ProjectReference Include="..\Basket_Infrastructure\Basket_Infrastructure.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
       <Content Include="..\.dockerignore">
         <Link>.dockerignore</Link>
       </Content>

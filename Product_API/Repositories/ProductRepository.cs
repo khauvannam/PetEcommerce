@@ -35,12 +35,14 @@ public class ProductRepository : IProductRepository
 
     public async Task<Result<Product>> CreateProduct(CreateProduct.Command command)
     {
-        var price = command.OriginalPrice;
         var productCategory = command.ProductCategory;
-        var product = Product.Create(command.Name, price, productCategory);
+        var product = Product.Create(command.Name, productCategory);
         foreach (var variant in command.ProductVariants)
         {
-            product.AddProductVariants(variant);
+            var productVariant = ProductVariant.Create(variant.VariantName, variant.ImageUrl);
+            productVariant.SetPrice(variant.OriginalPrice);
+            productVariant.ApplyDiscount(variant.DiscountPercent);
+            product.AddProductVariants(productVariant);
         }
 
         await _productCollection.InsertOneAsync(product);

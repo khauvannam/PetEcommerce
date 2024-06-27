@@ -1,6 +1,6 @@
-﻿namespace Product_API.Databases;
+namespace Product_API.Databases;
 
-public class ProductDatabaseSetting
+public class CategoryDatabaseSetting
 {
     public required string ConnectionString { get; init; } = null!;
     public required string DatabaseName { get; init; } = null!;
