@@ -21,7 +21,18 @@ public static class CreateCategory
     {
         public void AddRoutes(IEndpointRouteBuilder app)
         {
-            throw new NotImplementedException();
+            app.MapPost(
+                "/api/category",
+                async (ISender sender, Command command) =>
+                {
+                    if (await sender.Send(command) is { IsFailure: true } result)
+                    {
+                        return Results.BadRequest(result.ErrorTypes);
+                    }
+
+                    return Results.Ok();
+                }
+            );
         }
     }
 }

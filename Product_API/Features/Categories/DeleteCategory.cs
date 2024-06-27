@@ -21,7 +21,19 @@ public static class DeleteCategory
     {
         public void AddRoutes(IEndpointRouteBuilder app)
         {
-            throw new NotImplementedException();
+            app.MapDelete(
+                "/api/category/{categoryId}",
+                async (ISender sender, string categoryId) =>
+                {
+                    var command = new Command(categoryId);
+                    if (await sender.Send(command) is { IsFailure: true } result)
+                    {
+                        return Results.BadRequest(result.ErrorTypes);
+                    }
+
+                    return Results.Ok();
+                }
+            );
         }
     }
 }

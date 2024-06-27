@@ -26,7 +26,20 @@ public static class GetCategoryById
     {
         public void AddRoutes(IEndpointRouteBuilder app)
         {
-            throw new NotImplementedException();
+            app.MapGet(
+                "/api/category/{categoryId}",
+                async (ISender sender, string categoryId) =>
+                {
+                    var command = new Command(categoryId);
+                    var result = await sender.Send(command);
+                    if (result.IsFailure)
+                    {
+                        return Results.BadRequest(result.ErrorTypes);
+                    }
+
+                    return Results.Ok(result.Value);
+                }
+            );
         }
     }
 }
