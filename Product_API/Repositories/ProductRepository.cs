@@ -24,7 +24,10 @@ public class ProductRepository : IProductRepository
     {
         var filter = command.CategoryId is null
             ? Builders<Product>.Filter.Empty
-            : Builders<Product>.Filter.Eq(p => p.ProductCategory.CategoryId, command.CategoryId);
+            : Builders<Product>.Filter.Eq(
+                p => p.ProductCategory.ProductCategoryId,
+                command.CategoryId
+            );
         var products = await _productCollection
             .Find(filter)
             .Skip(command.Offset)
@@ -36,7 +39,7 @@ public class ProductRepository : IProductRepository
     public async Task<Result<Product>> CreateProduct(CreateProduct.Command command)
     {
         var productCategory = command.ProductCategory;
-        var product = Product.Create(command.Name, productCategory);
+        var product = Product.Create(command.Name, command.Description, productCategory);
         foreach (var variant in command.ProductVariants)
         {
             var productVariant = ProductVariant.Create(variant.VariantName, variant.ImageUrl);

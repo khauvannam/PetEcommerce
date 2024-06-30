@@ -11,6 +11,7 @@ public static class CreateProduct
 {
     public record Command(
         string Name,
+        string Description,
         ProductCategory ProductCategory,
         List<ProductVariantRequest> ProductVariants
     ) : IRequest<Result<Product>>;
@@ -33,7 +34,7 @@ public static class CreateProduct
         public void AddRoutes(IEndpointRouteBuilder app)
         {
             app.MapPost(
-                "/product",
+                "/api/product",
                 async (ISender sender, Command command) =>
                 {
                     var result = await sender.Send(command);

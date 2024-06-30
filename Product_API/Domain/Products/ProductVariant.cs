@@ -7,8 +7,8 @@ public sealed class ProductVariant : Entity
     public string VariantId => Id;
     public string VariantName { get; private set; }
     public string ImageUrl { get; private set; }
-    public OriginalPrice OriginalPrice { get; private set; }
-    public Discount Discount { get; private set; }
+    private OriginalPrice OriginalPrice { get; set; } = null!;
+    private Discount Discount { get; set; } = null!;
     public decimal DiscountedPrice => CalculateDiscountedPrice();
 
     private ProductVariant(string variantName, string imageUrl)

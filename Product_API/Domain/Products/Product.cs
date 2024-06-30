@@ -6,25 +6,27 @@ namespace Product_API.Domain.Products;
 
 public class Product : AggregateRoot
 {
-    private Product(string name, ProductCategory productCategory)
+    private Product(string name, string description, ProductCategory productCategory)
     {
         Name = name;
+        Description = description;
+        ProductCategory = productCategory;
         CreatedAt = DateTime.Now;
         UpdatedAt = DateTime.Now;
-        ProductCategory = productCategory;
     }
 
     [BsonId]
     public string ProductId => Id;
     public string Name { get; private set; }
+    public string Description { get; private set; }
     public DateTime CreatedAt { get; private set; }
     public DateTime UpdatedAt { get; private set; }
     public ProductCategory ProductCategory { get; private set; }
-    public List<ProductVariant> ProductVariants { get; } = [];
+    private List<ProductVariant> ProductVariants { get; } = [];
 
-    public static Product Create(string name, ProductCategory productCategory)
+    public static Product Create(string name, string description, ProductCategory productCategory)
     {
-        return new(name, productCategory);
+        return new(name, description, productCategory);
     }
 
     public void UpdateProduct(string name, ProductCategory productCategory)
@@ -39,6 +41,9 @@ public class Product : AggregateRoot
         ProductVariants.Add(productVariant);
     }
 
+    private Func<ProductVariant, bool> FilterFor =>
+        updatedVariants => ProductVariants.Contains(updatedVariants);
+
     private void UpdateCategory(ProductCategory other)
     {
         if (ProductCategory.Equals(other))
@@ -50,4 +55,14 @@ public class Product : AggregateRoot
     }
 }
 
-public record ProductCategory(string CategoryId, BsonDocument Details);
+public class ProductCategory : ValueObject
+{
+    public string ProductCategoryId { get; }
+    public BsonDocument Details { get; set; }
+
+    public override IEnumerable<object> GetEqualityComponents()
+    {
+        yield return ProductCategoryId;
+        yield return Details;
+    }
+}
