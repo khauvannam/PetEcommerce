@@ -68,9 +68,16 @@ public class ProductRepository : IProductRepository
         return Result.Failure(ProductErrors.NotFound);
     }
 
-    public Task<Result> UpdateProduct(string productId, CancellationToken cancellationToken)
+    public async Task<Result<Product>> UpdateProduct(
+        UpdateProduct.Command command,
+        CancellationToken cancellationToken
+    )
     {
-        throw new NotImplementedException();
+        var value = command.UpdateProductRequest;
+        var result = await GetProductById(command.ProductId, cancellationToken);
+        var product = result.Value;
+        product.UpdateProduct(value.Name, value.ProductCategory, value.ProductVariants);
+        return Result.Success(product);
     }
 
     public async Task<Result<Product>> GetProductById(

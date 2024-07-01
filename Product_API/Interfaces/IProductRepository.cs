@@ -10,6 +10,9 @@ public interface IProductRepository
     Task<Result<List<Product>>> ListAllProducts(ListAllProducts.Command command);
     Task<Result<Product>> CreateProduct(CreateProduct.Command command);
     Task<Result> DeleteProduct(string productId, CancellationToken cancellationToken);
-    Task<Result> UpdateProduct(string productId, CancellationToken cancellationToken);
+    Task<Result<Product>> UpdateProduct(
+        UpdateProduct.Command command,
+        CancellationToken cancellationToken
+    );
     Task<Result<Product>> GetProductById(string productId, CancellationToken cancellationToken);
 }

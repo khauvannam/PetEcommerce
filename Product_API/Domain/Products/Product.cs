@@ -29,11 +29,16 @@ public class Product : AggregateRoot
         return new(name, description, productCategory);
     }
 
-    public void UpdateProduct(string name, ProductCategory productCategory)
+    public void UpdateProduct(
+        string name,
+        ProductCategory productCategory,
+        List<ProductVariant> productVariants
+    )
     {
         Name = name;
         UpdatedAt = DateTime.Now;
         UpdateCategory(productCategory);
+        UpdateVariantList(productVariants);
     }
 
     public void AddProductVariants(ProductVariant productVariant)
@@ -41,8 +46,54 @@ public class Product : AggregateRoot
         ProductVariants.Add(productVariant);
     }
 
-    private Func<ProductVariant, bool> FilterFor =>
-        updatedVariants => ProductVariants.Contains(updatedVariants);
+    private void UpdateVariantList(List<ProductVariant> productVariants)
+    {
+        var updatedList = RemoveVariantIfNotInUpdateList(productVariants);
+        if (updatedList is null)
+        {
+            return;
+        }
+        SwapVariantPosition(updatedList);
+        AddVariantIfNotExit(updatedList);
+    }
+
+    private List<ProductVariant>? RemoveVariantIfNotInUpdateList(
+        List<ProductVariant> updatedVariants
+    )
+    {
+        if (ProductVariants.SequenceEqual(updatedVariants))
+        {
+            return null;
+        }
+        ProductVariants.RemoveAll(p => !updatedVariants.Contains(p));
+        return ProductVariants;
+    }
+
+    private void SwapVariantPosition(List<ProductVariant> updatedVariants)
+    {
+        foreach (var productVariant in ProductVariants.ToList())
+        {
+            var newIndex = updatedVariants.FindIndex(v => v.VariantId == productVariant.VariantId);
+            var oldIndex = ProductVariants.FindIndex(v =>
+                v.VariantId == updatedVariants[newIndex].VariantId
+            );
+            if (newIndex == oldIndex)
+                return;
+            if (Math.Min(oldIndex, newIndex) < 0)
+                return;
+            (ProductVariants[oldIndex], ProductVariants[newIndex]) = (
+                ProductVariants[newIndex],
+                ProductVariants[oldIndex]
+            );
+        }
+    }
+
+    private void AddVariantIfNotExit(List<ProductVariant> updatedVariants)
+    {
+        if (updatedVariants.Count == ProductVariants.Count)
+            return;
+        ProductVariants.AddRange(updatedVariants);
+    }
 
     private void UpdateCategory(ProductCategory other)
     {
@@ -57,8 +108,8 @@ public class Product : AggregateRoot
 
 public class ProductCategory : ValueObject
 {
-    public string ProductCategoryId { get; }
-    public BsonDocument Details { get; set; }
+    public string ProductCategoryId { get; } = null!;
+    public BsonDocument Details { get; set; } = null!;
 
     public override IEnumerable<object> GetEqualityComponents()
     {
