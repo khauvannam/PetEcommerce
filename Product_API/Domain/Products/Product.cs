@@ -32,13 +32,14 @@ public class Product : AggregateRoot
     public void UpdateProduct(
         string name,
         ProductCategory productCategory,
+        VariantUpdatedStatus status,
         List<ProductVariant> productVariants
     )
     {
         Name = name;
         UpdatedAt = DateTime.Now;
         UpdateCategory(productCategory);
-        UpdateVariantList(productVariants);
+        UpdateVariantList(productVariants, status);
     }
 
     public void AddProductVariants(ProductVariant productVariant)

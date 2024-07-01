@@ -76,7 +76,12 @@ public class ProductRepository : IProductRepository
         var value = command.UpdateProductRequest;
         var result = await GetProductById(command.ProductId, cancellationToken);
         var product = result.Value;
-        product.UpdateProduct(value.Name, value.ProductCategory, value.ProductVariants);
+        product.UpdateProduct(
+            value.Name,
+            value.ProductCategory,
+            value.Status,
+            value.ProductVariants
+        );
         return Result.Success(product);
     }
 
