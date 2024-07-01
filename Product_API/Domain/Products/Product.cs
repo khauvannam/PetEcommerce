@@ -46,15 +46,31 @@ public class Product : AggregateRoot
         ProductVariants.Add(productVariant);
     }
 
-    private void UpdateVariantList(List<ProductVariant> productVariants)
+    private void UpdateVariantList(
+        List<ProductVariant> updateVariants,
+        VariantUpdatedStatus status = VariantUpdatedStatus.None
+    )
     {
-        var updatedList = RemoveVariantIfNotInUpdateList(productVariants);
-        if (updatedList is null)
+        switch (status)
         {
-            return;
+            case VariantUpdatedStatus.None:
+                break;
+            case VariantUpdatedStatus.ReplaceAll:
+                ProductVariants.Clear();
+                ProductVariants.AddRange(updateVariants);
+                break;
+            case VariantUpdatedStatus.ChangePosition:
+                SwapVariantPosition(updateVariants);
+                break;
+            case VariantUpdatedStatus.AddMoreVariant:
+                AddVariantIfNotExit(updateVariants);
+                break;
+            case VariantUpdatedStatus.JustRemove:
+                RemoveVariantIfNotInUpdateList(updateVariants);
+                break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(status));
         }
-        SwapVariantPosition(updatedList);
-        AddVariantIfNotExit(updatedList);
     }
 
     private List<ProductVariant>? RemoveVariantIfNotInUpdateList(
@@ -90,8 +106,6 @@ public class Product : AggregateRoot
 
     private void AddVariantIfNotExit(List<ProductVariant> updatedVariants)
     {
-        if (updatedVariants.Count == ProductVariants.Count)
-            return;
         ProductVariants.AddRange(updatedVariants);
     }
 
@@ -116,4 +130,13 @@ public class ProductCategory : ValueObject
         yield return ProductCategoryId;
         yield return Details;
     }
+}
+
+public enum VariantUpdatedStatus
+{
+    None = 0,
+    ReplaceAll = 1,
+    ChangePosition = 2,
+    AddMoreVariant = 3,
+    JustRemove = 4
 }
