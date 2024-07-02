@@ -6,34 +6,46 @@ public sealed class ProductVariant : Entity
 {
     public string VariantId => Id;
     public string VariantName { get; private set; }
+    public int InStock { get; private set; }
     public string ImageUrl { get; private set; }
     private OriginalPrice OriginalPrice { get; set; } = null!;
     private Discount Discount { get; set; } = null!;
     public decimal DiscountedPrice => CalculateDiscountedPrice();
 
-    private ProductVariant(string variantName, string imageUrl)
+    private ProductVariant(string variantName, string imageUrl, int inStock)
     {
         VariantName = variantName;
         ImageUrl = imageUrl;
+        InStock = inStock;
     }
 
-    public static ProductVariant Create(string variantName, string imageUrl) =>
-        new(variantName, imageUrl);
+    public static ProductVariant Create(string variantName, string imageUrl, int inStock) =>
+        new(variantName, imageUrl, inStock);
 
-    public void Update(string variantName, string imageUrl, OriginalPrice originalPrice) =>
-        (VariantName, ImageUrl, OriginalPrice) = (variantName, imageUrl, originalPrice);
+    public void Update(
+        string variantName,
+        string imageUrl,
+        OriginalPrice originalPrice,
+        int inStock
+    ) =>
+        (VariantName, ImageUrl, OriginalPrice, InStock) = (
+            variantName,
+            imageUrl,
+            originalPrice,
+            inStock
+        );
 
     public void SetPrice(decimal value) => OriginalPrice = OriginalPrice.Create(value);
 
-    public void ApplyDiscount(decimal discountPercent) =>
-        Discount = Discount.Create(discountPercent);
-
-    private decimal CalculateDiscountedPrice()
+    public void ApplyDiscount(decimal discountPercent)
     {
-        return Discount.Percent == 0
+        Discount = Discount.Create(discountPercent);
+    }
+
+    private decimal CalculateDiscountedPrice() =>
+        Discount.Percent == 0
             ? OriginalPrice.Value
             : OriginalPrice.Value - OriginalPrice.Value * Discount.Percent / 100;
-    }
 }
 
 public class OriginalPrice : ValueObject

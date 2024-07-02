@@ -42,7 +42,11 @@ public class ProductRepository : IProductRepository
         var product = Product.Create(command.Name, command.Description, productCategory);
         foreach (var variant in command.ProductVariants)
         {
-            var productVariant = ProductVariant.Create(variant.VariantName, variant.ImageUrl);
+            var productVariant = ProductVariant.Create(
+                variant.VariantName,
+                variant.ImageUrl,
+                variant.InStock
+            );
             productVariant.SetPrice(variant.OriginalPrice);
             productVariant.ApplyDiscount(variant.DiscountPercent);
             product.AddProductVariants(productVariant);
@@ -76,12 +80,8 @@ public class ProductRepository : IProductRepository
         var value = command.UpdateProductRequest;
         var result = await GetProductById(command.ProductId, cancellationToken);
         var product = result.Value;
-        product.UpdateProduct(
-            value.Name,
-            value.ProductCategory,
-            value.Status,
-            value.ProductVariants
-        );
+        product.UpdateProduct(value.Name, value.ProductCategory, value.ProductVariants);
+
         return Result.Success(product);
     }
 

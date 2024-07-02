@@ -32,14 +32,13 @@ public class Product : AggregateRoot
     public void UpdateProduct(
         string name,
         ProductCategory productCategory,
-        VariantUpdatedStatus status,
         List<ProductVariant> productVariants
     )
     {
         Name = name;
         UpdatedAt = DateTime.Now;
         UpdateCategory(productCategory);
-        UpdateVariantList(productVariants, status);
+        UpdateVariantList(productVariants);
     }
 
     public void AddProductVariants(ProductVariant productVariant)
@@ -47,31 +46,10 @@ public class Product : AggregateRoot
         ProductVariants.Add(productVariant);
     }
 
-    private void UpdateVariantList(
-        List<ProductVariant> updateVariants,
-        VariantUpdatedStatus status = VariantUpdatedStatus.None
-    )
+    private void UpdateVariantList(List<ProductVariant> updateVariants)
     {
-        switch (status)
-        {
-            case VariantUpdatedStatus.None:
-                break;
-            case VariantUpdatedStatus.ReplaceAll:
-                ProductVariants.Clear();
-                ProductVariants.AddRange(updateVariants);
-                break;
-            case VariantUpdatedStatus.ChangePosition:
-                SwapVariantPosition(updateVariants);
-                break;
-            case VariantUpdatedStatus.AddMoreVariant:
-                AddVariantIfNotExit(updateVariants);
-                break;
-            case VariantUpdatedStatus.JustRemove:
-                RemoveVariantIfNotInUpdateList(updateVariants);
-                break;
-            default:
-                throw new ArgumentOutOfRangeException(nameof(status));
-        }
+        ProductVariants.Clear();
+        ProductVariants.AddRange(updateVariants);
     }
 
     private List<ProductVariant>? RemoveVariantIfNotInUpdateList(
@@ -131,13 +109,4 @@ public class ProductCategory : ValueObject
         yield return ProductCategoryId;
         yield return Details;
     }
-}
-
-public enum VariantUpdatedStatus
-{
-    None = 0,
-    ReplaceAll = 1,
-    ChangePosition = 2,
-    AddMoreVariant = 3,
-    JustRemove = 4
 }
