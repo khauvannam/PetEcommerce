@@ -9,12 +9,12 @@ namespace Identity.API.Features.Users;
 
 public static class Login
 {
-    public record Command(string? Email, string? Password) : IRequest<Result<LoginResponseDto>>;
+    public record Command(string? Email, string? Password) : IRequest<Result<LoginResponse>>;
 
     internal sealed class Handler(IUserRepository repository, IValidator<Command> validator)
-        : IRequestHandler<Command, Result<LoginResponseDto>>
+        : IRequestHandler<Command, Result<LoginResponse>>
     {
-        public async Task<Result<LoginResponseDto>> Handle(
+        public async Task<Result<LoginResponse>> Handle(
             Command request,
             CancellationToken cancellationToken
         )
@@ -22,7 +22,7 @@ public static class Login
             var validatorResult = await validator.ValidateAsync(request, cancellationToken);
             if (!validatorResult.IsValid)
             {
-                return Result.Failure<LoginResponseDto>(
+                return Result.Failure<LoginResponse>(
                     new("Login.Command", validatorResult.Errors.ToString()!)
                 );
             }

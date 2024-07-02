@@ -9,12 +9,12 @@ namespace Identity.API.Features.Tokens;
 public static class Refresh
 {
     public record Command(string RefreshToken, string AccessToken)
-        : IRequest<Result<TokenResponseDto>>;
+        : IRequest<Result<TokenResponse>>;
 
     internal class Handler(ITokenRepository repository)
-        : IRequestHandler<Command, Result<TokenResponseDto>>
+        : IRequestHandler<Command, Result<TokenResponse>>
     {
-        public Task<Result<TokenResponseDto>> Handle(
+        public Task<Result<TokenResponse>> Handle(
             Command request,
             CancellationToken cancellationToken
         )

@@ -43,12 +43,12 @@ internal class UserRepository(
         return Result.Success();
     }
 
-    public async Task<Result<LoginResponseDto>> Login(Login.Command command)
+    public async Task<Result<LoginResponse>> Login(Login.Command command)
     {
         var user = await userManager.FindByEmailAsync(command.Email!);
         if (user is null)
         {
-            return Result.Failure<LoginResponseDto>(UserErrors.NotFound);
+            return Result.Failure<LoginResponse>(UserErrors.NotFound);
         }
 
         var result = await signInManager.PasswordSignInAsync(
@@ -59,7 +59,7 @@ internal class UserRepository(
         );
         if (!result.Succeeded)
         {
-            return Result.Failure<LoginResponseDto>(UserErrors.NotFound);
+            return Result.Failure<LoginResponse>(UserErrors.NotFound);
         }
 
         var claims = await userManager.GetClaimsAsync(user);
@@ -74,7 +74,7 @@ internal class UserRepository(
         user.RefreshToken!.Refresh(refreshToken, expiredTime);
         await dbContext.SaveChangesAsync();
 
-        var loginResponse = new LoginResponseDto(refreshToken, accessToken);
+        var loginResponse = new LoginResponse(refreshToken, accessToken);
         return Result.Success(loginResponse);
     }
 

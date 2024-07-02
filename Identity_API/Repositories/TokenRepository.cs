@@ -13,32 +13,32 @@ namespace Identity.API.Repositories;
 
 public class TokenRepository(UserDbContext dbContext, JwtHandler jwtHandler) : ITokenRepository
 {
-    public async Task<Result<TokenResponseDto>> Refresh(Refresh.Command command)
+    public async Task<Result<TokenResponse>> Refresh(Refresh.Command command)
     {
         var claimsPrincipal = jwtHandler.GetClaimsPrincipalFromExpiredToken(command.AccessToken);
         var userId = claimsPrincipal.FindFirstValue("UserId");
-        var user = dbContext.Users
-            .Include(user => user.RefreshToken)
+        var user = dbContext
+            .Users.Include(user => user.RefreshToken)
             .FirstOrDefault(u => u.Id == userId);
         if (user is null)
         {
-            return Result.Failure<TokenResponseDto>(UserErrors.NotFound);
+            return Result.Failure<TokenResponse>(UserErrors.NotFound);
         }
 
         if (CheckInValidToken(user, command.RefreshToken))
         {
-            return Result.Failure<TokenResponseDto>(TokenErrors.WrongToken("refresh token"));
+            return Result.Failure<TokenResponse>(TokenErrors.WrongToken("refresh token"));
         }
 
         if (ChecKTokenIsExpired(user))
         {
-            return Result.Failure<TokenResponseDto>(TokenErrors.ExpiredToken());
+            return Result.Failure<TokenResponse>(TokenErrors.ExpiredToken());
         }
 
         var refreshToken = jwtHandler.GenerateRefreshToken();
         var accessToken = jwtHandler.GenerateAccessToken(claimsPrincipal.Claims);
         var expiredTime = DateTime.Now.AddMonths(1);
-        var tokenResponseDto = new TokenResponseDto(refreshToken, accessToken);
+        var tokenResponseDto = new TokenResponse(refreshToken, accessToken);
 
         user.RefreshToken!.Refresh(refreshToken, expiredTime);
         await dbContext.SaveChangesAsync();
@@ -48,8 +48,8 @@ public class TokenRepository(UserDbContext dbContext, JwtHandler jwtHandler) : I
     public async Task<Result> Revoke(Revoke.Command command)
     {
         var userId = command.UserId;
-        var user = dbContext.Users
-            .Include(user => user.RefreshToken!)
+        var user = dbContext
+            .Users.Include(user => user.RefreshToken!)
             .FirstOrDefault(u => u.Id == userId);
         if (user is null)
         {

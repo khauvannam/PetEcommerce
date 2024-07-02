@@ -5,6 +5,18 @@
     driver: local
 
 services:
+  basket_api:
+    container_name: basket_api.container
+    image: basket_api
+    build:
+      context: .
+      dockerfile: Basket_API/Dockerfile
+    depends_on:
+      - sql_server2
+    ports:
+      - 8080:8080
+    networks:
+      - sql_server_basket.networks:
   
   identity_api:
     container_name: identity_api.container
@@ -13,15 +25,14 @@ services:
       context: .
       dockerfile: Identity_API/Dockerfile
     depends_on:
-      - sql_server
+      - sql_server1
     environment:
-      - DB_HOST=sql_server
+      - DB_HOST=sql_server1
       - DB_PASSWORD=Nam09189921
     ports:
       - 8081:8080
     networks:
-      - sql_server.networks
-  
+      - sql_server_identity.networks
   
   product_api:
     container_name: product_api.container
@@ -33,9 +44,9 @@ services:
       - mongodb_server
       - azurite
     ports:
-      - 8083:8080
+      - 8082:8080
   
-  sql_server:
+  sql_server1:
     image: mcr.microsoft.com/mssql/server:2022-latest
     container_name: sql_server.container
     environment:
@@ -43,11 +54,25 @@ services:
       SA_PASSWORD: Nam09189921
       MSSQL_PID: Express
     ports:
-      - 8084:1433
+      - 8070:1433
     volumes:
       - mssql-data:/var/opt/mssql
     networks:
-      - sql_server.networks
+      - sql_server_identity.networks
+  
+  sql_server2:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: sql_server.container
+    environment:
+      ACCEPT_EULA: Y
+      SA_PASSWORD: Nam09189921
+      MSSQL_PID: Express
+    ports:
+      - 8071:1433
+    volumes:
+      - mssql-data:/var/opt/mssql
+    networks:
+      - sql_server_basket.networks
   
   mongodb_server:
     image: mongo
@@ -56,7 +81,7 @@ services:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: example
     ports:
-      - 27018:27017
+      - 8072:27017
     volumes:
       - mongodb-data:/data/db
   
@@ -64,10 +89,11 @@ services:
     container_name: azurite
     image: mcr.microsoft.com/azure-storage/azurite
     ports:
-      - 8880:10000
+      - 8073:10000
     restart: always
     volumes:
-      - D:/Azurite/blob-data:/data
+      - /home/khauvannam/Azurite/blob-data:/data
 
 networks:
-  sql_server.networks:
+  sql_server_identity.networks:
+  sql_server_basket.networks:
