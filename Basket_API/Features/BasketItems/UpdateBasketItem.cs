@@ -1,4 +1,5 @@
 using Basket_API.Domain.BasketItems;
+using Basket_API.Errors;
 using Basket_API.Interfaces;
 using FluentValidation;
 using MediatR;
@@ -6,9 +7,10 @@ using Shared.Domain.Results;
 
 namespace Basket_API.Features.BasketItems
 {
-    public static class CreateBasketItem
+    public static class UpdateBasketItem
     {
         public record Command(
+            string BasketItemId,
             string ProductId,
             string VariantId,
             string Name,
@@ -32,19 +34,27 @@ namespace Basket_API.Features.BasketItems
                 if (!validationResult.IsValid)
                 {
                     return Result.Failure<BasketItem>(
-                        new("CreateBasketItem.Command", validationResult.Errors.ToString()!)
+                        new("UpdateBasketItem.Command", validationResult.Errors.ToString()!)
                     );
                 }
-                var basketItem = BasketItem.Create(
+
+                var result = await repository.GetByIdAsync(request.BasketItemId);
+                if (result.IsFailure)
+                {
+                    return Result.Failure<BasketItem>(BasketItemErrors.NotFound);
+                }
+
+                var basketItem = result.Value;
+                basketItem.Update(
                     request.ProductId,
                     request.VariantId,
-                    request.Name,
-                    Quantity.Create(request.Quantity),
+                    request.Quantity,
                     request.Price,
                     request.OnSale,
                     request.ImageUrl
                 );
-                return await repository.CreateAsync(basketItem);
+
+                return await repository.UpdateAsync(basketItem);
             }
         }
 
@@ -52,6 +62,7 @@ namespace Basket_API.Features.BasketItems
         {
             public Validator()
             {
+                RuleFor(c => c.BasketItemId).NotEmpty().WithMessage("BasketItemId cannot be empty");
                 RuleFor(c => c.ProductId).NotEmpty().WithMessage("ProductId cannot be empty");
                 RuleFor(c => c.VariantId).NotEmpty().WithMessage("VariantId cannot be empty");
                 RuleFor(c => c.Name).NotEmpty().WithMessage("Name cannot be empty");

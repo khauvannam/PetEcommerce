@@ -9,13 +9,6 @@ namespace Identity.API.Controllers;
 [ApiController]
 public class UserController(ISender sender) : ControllerBase
 {
-    [HttpPost("hello")]
-    [AllowAnonymous]
-    public Task<IActionResult> Hello()
-    {
-        return Task.FromResult<IActionResult>(Ok("hello"));
-    }
-
     [HttpPost("Register")]
     public async Task<IActionResult> Register([FromBody] Register.Command command)
     {

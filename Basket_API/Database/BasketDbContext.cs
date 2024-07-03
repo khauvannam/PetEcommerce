@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Basket_API.Database;
 
-public class BasketDbContext : DbContext
+public class BasketDbContext(DbContextOptions<BasketDbContext> options) : DbContext(options)
 {
     public DbSet<BasketItem> BasketItems { get; init; }
     public DbSet<Basket> Baskets { get; init; }

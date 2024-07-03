@@ -1,4 +1,7 @@
 using Basket_API.Database;
+using Basket_API.Interfaces;
+using Basket_API.Repositories;
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 
 namespace Basket_API.Extensions;
@@ -17,7 +20,9 @@ public static class Extension
     public static void AddPersistence(this IServiceCollection services)
     {
         var assembly = typeof(Program).Assembly;
-
+        services.AddValidatorsFromAssembly(assembly);
         services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(assembly));
+        services.AddScoped<IBasketRepository, BasketRepository>();
+        services.AddScoped<IBasketItemRepository, BasketItemRepository>();
     }
 }
