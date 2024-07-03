@@ -1,3 +1,4 @@
+using Basket_API.Domain.BasketItems;
 using Basket_API.Domain.Baskets;
 using Basket_API.Interfaces;
 using FluentValidation;
@@ -8,7 +9,8 @@ namespace Basket_API.Features.Baskets;
 
 public static class CreateBasket
 {
-    public record Command(string CustomerId) : IRequest<Result<Basket>>;
+    public record Command(string CustomerId, List<BasketItem> BasketItems)
+        : IRequest<Result<Basket>>;
 
     internal sealed class Handler(IBasketRepository repository, IValidator<Command> validator)
         : IRequestHandler<Command, Result<Basket>>
@@ -27,6 +29,11 @@ public static class CreateBasket
             }
 
             var basket = Basket.Create(request.CustomerId);
+            foreach (var basketItem in request.BasketItems)
+            {
+                basket.AddBasketItem(basketItem);
+            }
+
             return await repository.CreateAsync(basket);
         }
     }

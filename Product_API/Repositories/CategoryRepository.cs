@@ -34,7 +34,7 @@ public class CategoryRepository : ICategoryRepository
         return Result.Success();
     }
 
-    public async Task<Result<Category>> GetCategoryById(GetCategoryById.Command command)
+    public async Task<Result<Category>> GetCategoryById(GetCategoryById.Query command)
     {
         var filter = Builders<Category>.Filter.Eq(c => c.CategoryId, command.CategoryId);
         if (await _categoryCollection.Find(filter).FirstOrDefaultAsync() is { } category)

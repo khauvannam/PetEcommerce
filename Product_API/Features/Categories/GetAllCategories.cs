@@ -8,13 +8,13 @@ namespace Product_API.Features.Categories;
 
 public static class GetAllCategories
 {
-    public record Command : IRequest<Result<List<Category>>>;
+    public record Query : IRequest<Result<List<Category>>>;
 
     public class Handler(ICategoryRepository repository)
-        : IRequestHandler<Command, Result<List<Category>>>
+        : IRequestHandler<Query, Result<List<Category>>>
     {
         public async Task<Result<List<Category>>> Handle(
-            Command request,
+            Query request,
             CancellationToken cancellationToken
         )
         {
@@ -30,8 +30,8 @@ public static class GetAllCategories
                 "api/categories",
                 async (ISender sender) =>
                 {
-                    var command = new Command();
-                    if (await sender.Send(command) is { IsFailure: true } result)
+                    var query = new Query();
+                    if (await sender.Send(query) is { IsFailure: true } result)
                     {
                         return Results.BadRequest(result.ErrorTypes);
                     }

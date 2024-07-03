@@ -8,12 +8,12 @@ namespace Product_API.Features.Products;
 
 public static class GetProductById
 {
-    public record Command(string ProductId) : IRequest<Result<Product>>;
+    public record Query(string ProductId) : IRequest<Result<Product>>;
 
-    public class Handler(IProductRepository repository) : IRequestHandler<Command, Result<Product>>
+    public class Handler(IProductRepository repository) : IRequestHandler<Query, Result<Product>>
     {
         public async Task<Result<Product>> Handle(
-            Command request,
+            Query request,
             CancellationToken cancellationToken
         )
         {
@@ -29,8 +29,8 @@ public static class GetProductById
                 "/product/{productId}",
                 async (string productId, ISender sender) =>
                 {
-                    var command = new Command(productId);
-                    var result = await sender.Send(command);
+                    var query = new Query(productId);
+                    var result = await sender.Send(query);
                     if (result.IsFailure)
                     {
                         return Results.BadRequest(result.ErrorTypes);

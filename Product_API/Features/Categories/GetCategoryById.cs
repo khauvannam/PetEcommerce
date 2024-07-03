@@ -8,13 +8,12 @@ namespace Product_API.Features.Categories;
 
 public static class GetCategoryById
 {
-    public record Command(string CategoryId) : IRequest<Result<Category>>;
+    public record Query(string CategoryId) : IRequest<Result<Category>>;
 
-    public class Handler(ICategoryRepository repository)
-        : IRequestHandler<Command, Result<Category>>
+    public class Handler(ICategoryRepository repository) : IRequestHandler<Query, Result<Category>>
     {
         public async Task<Result<Category>> Handle(
-            Command request,
+            Query request,
             CancellationToken cancellationToken
         )
         {
@@ -30,8 +29,8 @@ public static class GetCategoryById
                 "/api/category/{categoryId}",
                 async (ISender sender, string categoryId) =>
                 {
-                    var command = new Command(categoryId);
-                    var result = await sender.Send(command);
+                    var query = new Query(categoryId);
+                    var result = await sender.Send(query);
                     if (result.IsFailure)
                     {
                         return Results.BadRequest(result.ErrorTypes);

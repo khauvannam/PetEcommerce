@@ -20,7 +20,7 @@ public class ProductRepository : IProductRepository
         _productCollection = database.GetCollection<Product>(options.Value.CollectionName);
     }
 
-    public async Task<Result<List<Product>>> ListAllProducts(ListAllProducts.Command command)
+    public async Task<Result<List<Product>>> ListAllProducts(ListAllProducts.Query command)
     {
         var filter = command.CategoryId is null
             ? Builders<Product>.Filter.Empty

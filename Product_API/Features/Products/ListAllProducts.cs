@@ -9,14 +9,14 @@ namespace Product_API.Features.Products;
 
 public static class ListAllProducts
 {
-    public record Command(int Limit = 10, int Offset = 0, string? CategoryId = null)
+    public record Query(int Limit = 10, int Offset = 0, string? CategoryId = null)
         : IRequest<Result<List<Product>>>;
 
-    public class Handler(IProductRepository repository, IValidator<Command> validator)
-        : IRequestHandler<Command, Result<List<Product>>>
+    public class Handler(IProductRepository repository, IValidator<Query> validator)
+        : IRequestHandler<Query, Result<List<Product>>>
     {
         public async Task<Result<List<Product>>> Handle(
-            Command request,
+            Query request,
             CancellationToken cancellationToken
         )
         {
@@ -29,14 +29,14 @@ public static class ListAllProducts
 
             foreach (var error in validatorResult.Errors)
             {
-                result.AddResultList(new("ListAllProduct.Command", error.ToString()));
+                result.AddResultList(new("ListAllProduct.Query", error.ToString()));
             }
 
             return result;
         }
     }
 
-    public class Validator : AbstractValidator<Command>
+    public class Validator : AbstractValidator<Query>
     {
         public Validator()
         {
@@ -51,9 +51,9 @@ public static class ListAllProducts
         {
             app.MapGet(
                 "/product",
-                async (ISender sender, Command command) =>
+                async (ISender sender, Query query) =>
                 {
-                    var result = await sender.Send(command);
+                    var result = await sender.Send(query);
                     if (result.IsFailure)
                     {
                         return Results.NotFound(result.ErrorTypes);

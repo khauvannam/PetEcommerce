@@ -12,6 +12,7 @@ public class BasketDbContext(DbContextOptions<BasketDbContext> options) : DbCont
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Basket>().HasKey(b => b.BasketId);
+
         modelBuilder
             .Entity<Basket>()
             .HasMany<BasketItem>()
