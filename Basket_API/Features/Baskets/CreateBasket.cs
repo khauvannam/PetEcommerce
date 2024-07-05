@@ -12,7 +12,7 @@ public static class CreateBasket
     public record Command(string CustomerId, List<BasketItem> BasketItems)
         : IRequest<Result<Basket>>;
 
-    internal sealed class Handler(IBasketRepository repository, IValidator<Command> validator)
+    internal sealed class Handler(IBasketRepository basketRepository, IValidator<Command> validator)
         : IRequestHandler<Command, Result<Basket>>
     {
         public async Task<Result<Basket>> Handle(
@@ -31,10 +31,10 @@ public static class CreateBasket
             var basket = Basket.Create(request.CustomerId);
             foreach (var basketItem in request.BasketItems)
             {
-                basket.AddBasketItem(basketItem);
+                basket.CreateNewBasketItem(basketItem);
             }
 
-            return await repository.CreateAsync(basket);
+            return await basketRepository.CreateAsync(basket);
         }
     }
 

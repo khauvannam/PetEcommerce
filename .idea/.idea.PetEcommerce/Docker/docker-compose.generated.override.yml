@@ -1,29 +1,29 @@
 # This is a generated file. Not intended for manual editing.
 services:
-  gateway_api:
+  basket_api:
     build:
-      context: "D:\\Microservice Project\\PetEcommerce"
-      dockerfile: "Gateway_API/Dockerfile"
+      context: "/mnt/data1/dotnetproject"
+      dockerfile: "Basket_API/Dockerfile"
       target: "base"
     command: []
     entrypoint:
     - "dotnet"
-    - "/app/bin/Debug/net8.0/Gateway_API.dll"
+    - "/app/bin/Debug/net8.0/Basket_API.dll"
     environment:
       ASPNETCORE_ENVIRONMENT: "Development"
       DOTNET_USE_POLLING_FILE_WATCHER: "true"
-    image: "gateway_api:dev"
+    image: "basket_api:dev"
     ports: []
     volumes:
-    - "C:\\Users\\ADMIN\\.nuget\\packages:/root/.nuget/packages"
-    - "D:\\Microservice Project\\PetEcommerce\\Gateway_API:/app:rw"
-    - "D:\\Microservice Project\\PetEcommerce:/src:rw"
+    - "/home/khauvannam/.nuget/packages:/root/.nuget/packages"
+    - "/mnt/data1/dotnetproject/Basket_API:/app:rw"
+    - "/mnt/data1/dotnetproject:/src:rw"
     working_dir: "/app"
   identity_api:
     build:
-      context: "D:\\Microservice Project\\PetEcommerce"
+      context: "/mnt/data1/dotnetproject"
       dockerfile: "Identity_API/Dockerfile"
-      target: "bas"
+      target: "base"
     command: []
     entrypoint:
     - "dotnet"
@@ -34,13 +34,13 @@ services:
     image: "identity_api:dev"
     ports: []
     volumes:
-    - "C:\\Users\\ADMIN\\.nuget\\packages:/root/.nuget/packages"
-    - "D:\\Microservice Project\\PetEcommerce\\Identity_API:/app:rw"
-    - "D:\\Microservice Project\\PetEcommerce:/src:rw"
+    - "/home/khauvannam/.nuget/packages:/root/.nuget/packages"
+    - "/mnt/data1/dotnetproject/Identity_API:/app:rw"
+    - "/mnt/data1/dotnetproject:/src:rw"
     working_dir: "/app"
   product_api:
     build:
-      context: "D:\\Microservice Project\\PetEcommerce"
+      context: "/mnt/data1/dotnetproject"
       dockerfile: "Product_API/Dockerfile"
       target: "base"
     command: []
@@ -53,7 +53,7 @@ services:
     image: "product_api:dev"
     ports: []
     volumes:
-    - "C:\\Users\\ADMIN\\.nuget\\packages:/home/app/.nuget/packages"
-    - "D:\\Microservice Project\\PetEcommerce\\Product_API:/app:rw"
-    - "D:\\Microservice Project\\PetEcommerce:/src:rw"
+    - "/home/khauvannam/.nuget/packages:/root/.nuget/packages"
+    - "/mnt/data1/dotnetproject/Product_API:/app:rw"
+    - "/mnt/data1/dotnetproject:/src:rw"
     working_dir: "/app"

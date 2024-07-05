@@ -7,20 +7,17 @@ EXPOSE 8081
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["Basket.API/Basket.API.csproj", "Basket.API/"]
-COPY ["Basket.Application/Basket.Application.csproj", "Basket.Application/"]
-COPY ["Basket.Domain/Basket.Domain.csproj", "Basket.Domain/"]
-COPY ["Basket.Infrastructure/Basket.Infrastructure.csproj", "Basket.Infrastructure/"]
-RUN dotnet restore "Basket.API/Basket.API.csproj"
+COPY ["Basket_API/Basket_API.csproj", "Basket_API/"]
+RUN dotnet restore "Basket_API/Basket_API.csproj"
 COPY . .
-WORKDIR "/src/Basket.API"
-RUN dotnet build "Basket.API.csproj" -c $BUILD_CONFIGURATION -o /app/build
+WORKDIR "/src/Basket_API"
+RUN dotnet build "Basket_API.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "Basket.API.csproj" -c $BUILD_CONFIGURATION -o /app/publish 
+RUN dotnet publish "Basket_API.csproj" -c $BUILD_CONFIGURATION -o /app/publish 
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "Basket.API.dll"]
+ENTRYPOINT ["dotnet", "Basket_API.dll"]

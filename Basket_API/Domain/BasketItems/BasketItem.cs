@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using Basket_API.Domain.Baskets;
 using Shared.Domain.Bases;
 
@@ -18,7 +19,6 @@ public class BasketItem : Entity
         ProductId = productId;
         VariantId = variantId;
         Name = name;
-        ;
         Price = price;
         OnSale = onSale;
         ImageUrl = imageUrl;
@@ -27,14 +27,25 @@ public class BasketItem : Entity
     }
 
     public string BasketItemId => Id;
+
+    [MaxLength(255)]
     public string ImageUrl { get; private set; }
+
+    [MaxLength(255)]
     public string ProductId { get; private set; }
+
+    [MaxLength(255)]
     public string VariantId { get; private set; }
+
+    [MaxLength(255)]
     public string BasketId { get; private set; } = null!;
     public Basket Basket { get; init; } = null!;
+
+    [MaxLength(255)]
     public string Name { get; private set; }
     private Quantity Quantity { get; set; }
     public decimal Price { get; private set; }
+    public decimal TotalPrice => Price * Quantity.Value;
     public bool OnSale { get; private set; }
     public DateTime AddedAt { get; private set; }
 
@@ -44,38 +55,21 @@ public class BasketItem : Entity
         string name,
         Quantity quantity,
         decimal price,
-        bool onSale,
-        string imageUrl
+        string imageUrl,
+        bool onSale = false
     )
     {
         return new(productId, variantId, name, price, onSale, imageUrl, quantity);
     }
 
-    public void Update(
-        string productId,
-        string variantId,
-        int quantity,
-        decimal price,
-        bool onSale,
-        string imageUrl
-    )
-    {
-        ProductId = productId;
-        VariantId = variantId;
-        Quantity.Update(quantity);
-        Price = price;
-        OnSale = onSale;
-        ImageUrl = imageUrl;
-    }
-
     public void SetPrice(decimal price) => Price = price;
 
-    public void AddToBasket(string basketId) => BasketId = basketId;
-
-    public void SetOnSale(bool onSale)
+    public void SetOnSale(bool onSale = true)
     {
         OnSale = onSale;
     }
+
+    public void ChangeQuantity(int quantity) => Quantity.Update(quantity);
 }
 
 public class Quantity : ValueObject
@@ -89,7 +83,7 @@ public class Quantity : ValueObject
         Value = value;
     }
 
-    private int Value { get; set; }
+    public int Value { get; private set; }
 
     public static Quantity Create(int value) => new(value);
 

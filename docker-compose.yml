@@ -1,7 +1,11 @@
 ﻿volumes:
-  mssql-data:
+  mssql1-data:
+    driver: local
+  mssql2-data:
     driver: local
   mongodb-data:
+    driver: local
+  redis-data:
     driver: local
 
 services:
@@ -12,11 +16,12 @@ services:
       context: .
       dockerfile: Basket_API/Dockerfile
     depends_on:
+      - redis-cache_server
       - sql_server2
     ports:
       - 8080:8080
     networks:
-      - sql_server_basket.networks:
+      - sql_server_basket.networks
   
   identity_api:
     container_name: identity_api.container
@@ -48,7 +53,7 @@ services:
   
   sql_server1:
     image: mcr.microsoft.com/mssql/server:2022-latest
-    container_name: sql_server.container
+    container_name: sql_server1.container
     environment:
       ACCEPT_EULA: Y
       SA_PASSWORD: Nam09189921
@@ -56,13 +61,13 @@ services:
     ports:
       - 8070:1433
     volumes:
-      - mssql-data:/var/opt/mssql
+      - mssql1-data:/var/opt/mssql
     networks:
       - sql_server_identity.networks
   
   sql_server2:
     image: mcr.microsoft.com/mssql/server:2022-latest
-    container_name: sql_server.container
+    container_name: sql_server2.container
     environment:
       ACCEPT_EULA: Y
       SA_PASSWORD: Nam09189921
@@ -70,7 +75,17 @@ services:
     ports:
       - 8071:1433
     volumes:
-      - mssql-data:/var/opt/mssql
+      - mssql2-data:/var/opt/mssql
+    networks:
+      - sql_server_basket.networks
+  
+  redis-cache_server:
+    image: redis
+    container_name: redis-cache_server.container
+    ports:
+      - 8074:6379
+    volumes:
+      - redis-data:/data
     networks:
       - sql_server_basket.networks
   

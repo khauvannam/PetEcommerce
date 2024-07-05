@@ -1,4 +1,5 @@
-﻿using Product_API.Databases;
+﻿using Carter;
+using Product_API.Databases;
 using Product_API.Interfaces;
 using Product_API.Repositories;
 
@@ -8,6 +9,7 @@ public static class Extension
 {
     public static void AddPersistence(this IServiceCollection services)
     {
+        services.AddCarter();
         services.AddScoped<IProductRepository, ProductRepository>();
         services.AddScoped<ICategoryRepository, CategoryRepository>();
     }

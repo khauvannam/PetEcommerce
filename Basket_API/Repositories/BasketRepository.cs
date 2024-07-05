@@ -1,4 +1,5 @@
 using Basket_API.Database;
+using Basket_API.Domain.BasketItems;
 using Basket_API.Domain.Baskets;
 using Basket_API.Errors;
 using Basket_API.Interfaces;
@@ -16,9 +17,20 @@ public class BasketRepository(BasketDbContext context) : IBasketRepository
         return Result.Success(basket);
     }
 
-    public async Task<Result<Basket>> UpdateAsync(Basket basket)
+    public async Task<Result<Basket>> UpdateAsync(
+        List<BasketItemRequest> basketsItemRequests,
+        Basket basket
+    )
     {
-        context.Baskets.Update(basket);
+        if (basketsItemRequests.Count == 0)
+        {
+            basket.RemoveAllBasketItem();
+        }
+        basket.RemoveAllBasketItemNotExist(basketsItemRequests);
+        foreach (var basketItemRequest in basketsItemRequests)
+        {
+            basket.UpdateBasket(basketItemRequest);
+        }
         await context.SaveChangesAsync();
         return Result.Success(basket);
     }

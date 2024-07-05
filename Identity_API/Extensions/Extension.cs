@@ -6,7 +6,6 @@ using Identity.API.Repositories;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Shared.Extensions.JwtHandlers;
-using Shared.Services;
 
 namespace Identity.API.Extensions;
 
@@ -17,7 +16,7 @@ public static class Extension
         var dbHost = Environment.GetEnvironmentVariable("DB_HOST")!;
         var dbPassword = Environment.GetEnvironmentVariable("DB_PASSWORD")!;
         var conn =
-            $"Server={dbHost};Initial Catalog=UserDatabase;User ID=sa;Password={dbPassword};TrustServerCertificate=True;";
+            $"Server=172.19.0.2;Initial Catalog=UsrDatabase;User ID=sa;Password=Nam09189921;TrustServerCertificate=True;Encrypt=False";
         builder.Services.AddDbContext<UserDbContext>(opt => opt.UseSqlServer(conn));
     }
 

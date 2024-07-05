@@ -1,3 +1,4 @@
+using Basket_API.Domain.BasketItems;
 using Basket_API.Domain.Baskets;
 using Basket_API.Errors;
 using Basket_API.Interfaces;
@@ -9,7 +10,8 @@ namespace Basket_API.Features.Baskets
 {
     public static class UpdateBasket
     {
-        public record Command(string BasketId, string CustomerId) : IRequest<Result<Basket>>;
+        public record Command(string BasketId, List<BasketItemRequest> BasketItemRequests)
+            : IRequest<Result<Basket>>;
 
         internal sealed class Handler(IBasketRepository repository, IValidator<Command> validator)
             : IRequestHandler<Command, Result<Basket>>
@@ -35,7 +37,7 @@ namespace Basket_API.Features.Baskets
 
                 var basket = result.Value;
 
-                return await repository.UpdateAsync(basket);
+                return await repository.UpdateAsync(request.BasketItemRequests, basket);
             }
         }
 
@@ -44,7 +46,6 @@ namespace Basket_API.Features.Baskets
             public Validator()
             {
                 RuleFor(c => c.BasketId).NotEmpty().WithMessage("BasketId cannot be empty");
-                RuleFor(c => c.CustomerId).NotEmpty().WithMessage("CustomerId cannot be empty");
             }
         }
     }
