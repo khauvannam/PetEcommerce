@@ -1,6 +1,7 @@
 ﻿using Carter;
 using FluentValidation;
 using MediatR;
+using Microsoft.AspNetCore.Mvc;
 using Product_API.Domain.Products;
 using Product_API.Interfaces;
 using Shared.Domain.Results;
@@ -35,7 +36,7 @@ public static class CreateProduct
         {
             app.MapPost(
                 "/api/product",
-                async (ISender sender, Command command) =>
+                async (ISender sender, [FromBody] Command command) =>
                 {
                     var result = await sender.Send(command);
                     if (result.IsFailure)

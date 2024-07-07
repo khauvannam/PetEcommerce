@@ -31,7 +31,7 @@ public static class Register
                 return await repository.Register(request);
             }
 
-            var result = Result.Create(false);
+            var result = Result.Create();
             foreach (var error in validateResult.Errors)
             {
                 result.AddResultList(new("Register.Command", error.ToString()));

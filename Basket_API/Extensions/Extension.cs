@@ -10,10 +10,9 @@ public static class Extension
 {
     public static void AddDatabase(this WebApplicationBuilder builder)
     {
-        var dbHost = Environment.GetEnvironmentVariable("DB_HOST")!;
-        var dbPassword = Environment.GetEnvironmentVariable("DB_PASSWORD")!;
+        // 172.20.0.2
         var conn =
-            $"Server={dbHost};Initial Catalog=BasketDatabase;User ID=sa;Password={dbPassword};TrustServerCertificate=True;";
+            "Server=localhost,8071;Initial Catalog=BasketDatabase;User ID=sa;Password=Nam09189921;TrustServerCertificate=True;Encrypt=false";
         builder.Services.AddDbContext<BasketDbContext>(opt => opt.UseSqlServer(conn));
     }
 

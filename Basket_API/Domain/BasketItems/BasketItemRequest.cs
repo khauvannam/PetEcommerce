@@ -1,7 +1,7 @@
 namespace Basket_API.Domain.BasketItems;
 
 public record BasketItemRequest(
-    string BasketItemId,
+    string? BasketItemId,
     string ProductId,
     string VariantId,
     string Name,

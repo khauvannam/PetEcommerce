@@ -2,7 +2,7 @@
 
 public abstract class Entity
 {
-    protected string Id { get; } = Guid.NewGuid().ToString();
+    protected string Id { get; set; } = Guid.NewGuid().ToString();
 
     public override bool Equals(object? obj)
     {

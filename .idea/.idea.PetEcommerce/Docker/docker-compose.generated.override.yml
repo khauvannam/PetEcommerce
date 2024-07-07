@@ -2,7 +2,7 @@
 services:
   basket_api:
     build:
-      context: "/mnt/data1/dotnetproject"
+      context: "/mnt/data1/dotnet-repository/petecommercial-project"
       dockerfile: "Basket_API/Dockerfile"
       target: "base"
     command: []
@@ -16,12 +16,12 @@ services:
     ports: []
     volumes:
     - "/home/khauvannam/.nuget/packages:/root/.nuget/packages"
-    - "/mnt/data1/dotnetproject/Basket_API:/app:rw"
-    - "/mnt/data1/dotnetproject:/src:rw"
+    - "/mnt/data1/dotnet-repository/petecommercial-project/Basket_API:/app:rw"
+    - "/mnt/data1/dotnet-repository/petecommercial-project:/src:rw"
     working_dir: "/app"
   identity_api:
     build:
-      context: "/mnt/data1/dotnetproject"
+      context: "/mnt/data1/dotnet-repository/petecommercial-project"
       dockerfile: "Identity_API/Dockerfile"
       target: "base"
     command: []
@@ -35,12 +35,12 @@ services:
     ports: []
     volumes:
     - "/home/khauvannam/.nuget/packages:/root/.nuget/packages"
-    - "/mnt/data1/dotnetproject/Identity_API:/app:rw"
-    - "/mnt/data1/dotnetproject:/src:rw"
+    - "/mnt/data1/dotnet-repository/petecommercial-project/Identity_API:/app:rw"
+    - "/mnt/data1/dotnet-repository/petecommercial-project:/src:rw"
     working_dir: "/app"
   product_api:
     build:
-      context: "/mnt/data1/dotnetproject"
+      context: "/mnt/data1/dotnet-repository/petecommercial-project"
       dockerfile: "Product_API/Dockerfile"
       target: "base"
     command: []
@@ -54,6 +54,6 @@ services:
     ports: []
     volumes:
     - "/home/khauvannam/.nuget/packages:/root/.nuget/packages"
-    - "/mnt/data1/dotnetproject/Product_API:/app:rw"
-    - "/mnt/data1/dotnetproject:/src:rw"
+    - "/mnt/data1/dotnet-repository/petecommercial-project/Product_API:/app:rw"
+    - "/mnt/data1/dotnet-repository/petecommercial-project:/src:rw"
     working_dir: "/app"

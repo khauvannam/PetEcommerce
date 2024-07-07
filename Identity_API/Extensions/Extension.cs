@@ -13,10 +13,8 @@ public static class Extension
 {
     public static void AddDatabase(this WebApplicationBuilder builder)
     {
-        var dbHost = Environment.GetEnvironmentVariable("DB_HOST")!;
-        var dbPassword = Environment.GetEnvironmentVariable("DB_PASSWORD")!;
         var conn =
-            $"Server=172.19.0.2;Initial Catalog=UsrDatabase;User ID=sa;Password=Nam09189921;TrustServerCertificate=True;Encrypt=False";
+            "Server=172.19.0.2;Initial Catalog=UsrDatabase;User ID=sa;Password=Nam09189921;TrustServerCertificate=True;Encrypt=False";
         builder.Services.AddDbContext<UserDbContext>(opt => opt.UseSqlServer(conn));
     }
 

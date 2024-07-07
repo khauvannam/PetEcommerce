@@ -26,14 +26,16 @@ public sealed class ProductVariant : Entity
         string variantName,
         string imageUrl,
         OriginalPrice originalPrice,
+        Discount discount,
         int inStock
-    ) =>
-        (VariantName, ImageUrl, OriginalPrice, InStock) = (
-            variantName,
-            imageUrl,
-            originalPrice,
-            inStock
-        );
+    )
+    {
+        VariantName = variantName;
+        ImageUrl = imageUrl;
+        OriginalPrice = originalPrice;
+        Discount = discount;
+        InStock = inStock;
+    }
 
     public void SetPrice(decimal value) => OriginalPrice = OriginalPrice.Create(value);
 
@@ -53,8 +55,8 @@ public class OriginalPrice : ValueObject
     private OriginalPrice(decimal value, Currency currency) =>
         (Value, Currency) = (value, currency);
 
-    public decimal Value { get; private set; }
-    public Currency Currency { get; private set; }
+    public decimal Value { get; }
+    public Currency Currency { get; }
 
     public static OriginalPrice Create(decimal value, Currency currency = Currency.Usd)
     {
@@ -73,7 +75,7 @@ public class OriginalPrice : ValueObject
 
 public class Discount : ValueObject
 {
-    public decimal Percent { get; }
+    public decimal Percent { get; private set; }
 
     private Discount(decimal percent)
     {

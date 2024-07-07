@@ -1,29 +1,29 @@
 using System.ComponentModel.DataAnnotations;
 using Basket_API.Domain.BasketItems;
+using Newtonsoft.Json;
 using Shared.Domain.Bases;
 
 namespace Basket_API.Domain.Baskets;
 
 public class Basket : AggregateRoot
 {
-    private Basket(string customerId)
-    {
-        CustomerId = customerId;
-    }
-
-    public string BasketId => Id;
+    private Basket() { }
 
     [MaxLength(255)]
-    public string CustomerId { get; private set; }
-    public List<BasketItem> BasketItemsList { get; private set; } = null!;
-
-    public static Basket Create(string customerId) => new(customerId);
-
-    public void CreateNewBasketItem(BasketItem basketItem)
+    public string BasketId
     {
-        BasketItemsList = [];
-        AddBasketItem(basketItem);
+        get => Id;
+        set => throw new ArgumentException("Can not set primary key");
     }
+
+    [MaxLength(255)]
+    public string CustomerId { get; private set; } = null!;
+
+    [JsonIgnore]
+    public List<BasketItem> BasketItemsList { get; private init; } = null!;
+
+    public static Basket Create(string customerId) =>
+        new() { CustomerId = customerId, BasketItemsList = [] };
 
     public void UpdateBasket(BasketItemRequest newBasketItem)
     {
@@ -54,6 +54,4 @@ public class Basket : AggregateRoot
     }
 
     public void RemoveAllBasketItem() => BasketItemsList.Clear();
-
-    private void AddBasketItem(BasketItem basketItem) => BasketItemsList.Add(basketItem);
 }

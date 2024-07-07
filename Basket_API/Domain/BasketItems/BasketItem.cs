@@ -1,12 +1,14 @@
 using System.ComponentModel.DataAnnotations;
 using Basket_API.Domain.Baskets;
+using Newtonsoft.Json;
 using Shared.Domain.Bases;
 
 namespace Basket_API.Domain.BasketItems;
 
 public class BasketItem : Entity
 {
-    private BasketItem(
+    [JsonConstructor]
+    public BasketItem(
         string productId,
         string variantId,
         string name,
@@ -22,11 +24,16 @@ public class BasketItem : Entity
         Price = price;
         OnSale = onSale;
         ImageUrl = imageUrl;
-        Quantity = quantity;
+        Quantity = Quantity.Create(1);
         AddedAt = DateTime.Now;
     }
 
-    public string BasketItemId => Id;
+    [MaxLength(255)]
+    public string BasketItemId
+    {
+        get => Id;
+        set => throw new ArgumentException("Can not set primary key");
+    }
 
     [MaxLength(255)]
     public string ImageUrl { get; private set; }
@@ -38,14 +45,15 @@ public class BasketItem : Entity
     public string VariantId { get; private set; }
 
     [MaxLength(255)]
-    public string BasketId { get; private set; } = null!;
-    public Basket Basket { get; init; } = null!;
+    public string BasketId { get; init; }
+
+    [JsonIgnore]
+    public Basket Basket { get; init; }
 
     [MaxLength(255)]
     public string Name { get; private set; }
-    private Quantity Quantity { get; set; }
+    public Quantity Quantity { get; private set; }
     public decimal Price { get; private set; }
-    public decimal TotalPrice => Price * Quantity.Value;
     public bool OnSale { get; private set; }
     public DateTime AddedAt { get; private set; }
 
@@ -74,6 +82,9 @@ public class BasketItem : Entity
 
 public class Quantity : ValueObject
 {
+    public Quantity() { }
+
+    [JsonConstructor]
     private Quantity(int value)
     {
         if (value <= 0)

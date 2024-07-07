@@ -13,7 +13,6 @@ public class Result
         IsSuccess = isSuccess;
     }
 
-    
     public List<ErrorType> ErrorTypes { get; } = [];
     private bool IsSuccess { get; }
     public bool IsFailure => !IsSuccess;
@@ -26,7 +25,7 @@ public class Result
 
     public static Result Failure(ErrorType errorType) => new(false, errorType);
 
-    public static Result Create(bool isSuccess)
+    public static Result Create(bool isSuccess = false)
     {
         return new(isSuccess);
     }
@@ -50,11 +49,10 @@ public class Result<T> : Result
         _value = value;
     }
 
-    internal Result(bool isSuccess) : base(isSuccess)
-    {
-    }
-    private readonly T? _value;
+    internal Result(bool isSuccess)
+        : base(isSuccess) { }
 
+    private readonly T? _value;
 
     public T Value => _value!;
 }

@@ -9,7 +9,7 @@ namespace Basket_API.Features.Baskets;
 
 public static class CreateBasket
 {
-    public record Command(string CustomerId, List<BasketItem> BasketItems)
+    public record Command(string CustomerId, List<BasketItemRequest> BasketItems)
         : IRequest<Result<Basket>>;
 
     internal sealed class Handler(IBasketRepository basketRepository, IValidator<Command> validator)
@@ -29,9 +29,18 @@ public static class CreateBasket
             }
 
             var basket = Basket.Create(request.CustomerId);
-            foreach (var basketItem in request.BasketItems)
+            foreach (var basketItemRequest in request.BasketItems)
             {
-                basket.CreateNewBasketItem(basketItem);
+                var basketItem = BasketItem.Create(
+                    basketItemRequest.ProductId,
+                    basketItemRequest.VariantId,
+                    basketItemRequest.Name,
+                    Quantity.Create(basketItemRequest.Quantity),
+                    basketItemRequest.Price,
+                    basketItemRequest.ImageUrl,
+                    basketItemRequest.OnSale
+                );
+                basket.BasketItemsList.Add(basketItem);
             }
 
             return await basketRepository.CreateAsync(basket);
