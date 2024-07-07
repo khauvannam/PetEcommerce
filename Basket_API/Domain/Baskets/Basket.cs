@@ -7,6 +7,7 @@ namespace Basket_API.Domain.Baskets;
 
 public class Basket : AggregateRoot
 {
+    [JsonConstructor]
     private Basket() { }
 
     [MaxLength(255)]
@@ -45,6 +46,8 @@ public class Basket : AggregateRoot
             BasketItemsList.Add(basketItem);
             return;
         }
+        oldBasketItem.SetPrice(newBasketItem.Price);
+        oldBasketItem.SetOnSale(newBasketItem.OnSale);
         oldBasketItem.ChangeQuantity(newBasketItem.Quantity);
     }
 

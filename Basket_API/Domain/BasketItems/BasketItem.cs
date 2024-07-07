@@ -8,31 +8,13 @@ namespace Basket_API.Domain.BasketItems;
 public class BasketItem : Entity
 {
     [JsonConstructor]
-    public BasketItem(
-        string productId,
-        string variantId,
-        string name,
-        decimal price,
-        bool onSale,
-        string imageUrl,
-        Quantity quantity
-    )
-    {
-        ProductId = productId;
-        VariantId = variantId;
-        Name = name;
-        Price = price;
-        OnSale = onSale;
-        ImageUrl = imageUrl;
-        Quantity = Quantity.Create(1);
-        AddedAt = DateTime.Now;
-    }
+    private BasketItem() { }
 
     [MaxLength(255)]
     public string BasketItemId
     {
         get => Id;
-        set => throw new ArgumentException("Can not set primary key");
+        init => throw new ArgumentException("Can not set primary key");
     }
 
     [MaxLength(255)]
@@ -67,7 +49,17 @@ public class BasketItem : Entity
         bool onSale = false
     )
     {
-        return new(productId, variantId, name, price, onSale, imageUrl, quantity);
+        return new()
+        {
+            ProductId = productId,
+            VariantId = variantId,
+            Name = name,
+            Price = price,
+            OnSale = onSale,
+            ImageUrl = imageUrl,
+            Quantity = quantity,
+            AddedAt = DateTime.Now
+        };
     }
 
     public void SetPrice(decimal price) => Price = price;
@@ -82,9 +74,6 @@ public class BasketItem : Entity
 
 public class Quantity : ValueObject
 {
-    public Quantity() { }
-
-    [JsonConstructor]
     private Quantity(int value)
     {
         if (value <= 0)
