@@ -7,7 +7,6 @@ namespace Basket_API.Domain.BasketItems;
 
 public class BasketItem : Entity
 {
-    [JsonConstructor]
     private BasketItem() { }
 
     [MaxLength(255)]
@@ -29,7 +28,6 @@ public class BasketItem : Entity
     [MaxLength(255)]
     public string BasketId { get; init; }
 
-    [JsonIgnore]
     public Basket Basket { get; init; }
 
     [MaxLength(255)]
@@ -61,6 +59,8 @@ public class BasketItem : Entity
             AddedAt = DateTime.Now
         };
     }
+
+    public decimal GetTotalPrice() => Price * Quantity.Value;
 
     public void SetPrice(decimal price) => Price = price;
 

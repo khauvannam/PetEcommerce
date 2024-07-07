@@ -40,6 +40,7 @@ public static class CreateBasket
                     basketItemRequest.ImageUrl,
                     basketItemRequest.OnSale
                 );
+
                 basket.BasketItemsList.Add(basketItem);
             }
 

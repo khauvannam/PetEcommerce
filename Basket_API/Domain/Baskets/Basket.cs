@@ -7,7 +7,6 @@ namespace Basket_API.Domain.Baskets;
 
 public class Basket : AggregateRoot
 {
-    [JsonConstructor]
     private Basket() { }
 
     [MaxLength(255)]
@@ -20,41 +19,39 @@ public class Basket : AggregateRoot
     [MaxLength(255)]
     public string CustomerId { get; private set; } = null!;
 
-    [JsonIgnore]
     public List<BasketItem> BasketItemsList { get; private init; } = null!;
 
     public static Basket Create(string customerId) =>
         new() { CustomerId = customerId, BasketItemsList = [] };
 
-    public void UpdateBasket(BasketItemRequest newBasketItem)
+    public void UpdateBasket(BasketItemRequest basketItemRequest)
     {
-        var oldBasketItem = BasketItemsList.FirstOrDefault(bi =>
-            bi.BasketItemId == newBasketItem.BasketItemId
-        );
-
-        if (oldBasketItem is null)
+        if (
+            BasketItemsList.FirstOrDefault(bi =>
+                bi.BasketItemId == basketItemRequest.BasketItemId
+            ) is
+            { } basketItem
+        )
         {
-            var basketItem = BasketItem.Create(
-                newBasketItem.ProductId,
-                newBasketItem.VariantId,
-                newBasketItem.Name,
-                Quantity.Create(newBasketItem.Quantity),
-                newBasketItem.Price,
-                newBasketItem.ImageUrl,
-                newBasketItem.OnSale
-            );
-            BasketItemsList.Add(basketItem);
+            basketItem.SetPrice(basketItemRequest.Price);
+            basketItem.SetOnSale(basketItemRequest.OnSale);
+            basketItem.ChangeQuantity(basketItemRequest.Quantity);
             return;
         }
-        oldBasketItem.SetPrice(newBasketItem.Price);
-        oldBasketItem.SetOnSale(newBasketItem.OnSale);
-        oldBasketItem.ChangeQuantity(newBasketItem.Quantity);
+        var newBasketItem = BasketItem.Create(
+            basketItemRequest.ProductId,
+            basketItemRequest.VariantId,
+            basketItemRequest.Name,
+            Quantity.Create(basketItemRequest.Quantity),
+            basketItemRequest.Price,
+            basketItemRequest.ImageUrl,
+            basketItemRequest.OnSale
+        );
+        BasketItemsList.Add(newBasketItem);
     }
 
-    public void RemoveAllBasketItemNotExist(List<BasketItemRequest> basketItemRequests)
-    {
+    public void RemoveAllBasketItemNotExist(List<BasketItemRequest> basketItemRequests) =>
         BasketItemsList.RemoveAll(b => basketItemRequests.All(bi => bi.BasketItemId != b.BasketId));
-    }
 
     public void RemoveAllBasketItem() => BasketItemsList.Clear();
 }
