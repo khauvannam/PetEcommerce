@@ -1,5 +1,6 @@
 ﻿using Carter;
 using FluentValidation;
+using Newtonsoft.Json;
 using Product_API.Databases;
 using Product_API.Features.Products;
 using Product_API.Interfaces;
@@ -27,7 +28,11 @@ public static class Extension
         {
             c.WithModules(modules.ToArray());
         });
-
+        services
+            .AddControllers()
+            .AddNewtonsoftJson(opt =>
+                opt.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+            );
         services.AddBlobService();
 
         services.AddValidatorsFromAssemblyContaining<ListAllProducts.Validator>();

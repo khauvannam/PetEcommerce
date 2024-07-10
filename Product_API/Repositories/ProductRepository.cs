@@ -1,7 +1,4 @@
 ﻿using Microsoft.Extensions.Options;
-using MongoDB.Bson;
-using MongoDB.Bson.Serialization;
-using MongoDB.Driver;
 using Newtonsoft.Json;
 using Product_API.Databases;
 using Product_API.Domain.Products;

@@ -28,7 +28,7 @@ public static class UpdateProduct
         public void AddRoutes(IEndpointRouteBuilder app)
         {
             app.MapGet(
-                "/api/product/{productId}",
+                "api/product/{productId}",
                 async (
                     ISender sender,
                     string productId,

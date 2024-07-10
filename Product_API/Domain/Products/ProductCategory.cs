@@ -1,16 +1,12 @@
-using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Attributes;
 using Shared.Domain.Bases;
 
 namespace Product_API.Domain.Products;
 
 public sealed class ProductCategory : ValueObject
 {
-    [BsonElement("CategoryId")]
     public string ProductCategoryId { get; set; }
 
-    [BsonElement("Details")]
-    public BsonDocument Details { get; set; }
+    public string Details { get; set; }
 
     protected override IEnumerable<object> GetEqualityComponents()
     {

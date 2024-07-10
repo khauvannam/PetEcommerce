@@ -22,7 +22,7 @@ public static class DeleteProduct
         public void AddRoutes(IEndpointRouteBuilder app)
         {
             app.MapDelete(
-                "/product/{productId}",
+                "api/product/{productId}",
                 async (ISender sender, string productId) =>
                 {
                     var command = new Command(productId);

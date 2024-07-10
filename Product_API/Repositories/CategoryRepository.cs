@@ -1,5 +1,4 @@
 using Microsoft.Extensions.Options;
-using MongoDB.Driver;
 using Product_API.Databases;
 using Product_API.Domain.Categories;
 using Product_API.Errors;

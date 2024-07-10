@@ -26,7 +26,7 @@ public static class GetProductById
         public void AddRoutes(IEndpointRouteBuilder app)
         {
             app.MapGet(
-                "/product/{productId}",
+                "api/product/{productId}",
                 async (string productId, ISender sender) =>
                 {
                     var query = new Query(productId);

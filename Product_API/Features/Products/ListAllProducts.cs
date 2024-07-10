@@ -51,7 +51,7 @@ public static class ListAllProducts
         public override void AddRoutes(IEndpointRouteBuilder app)
         {
             app.MapGet(
-                "/product",
+                "api/product",
                 async (ISender sender, [FromBody] Query query) =>
                 {
                     var result = await sender.Send(query);

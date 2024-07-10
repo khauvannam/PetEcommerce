@@ -1,6 +1,4 @@
-﻿using MongoDB.Bson.Serialization.Attributes;
-using Newtonsoft.Json;
-using Shared.Domain.Bases;
+﻿using Shared.Domain.Bases;
 
 namespace Product_API.Domain.Products;
 
@@ -15,8 +13,6 @@ public class Product : AggregateRoot
         UpdatedAt = DateTime.Now;
     }
 
-    [JsonIgnore]
-    [BsonId]
     public string ProductId => Id;
     public string Name { get; private set; }
     public string Description { get; private set; }
