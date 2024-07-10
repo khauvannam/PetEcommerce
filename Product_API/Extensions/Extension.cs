@@ -1,7 +1,10 @@
 ﻿using Carter;
+using FluentValidation;
 using Product_API.Databases;
+using Product_API.Features.Products;
 using Product_API.Interfaces;
 using Product_API.Repositories;
+using Shared.Extensions;
 
 namespace Product_API.Extensions;
 
@@ -24,6 +27,10 @@ public static class Extension
         {
             c.WithModules(modules.ToArray());
         });
+
+        services.AddBlobService();
+
+        services.AddValidatorsFromAssemblyContaining<ListAllProducts.Validator>();
 
         services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Program).Assembly));
         services.AddScoped<IProductRepository, ProductRepository>();

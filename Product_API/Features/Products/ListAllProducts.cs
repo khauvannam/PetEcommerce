@@ -1,6 +1,7 @@
 ﻿using Carter;
 using FluentValidation;
 using MediatR;
+using Microsoft.AspNetCore.Mvc;
 using Product_API.Domain.Products;
 using Product_API.Interfaces;
 using Shared.Domain.Results;
@@ -51,7 +52,7 @@ public static class ListAllProducts
         {
             app.MapGet(
                 "/product",
-                async (ISender sender, Query query) =>
+                async (ISender sender, [FromBody] Query query) =>
                 {
                     var result = await sender.Send(query);
                     if (result.IsFailure)

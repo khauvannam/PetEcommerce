@@ -22,7 +22,15 @@ public class CategoryRepository : ICategoryRepository
 
     public async Task<Result> CreateCategory(CreateCategory.Command command)
     {
-        var category = Category.Create(command.CategoryName, command.Details);
+        HashSet<string> details = new();
+        foreach (var detail in command.Details)
+        {
+            if (!details.Add(detail))
+            {
+                throw new ArgumentException("Detail con not be duplicated");
+            }
+        }
+        var category = Category.Create(command.CategoryName, details);
         await _categoryCollection.InsertOneAsync(category);
         return Result.Success();
     }

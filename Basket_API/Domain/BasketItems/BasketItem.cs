@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 using Basket_API.Domain.Baskets;
-using Newtonsoft.Json;
 using Shared.Domain.Bases;
 
 namespace Basket_API.Domain.BasketItems;
@@ -10,10 +10,11 @@ public class BasketItem : Entity
     private BasketItem() { }
 
     [MaxLength(255)]
+    [JsonInclude]
     public string BasketItemId
     {
         get => Id;
-        init => throw new ArgumentException("Can not set primary key");
+        private set => Id = value;
     }
 
     [MaxLength(255)]
@@ -28,6 +29,7 @@ public class BasketItem : Entity
     [MaxLength(255)]
     public string BasketId { get; init; }
 
+    [Newtonsoft.Json.JsonIgnore]
     public Basket Basket { get; init; }
 
     [MaxLength(255)]
@@ -74,23 +76,24 @@ public class BasketItem : Entity
 
 public class Quantity : ValueObject
 {
-    private Quantity(int value)
+    private Quantity() { }
+
+    public int Value { get; private set; }
+
+    public static Quantity Create(int value)
     {
         if (value <= 0)
         {
             throw new ArgumentException("Quantity can't be negative");
         }
-        Value = value;
+
+        return new() { Value = value };
     }
-
-    public int Value { get; private set; }
-
-    public static Quantity Create(int value) => new(value);
 
     public void Update(int value) =>
         Value = value > 0 ? value : throw new ArgumentException("Quantity can't be negative");
 
-    public override IEnumerable<object> GetEqualityComponents()
+    protected override IEnumerable<object> GetEqualityComponents()
     {
         yield return Value;
     }

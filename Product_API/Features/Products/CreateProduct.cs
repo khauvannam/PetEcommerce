@@ -13,7 +13,7 @@ public static class CreateProduct
     public record Command(
         string Name,
         string Description,
-        ProductCategory ProductCategory,
+        ProductCategoryDto ProductCategoryDto,
         List<ProductVariantRequest> ProductVariants
     ) : IRequest<Result<Product>>;
 

@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 using Basket_API.Domain.BasketItems;
-using Newtonsoft.Json;
 using Shared.Domain.Bases;
 
 namespace Basket_API.Domain.Baskets;
@@ -10,16 +10,19 @@ public class Basket : AggregateRoot
     private Basket() { }
 
     [MaxLength(255)]
+    [JsonInclude]
     public string BasketId
     {
         get => Id;
-        set => throw new ArgumentException("Can not set primary key");
+        private set => Id = value;
     }
 
     [MaxLength(255)]
+    [JsonInclude]
     public string CustomerId { get; private set; } = null!;
 
-    public List<BasketItem> BasketItemsList { get; private init; } = null!;
+    [JsonInclude]
+    public HashSet<BasketItem> BasketItemsList { get; private init; } = null!;
 
     public static Basket Create(string customerId) =>
         new() { CustomerId = customerId, BasketItemsList = [] };
@@ -47,11 +50,14 @@ public class Basket : AggregateRoot
             basketItemRequest.ImageUrl,
             basketItemRequest.OnSale
         );
+
         BasketItemsList.Add(newBasketItem);
     }
 
     public void RemoveAllBasketItemNotExist(List<BasketItemRequest> basketItemRequests) =>
-        BasketItemsList.RemoveAll(b => basketItemRequests.All(bi => bi.BasketItemId != b.BasketId));
+        BasketItemsList.RemoveWhere(b =>
+            basketItemRequests.All(bi => bi.BasketItemId != b.BasketId)
+        );
 
     public void RemoveAllBasketItem() => BasketItemsList.Clear();
 }

@@ -1,5 +1,5 @@
-﻿using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Attributes;
+﻿using MongoDB.Bson.Serialization.Attributes;
+using Newtonsoft.Json;
 using Shared.Domain.Bases;
 
 namespace Product_API.Domain.Products;
@@ -15,6 +15,7 @@ public class Product : AggregateRoot
         UpdatedAt = DateTime.Now;
     }
 
+    [JsonIgnore]
     [BsonId]
     public string ProductId => Id;
     public string Name { get; private set; }
@@ -96,17 +97,5 @@ public class Product : AggregateRoot
         }
 
         ProductCategory = other;
-    }
-}
-
-public class ProductCategory : ValueObject
-{
-    public string ProductCategoryId { get; } = null!;
-    public BsonDocument Details { get; set; } = null!;
-
-    public override IEnumerable<object> GetEqualityComponents()
-    {
-        yield return ProductCategoryId;
-        yield return Details;
     }
 }

@@ -3,6 +3,7 @@ using Basket_API.Interfaces;
 using Basket_API.Repositories;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Distributed;
 
 namespace Basket_API.Extensions;
 
@@ -20,8 +21,15 @@ public static class Extension
     {
         var assembly = typeof(Program).Assembly;
         services.AddValidatorsFromAssembly(assembly);
+
         services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(assembly));
-        services.AddScoped<IBasketRepository, BasketRepository>();
+        services.AddScoped<BasketRepository>();
+        services.AddScoped<IBasketRepository>(provider =>
+        {
+            var repository = provider.GetRequiredService<BasketRepository>();
+            var cache = provider.GetRequiredService<IDistributedCache>();
+            return new CachedBasketRepository(cache, repository);
+        });
         services.AddScoped<IBasketItemRepository, BasketItemRepository>();
     }
 }

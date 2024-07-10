@@ -5,12 +5,7 @@ namespace Identity.API.Domain.Tokens;
 
 public class RefreshToken
 {
-    private RefreshToken(string tokenId, string token, DateTime expiredAt)
-    {
-        TokenId = tokenId;
-        Token = token;
-        ExpiredAt = expiredAt;
-    }
+    private RefreshToken() { }
 
     [Key]
     [MaxLength(255)]
@@ -27,7 +22,12 @@ public class RefreshToken
     public static RefreshToken Create(string token, DateTime expiredAt)
     {
         var tokenId = Guid.NewGuid().ToString();
-        return new(tokenId, token, expiredAt);
+        return new()
+        {
+            TokenId = tokenId,
+            Token = token,
+            ExpiredAt = expiredAt
+        };
     }
 
     public void Refresh(string token, DateTime expiredAt)

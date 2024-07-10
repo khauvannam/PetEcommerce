@@ -66,7 +66,7 @@ public class OriginalPrice : ValueObject
         return new(value, currency);
     }
 
-    public override IEnumerable<object> GetEqualityComponents()
+    protected override IEnumerable<object> GetEqualityComponents()
     {
         yield return Value;
         yield return Currency;
@@ -89,7 +89,7 @@ public class Discount : ValueObject
 
     public static Discount Create(decimal percent) => new(percent);
 
-    public override IEnumerable<object> GetEqualityComponents()
+    protected override IEnumerable<object> GetEqualityComponents()
     {
         yield return Percent;
     }

@@ -1,5 +1,6 @@
 ﻿using Carter;
 using MediatR;
+using Microsoft.AspNetCore.Mvc;
 using Product_API.Domain.Products;
 using Product_API.Interfaces;
 using Shared.Domain.Results;
@@ -31,7 +32,7 @@ public static class UpdateProduct
                 async (
                     ISender sender,
                     string productId,
-                    UpdateProductRequest updateProductRequest
+                    [FromBody] UpdateProductRequest updateProductRequest
                 ) =>
                 {
                     var command = new Command(productId, updateProductRequest);

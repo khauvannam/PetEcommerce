@@ -2,25 +2,20 @@
 
     <PropertyGroup>
         <TargetFramework>net8.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     </PropertyGroup>
 
     <ItemGroup>
-        <Compile Include="Controllers\DiscountController.fs" />
-        <Compile Include="Program.fs"/>
+        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.4"/>
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0"/>
     </ItemGroup>
 
     <ItemGroup>
       <Content Include="..\.dockerignore">
         <Link>.dockerignore</Link>
       </Content>
-      <Content Include="Dockerfile" />
-      <Folder Include="Features\Discounts\" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <PackageReference Update="FSharp.Core" Version="8.0.400-beta.24280.1" />
-      <PackageReference Include="MediatR" Version="12.3.0" />
     </ItemGroup>
 
 </Project>

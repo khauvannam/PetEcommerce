@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Basket_API.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("api/[controller]")]
 public class BasketController(ISender sender) : ControllerBase
 {
     [HttpPost]

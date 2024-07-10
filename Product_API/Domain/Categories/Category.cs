@@ -2,7 +2,7 @@
 
 public class Category
 {
-    private Category(string categoryName, List<string> details)
+    private Category(string categoryName, HashSet<string> details)
     {
         if (details.Count > 15)
         {
@@ -15,11 +15,11 @@ public class Category
 
     public string CategoryId = Guid.NewGuid().ToString();
     public string CategoryName { get; private set; }
-    public List<string> Details { get; private set; }
+    public HashSet<string> Details { get; private set; }
 
-    public static Category Create(string categoryName, List<string> details) =>
+    public static Category Create(string categoryName, HashSet<string> details) =>
         new(categoryName, details);
 
-    public void Update(List<string> details, string categoryName) =>
+    public void Update(HashSet<string> details, string categoryName) =>
         (Details, CategoryName) = (details, categoryName);
 }

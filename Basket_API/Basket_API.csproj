@@ -30,4 +30,14 @@
       <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="8.0.6" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Reference Include="MongoDB.Bson">
+        <HintPath>..\..\..\..\..\home\khauvannam\.nuget\packages\mongodb.bson\2.25.0\lib\netstandard2.1\MongoDB.Bson.dll</HintPath>
+      </Reference>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Helpers\" />
+    </ItemGroup>
+
 </Project>

@@ -1,8 +1,8 @@
 ﻿namespace Shared.Domain.Bases;
 
-public abstract class ValueObject : IEquatable<ValueObject>
+public abstract class ValueObject
 {
-    public abstract IEnumerable<object> GetEqualityComponents();
+    protected abstract IEnumerable<object> GetEqualityComponents();
 
     public override bool Equals(object? obj)
     {

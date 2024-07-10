@@ -1,5 +1,8 @@
 ﻿using Microsoft.Extensions.Options;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
+using Newtonsoft.Json;
 using Product_API.Databases;
 using Product_API.Domain.Products;
 using Product_API.Errors;
@@ -38,7 +41,13 @@ public class ProductRepository : IProductRepository
 
     public async Task<Result<Product>> CreateProduct(CreateProduct.Command command)
     {
-        var productCategory = command.ProductCategory;
+        var jsonDetail = JsonConvert.SerializeObject(command.ProductCategoryDto.Details);
+        var bsonDoc = BsonSerializer.Deserialize<BsonDocument>(jsonDetail);
+        var productCategory = new ProductCategory
+        {
+            ProductCategoryId = command.ProductCategoryDto.ProductCategoryId,
+            Details = bsonDoc
+        };
         var product = Product.Create(command.Name, command.Description, productCategory);
         foreach (var variant in command.ProductVariants)
         {

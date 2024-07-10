@@ -5,6 +5,7 @@ using Identity.API.Interfaces;
 using Identity.API.Repositories;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Shared.Extensions;
 using Shared.Extensions.JwtHandlers;
 
 namespace Identity.API.Extensions;
@@ -30,6 +31,10 @@ public static class Extension
         services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(assembly));
 
         services.AddValidatorsFromAssembly(assembly);
+
+        // Add outside services
+        services.AddBlobService();
+        services.AddEmailService();
 
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<ITokenRepository, TokenRepository>();
