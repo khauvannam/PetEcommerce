@@ -5,7 +5,9 @@
     driver: local
   mongodb-data:
     driver: local
-  redis-data:
+  redis-cache:
+    driver: local
+  redis-database:
     driver: local
 
 services:
@@ -47,10 +49,12 @@ services:
       context: .
       dockerfile: Product_API/Dockerfile
     depends_on:
-      - mongodb_server
+      - redis-database_server 
       - azurite
     ports:
       - 8082:8080
+    networks:
+      - product_backend.networks 
   
   sql_server1:
     image: mcr.microsoft.com/mssql/server:2022-latest
@@ -86,21 +90,20 @@ services:
     ports:
       - 8074:6379
     volumes:
-      - redis-data:/data
+      - redis-cache:/data
     networks:
       - basket_backend.networks
   
-  mongodb_server:
-    image: mongo
-    container_name: mongodb_server.container
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: example
+  redis-database_server:
+    image: redis
+    container_name: redis-database_server.container
     ports:
-      - 8072:27017
+      - 8075:6379
     volumes:
-      - mongodb-data:/data/db
-  
+      - redis-database:/data
+    networks:
+      - product_backend.networks
+ 
   azurite:
     container_name: azurite
     image: mcr.microsoft.com/azure-storage/azurite
@@ -115,6 +118,7 @@ services:
 networks:
   identity_backend.networks:
   basket_backend.networks:
+  product_backend.networks:
   message_broker:
   frontend:
   backend:

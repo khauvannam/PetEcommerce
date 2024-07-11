@@ -6,46 +6,63 @@ using Product_API.Errors;
 using Product_API.Features.Products;
 using Product_API.Interfaces;
 using Shared.Domain.Results;
+using Shared.Domain.Services;
+using StackExchange.Redis;
 
 namespace Product_API.Repositories;
 
 public class ProductRepository : IProductRepository
 {
-    private readonly IMongoCollection<Product> _productCollection;
+    private readonly IDatabase _database;
+    private const string ProductKeyPrefix = "Product:";
 
     public ProductRepository(IOptions<ProductDatabaseSetting> options)
     {
-        var client = new MongoClient(options.Value.ConnectionString);
-        var database = client.GetDatabase(options.Value.DatabaseName);
-        _productCollection = database.GetCollection<Product>(options.Value.CollectionName);
+        var redis = ConnectionMultiplexer.Connect(options.Value.ConnectionString);
+        _database = redis.GetDatabase(options.Value.DatabaseIndex);
     }
 
     public async Task<Result<List<Product>>> ListAllProducts(ListAllProducts.Query command)
     {
-        var filter = command.CategoryId is null
-            ? Builders<Product>.Filter.Empty
-            : Builders<Product>.Filter.Eq(
-                p => p.ProductCategory.ProductCategoryId,
-                command.CategoryId
-            );
-        var products = await _productCollection
-            .Find(filter)
-            .Skip(command.Offset)
-            .Limit(command.Limit * command.Offset)
-            .ToListAsync();
+        var server = _database.Multiplexer.GetServer(_database.Multiplexer.GetEndPoints().First());
+        var keys = server.Keys(pattern: ProductKeyPrefix + "*").ToArray();
+        var products = new List<Product>();
+
+        foreach (var key in keys.Skip(command.Offset).Take(command.Limit))
+        {
+            var productJson = await _database.StringGetAsync(key);
+            if (!productJson.IsNullOrEmpty)
+            {
+                var product = JsonConvert.DeserializeObject<Product>(
+                    productJson!,
+                    new JsonSerializerSettings
+                    {
+                        ConstructorHandling = ConstructorHandling.AllowNonPublicDefaultConstructor,
+                        ContractResolver = new PrivateSetterJsonResolver()
+                    }
+                )!;
+                if (
+                    command.CategoryId == null
+                    || product.ProductCategory.ProductCategoryId == command.CategoryId
+                )
+                {
+                    products.Add(product);
+                }
+            }
+        }
+
         return Result.Success(products);
     }
 
     public async Task<Result<Product>> CreateProduct(CreateProduct.Command command)
     {
-        var jsonDetail = JsonConvert.SerializeObject(command.ProductCategoryDto.Details);
-        var bsonDoc = BsonSerializer.Deserialize<BsonDocument>(jsonDetail);
-        var productCategory = new ProductCategory
-        {
-            ProductCategoryId = command.ProductCategoryDto.ProductCategoryId,
-            Details = bsonDoc
-        };
+        var productCategory = ProductCategory.Create(
+            command.ProductCategoryDto.ProductCategoryId,
+            command.ProductCategoryDto.Details
+        );
+
         var product = Product.Create(command.Name, command.Description, productCategory);
+
         foreach (var variant in command.ProductVariants)
         {
             var productVariant = ProductVariant.Create(
@@ -58,24 +75,15 @@ public class ProductRepository : IProductRepository
             product.AddProductVariants(productVariant);
         }
 
-        await _productCollection.InsertOneAsync(product);
+        var productJson = JsonConvert.SerializeObject(product);
+        await _database.StringSetAsync(ProductKeyPrefix + product.ProductId, productJson);
         return Result.Success(product);
     }
 
     public async Task<Result> DeleteProduct(string productId, CancellationToken cancellationToken)
     {
-        var filter = Builders<Product>.Filter.Eq(p => p.ProductId, productId);
-        var findResult = await _productCollection.Find(filter).AnyAsync(cancellationToken);
-        if (findResult)
-        {
-            await _productCollection.DeleteOneAsync(
-                p => p.ProductId == productId,
-                cancellationToken
-            );
-            return Result.Success();
-        }
-
-        return Result.Failure(ProductErrors.NotFound);
+        var deleted = await _database.KeyDeleteAsync(ProductKeyPrefix + productId);
+        return deleted ? Result.Success() : Result.Failure(ProductErrors.NotFound);
     }
 
     public async Task<Result<Product>> UpdateProduct(
@@ -83,11 +91,24 @@ public class ProductRepository : IProductRepository
         CancellationToken cancellationToken
     )
     {
+        var productJson = await _database.StringGetAsync(ProductKeyPrefix + command.ProductId);
+        if (productJson.IsNullOrEmpty)
+        {
+            return Result.Failure<Product>(ProductErrors.NotFound);
+        }
+        var product = JsonConvert.DeserializeObject<Product>(
+            productJson!,
+            new JsonSerializerSettings
+            {
+                ConstructorHandling = ConstructorHandling.AllowNonPublicDefaultConstructor,
+                ContractResolver = new PrivateSetterJsonResolver(),
+            }
+        )!;
         var value = command.UpdateProductRequest;
-        var result = await GetProductById(command.ProductId, cancellationToken);
-        var product = result.Value;
         product.UpdateProduct(value.Name, value.ProductCategory, value.ProductVariants);
 
+        productJson = JsonConvert.SerializeObject(product);
+        await _database.StringSetAsync(ProductKeyPrefix + product.ProductId, productJson);
         return Result.Success(product);
     }
 
@@ -96,15 +117,12 @@ public class ProductRepository : IProductRepository
         CancellationToken cancellationToken
     )
     {
-        var filter = Builders<Product>.Filter.Eq(p => p.ProductId, productId);
-        if (
-            await _productCollection.Find(filter).FirstOrDefaultAsync(cancellationToken) is
-            { } product
-        )
+        var productJson = await _database.StringGetAsync(ProductKeyPrefix + productId);
+        if (productJson.IsNullOrEmpty)
         {
-            return Result.Success(product);
+            return Result.Failure<Product>(ProductErrors.NotFound);
         }
-
-        return Result.Failure<Product>(ProductErrors.NotFound);
+        var product = JsonConvert.DeserializeObject<Product>(productJson!)!;
+        return Result.Success(product);
     }
 }

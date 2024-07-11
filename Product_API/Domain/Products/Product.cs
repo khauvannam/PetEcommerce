@@ -4,16 +4,14 @@ namespace Product_API.Domain.Products;
 
 public class Product : AggregateRoot
 {
-    private Product(string name, string description, ProductCategory productCategory)
+    private Product() { }
+
+    public string ProductId
     {
-        Name = name;
-        Description = description;
-        ProductCategory = productCategory;
-        CreatedAt = DateTime.Now;
-        UpdatedAt = DateTime.Now;
+        get => Id;
+        private set => Id = value;
     }
 
-    public string ProductId => Id;
     public string Name { get; private set; }
     public string Description { get; private set; }
     public DateTime CreatedAt { get; private set; }
@@ -23,7 +21,14 @@ public class Product : AggregateRoot
 
     public static Product Create(string name, string description, ProductCategory productCategory)
     {
-        return new(name, description, productCategory);
+        return new()
+        {
+            Name = name,
+            Description = description,
+            ProductCategory = productCategory,
+            CreatedAt = DateTime.Now,
+            UpdatedAt = DateTime.Now
+        };
     }
 
     public void UpdateProduct(
@@ -49,7 +54,16 @@ public class Product : AggregateRoot
         ProductVariants.AddRange(updateVariants);
     }
 
-    private List<ProductVariant>? RemoveVariantIfNotInUpdateList(
+    private void UpdateCategory(ProductCategory other)
+    {
+        if (ProductCategory.Equals(other))
+        {
+            return;
+        }
+
+        ProductCategory = other;
+    }
+    /*private List<ProductVariant>? RemoveVariantIfNotInUpdateList(
         List<ProductVariant> updatedVariants
     )
     {
@@ -84,14 +98,5 @@ public class Product : AggregateRoot
     {
         ProductVariants.AddRange(updatedVariants);
     }
-
-    private void UpdateCategory(ProductCategory other)
-    {
-        if (ProductCategory.Equals(other))
-        {
-            return;
-        }
-
-        ProductCategory = other;
-    }
+*/
 }

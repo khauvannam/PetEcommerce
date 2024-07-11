@@ -34,8 +34,6 @@ public static class Extension
 
         // Add outside services
         services.AddBlobService();
-        services.AddEmailService();
-
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<ITokenRepository, TokenRepository>();
         services.AddScoped<IUserServiceRepository, UserServiceRepository>();

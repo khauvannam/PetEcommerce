@@ -4,9 +4,19 @@ namespace Product_API.Domain.Products;
 
 public sealed class ProductCategory : ValueObject
 {
-    public string ProductCategoryId { get; set; }
+    private ProductCategory() { }
 
-    public string Details { get; set; }
+    public string ProductCategoryId { get; private set; }
+
+    public Dictionary<string, string> Details { get; private set; }
+
+    public static ProductCategory Create(
+        string productCategoryId,
+        Dictionary<string, string> details
+    )
+    {
+        return new() { ProductCategoryId = productCategoryId, Details = details };
+    }
 
     protected override IEnumerable<object> GetEqualityComponents()
     {
@@ -15,9 +25,4 @@ public sealed class ProductCategory : ValueObject
     }
 }
 
-public sealed class ProductCategoryDto
-{
-    public string ProductCategoryId { get; set; } = null!;
-
-    public Dictionary<string, string> Details { get; set; } = null!;
-}
+public record ProductCategoryDto(string ProductCategoryId, Dictionary<string, string> Details);
