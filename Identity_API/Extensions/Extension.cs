@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 using Identity.API.Databases;
-using Identity.API.Domain.Users;
+using Identity.API.Domains.Users;
 using Identity.API.Interfaces;
 using Identity.API.Repositories;
 using Microsoft.AspNetCore.Identity;

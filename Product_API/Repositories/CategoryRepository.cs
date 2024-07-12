@@ -1,7 +1,7 @@
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Product_API.Databases;
-using Product_API.Domain.Categories;
+using Product_API.Domains.Categories;
 using Product_API.Errors;
 using Product_API.Features.Categories;
 using Product_API.Interfaces;
@@ -31,7 +31,7 @@ public class CategoryRepository : ICategoryRepository
                 throw new ArgumentException("Detail cannot be duplicated");
             }
         }
-        var category = Category.Create(command.CategoryName, details);
+        var category = Category.Create(command.CategoryName, command.Description, details);
         var categoryJson = JsonConvert.SerializeObject(category);
         await _database.StringSetAsync(CategoryKeyPrefix + category.CategoryId, categoryJson);
         return Result.Success();

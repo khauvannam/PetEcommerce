@@ -1,4 +1,4 @@
-﻿using Identity.API.Domain.Users;
+﻿using Identity.API.Domains.Users;
 using Identity.API.Features.Users;
 using Shared.Domain.Results;
 

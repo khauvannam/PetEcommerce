@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Product_API.Databases;
-using Product_API.Domain.Products;
+using Product_API.Domains.Products;
 using Product_API.Errors;
 using Product_API.Features.Products;
 using Product_API.Interfaces;
@@ -61,7 +61,12 @@ public class ProductRepository : IProductRepository
             command.ProductCategoryDto.Details
         );
 
-        var product = Product.Create(command.Name, command.Description, productCategory);
+        var product = Product.Create(
+            command.Name,
+            command.Description,
+            command.ProductUseGuide,
+            productCategory
+        );
 
         foreach (var variant in command.ProductVariants)
         {
@@ -105,7 +110,13 @@ public class ProductRepository : IProductRepository
             }
         )!;
         var value = command.UpdateProductRequest;
-        product.UpdateProduct(value.Name, value.ProductCategory, value.ProductVariants);
+        product.UpdateProduct(
+            value.Name,
+            value.Description,
+            value.ProductUseGuide,
+            value.ProductCategory,
+            value.ProductVariants
+        );
 
         productJson = JsonConvert.SerializeObject(product);
         await _database.StringSetAsync(ProductKeyPrefix + product.ProductId, productJson);

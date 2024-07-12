@@ -1,6 +1,6 @@
 ﻿using Carter;
 using MediatR;
-using Product_API.Domain.Categories;
+using Product_API.Domains.Categories;
 using Product_API.Interfaces;
 using Shared.Domain.Results;
 

@@ -1,5 +1,5 @@
-using Basket_API.Domain.BasketItems;
-using Basket_API.Domain.Baskets;
+using Basket_API.Domains.BasketItems;
+using Basket_API.Domains.Baskets;
 using Basket_API.Errors;
 using Basket_API.Interfaces;
 using FluentValidation;

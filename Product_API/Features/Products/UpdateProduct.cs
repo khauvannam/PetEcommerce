@@ -1,7 +1,7 @@
 ﻿using Carter;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Product_API.Domain.Products;
+using Product_API.Domains.Products;
 using Product_API.Interfaces;
 using Shared.Domain.Results;
 

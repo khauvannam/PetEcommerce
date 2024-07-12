@@ -1,4 +1,4 @@
-﻿using Product_API.Domain.Categories;
+﻿using Product_API.Domains.Categories;
 using Product_API.Features.Categories;
 using Shared.Domain.Results;
 

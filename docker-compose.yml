@@ -109,7 +109,7 @@ services:
     image: mcr.microsoft.com/azure-storage/azurite
     ports:
       - 8073:10000
-    restart: always
+    restart: on-failure
     volumes:
       - /home/khauvannam/Azurite/blob-data:/data
     command:

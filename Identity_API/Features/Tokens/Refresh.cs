@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using Identity.API.Domain.Tokens;
+using Identity.API.Domains.Tokens;
 using Identity.API.Interfaces;
 using MediatR;
 using Shared.Domain.Results;

@@ -1,4 +1,4 @@
-﻿using Product_API.Domain.Products;
+﻿using Product_API.Domains.Products;
 using Product_API.Features.Products;
 using Shared.Domain.Results;
 

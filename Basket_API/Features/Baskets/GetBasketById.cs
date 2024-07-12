@@ -1,4 +1,4 @@
-using Basket_API.Domain.Baskets;
+using Basket_API.Domains.Baskets;
 using Basket_API.Interfaces;
 using MediatR;
 using Shared.Domain.Results;

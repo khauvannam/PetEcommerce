@@ -1,6 +1,6 @@
 ﻿using Identity.API.Databases;
-using Identity.API.Domain.Tokens;
-using Identity.API.Domain.Users;
+using Identity.API.Domains.Tokens;
+using Identity.API.Domains.Users;
 using Identity.API.Errors;
 using Identity.API.Features.Users;
 using Identity.API.Interfaces;
