@@ -6,23 +6,27 @@ using Product_API.Errors;
 using Product_API.Features.Categories;
 using Product_API.Interfaces;
 using Shared.Domain.Results;
+using Shared.Services;
 using StackExchange.Redis;
 
 namespace Product_API.Repositories;
 
 public class CategoryRepository : ICategoryRepository
 {
+    private readonly BlobService _blobService;
     private readonly IDatabase _database;
     private const string CategoryKeyPrefix = "Category:";
 
-    public CategoryRepository(IOptions<CategoryDatabaseSetting> options)
+    public CategoryRepository(IOptions<CategoryDatabaseSetting> options, BlobService blobService)
     {
+        _blobService = blobService;
         var redis = ConnectionMultiplexer.Connect(options.Value.ConnectionString);
         _database = redis.GetDatabase(options.Value.DatabaseIndex);
     }
 
     public async Task<Result> CreateCategory(CreateCategory.Command command)
     {
+        var fileName = (await _blobService.UploadFileAsync(command.File, CategoryKeyPrefix)).Value;
         HashSet<string> details = new();
         foreach (var detail in command.Details)
         {
@@ -31,7 +35,12 @@ public class CategoryRepository : ICategoryRepository
                 throw new ArgumentException("Detail cannot be duplicated");
             }
         }
-        var category = Category.Create(command.CategoryName, command.Description, details);
+        var category = Category.Create(
+            command.CategoryName,
+            command.Description,
+            fileName,
+            details
+        );
         var categoryJson = JsonConvert.SerializeObject(category);
         await _database.StringSetAsync(CategoryKeyPrefix + category.CategoryId, categoryJson);
         return Result.Success();

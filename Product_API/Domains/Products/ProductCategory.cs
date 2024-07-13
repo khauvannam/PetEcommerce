@@ -6,9 +6,9 @@ public sealed class ProductCategory : ValueObject
 {
     private ProductCategory() { }
 
-    public string ProductCategoryId { get; private set; }
+    public string ProductCategoryId { get; private set; } = null!;
 
-    public Dictionary<string, string> Details { get; private set; }
+    public Dictionary<string, string> Details { get; private set; } = null!;
 
     public static ProductCategory Create(
         string productCategoryId,
@@ -24,5 +24,3 @@ public sealed class ProductCategory : ValueObject
         yield return Details;
     }
 }
-
-public record ProductCategoryDto(string ProductCategoryId, Dictionary<string, string> Details);

@@ -7,31 +7,27 @@ public sealed class ProductVariant : Entity
     public string VariantId => Id;
     public string VariantName { get; private set; }
     public int InStock { get; private set; }
-    public string ImageUrl { get; private set; }
     private OriginalPrice OriginalPrice { get; set; } = null!;
     private Discount Discount { get; set; } = null!;
     public decimal DiscountedPrice => CalculateDiscountedPrice();
 
-    private ProductVariant(string variantName, string imageUrl, int inStock)
+    private ProductVariant(string variantName, int inStock)
     {
         VariantName = variantName;
-        ImageUrl = imageUrl;
         InStock = inStock;
     }
 
-    public static ProductVariant Create(string variantName, string imageUrl, int inStock) =>
-        new(variantName, imageUrl, inStock);
+    public static ProductVariant Create(string variantName, int inStock) =>
+        new(variantName, inStock);
 
     public void Update(
         string variantName,
-        string imageUrl,
         OriginalPrice originalPrice,
         Discount discount,
         int inStock
     )
     {
         VariantName = variantName;
-        ImageUrl = imageUrl;
         OriginalPrice = originalPrice;
         Discount = discount;
         InStock = inStock;

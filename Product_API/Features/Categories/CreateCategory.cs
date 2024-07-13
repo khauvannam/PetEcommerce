@@ -1,5 +1,6 @@
 ﻿using Carter;
 using MediatR;
+using Microsoft.AspNetCore.Mvc;
 using Product_API.Interfaces;
 using Shared.Domain.Results;
 
@@ -7,8 +8,12 @@ namespace Product_API.Features.Categories;
 
 public static class CreateCategory
 {
-    public record Command(string CategoryName, string Description, List<string> Details)
-        : IRequest<Result>;
+    public record Command(
+        string CategoryName,
+        string Description,
+        IFormFile File,
+        List<string> Details
+    ) : IRequest<Result>;
 
     public class Handler(ICategoryRepository repository) : IRequestHandler<Command, Result>
     {
@@ -23,17 +28,18 @@ public static class CreateCategory
         public void AddRoutes(IEndpointRouteBuilder app)
         {
             app.MapPost(
-                "/api/category",
-                async (ISender sender, Command command) =>
-                {
-                    if (await sender.Send(command) is { IsFailure: true } result)
+                    "/api/category",
+                    async (ISender sender, [FromForm] Command command) =>
                     {
-                        return Results.BadRequest(result.ErrorTypes);
-                    }
+                        if (await sender.Send(command) is { IsFailure: true } result)
+                        {
+                            return Results.BadRequest(result.ErrorTypes);
+                        }
 
-                    return Results.Ok();
-                }
-            );
+                        return Results.Ok();
+                    }
+                )
+                .DisableAntiforgery();
         }
     }
 }

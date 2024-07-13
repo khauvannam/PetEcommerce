@@ -28,23 +28,24 @@ public static class UpdateProduct
         public void AddRoutes(IEndpointRouteBuilder app)
         {
             app.MapGet(
-                "api/product/{productId}",
-                async (
-                    ISender sender,
-                    string productId,
-                    [FromBody] UpdateProductRequest updateProductRequest
-                ) =>
-                {
-                    var command = new Command(productId, updateProductRequest);
-                    var result = await sender.Send(command);
-                    if (!result.IsFailure)
+                    "api/product/{productId}",
+                    async (
+                        ISender sender,
+                        string productId,
+                        [FromBody] UpdateProductRequest updateProductRequest
+                    ) =>
                     {
-                        return Results.Ok(result.Value);
-                    }
+                        var command = new Command(productId, updateProductRequest);
+                        var result = await sender.Send(command);
+                        if (!result.IsFailure)
+                        {
+                            return Results.Ok(result.Value);
+                        }
 
-                    return Results.BadRequest(result.ErrorTypes);
-                }
-            );
+                        return Results.BadRequest(result.ErrorTypes);
+                    }
+                )
+                .DisableAntiforgery();
         }
     }
 }

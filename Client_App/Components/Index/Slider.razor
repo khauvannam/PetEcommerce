@@ -1,21 +1,17 @@
-<div class="w-full p-10 flex justify-center">
+@using Client_App.Components.Share
+<div class="w-full px-10 flex justify-center">
     <div class="w-full max-w-[1300px] justify-between flex">
         <div class="w-5/12 mt-20">
-            <h1 class="text-4xl  font-extrabold text-main">
+            <h1 class="text-4xl font-extrabold text-main uppercase">
                 Every dog deserves to feel their best
             </h1>
             <p class="pt-4 pb-6 text-main">
                 Help your pet stay calm through stressful situations like fireworks, separation anxiety, new routines, and travel. Order now and watch their transformation.
             </p>
             <div class="mb-12">
-                <button class="h-[54px] w-[355px] rounded-full flex justify-center items-center bg-[#00205c] hover:border-[#00205c] hover:border-2 hover:bg-[#FADC6F] group">
-                    <p class="text-white group-hover:text-main">
-                        Get Up to 40% Off
-                    </p>
-                </button>
+                <CustomButton Value="Get Up to 40% Off"/>
             </div>
             <div class="flex justify-between w-full gap-10">
-
                 <div class="flex flex-col gap-5 justify-center">
                     <img class="max-h-[32px]" src="./images/index/icons/USA_200x.svg" alt=""><span class="text-main">USA Made</span>
                 </div>

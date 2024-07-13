@@ -13,6 +13,7 @@ public static class Extension
 {
     public static void AddPersistence(this IServiceCollection services)
     {
+        //localhost:8075
         var catalog = new DependencyContextAssemblyCatalog();
         var types = catalog.GetAssemblies().SelectMany(x => x.GetTypes());
 

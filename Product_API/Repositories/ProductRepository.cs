@@ -7,17 +7,20 @@ using Product_API.Features.Products;
 using Product_API.Interfaces;
 using Shared.Domain.Results;
 using Shared.Domain.Services;
+using Shared.Services;
 using StackExchange.Redis;
 
 namespace Product_API.Repositories;
 
 public class ProductRepository : IProductRepository
 {
+    private readonly BlobService _blobService;
     private readonly IDatabase _database;
     private const string ProductKeyPrefix = "Product:";
 
-    public ProductRepository(IOptions<ProductDatabaseSetting> options)
+    public ProductRepository(IOptions<ProductDatabaseSetting> options, BlobService blobService)
     {
+        _blobService = blobService;
         var redis = ConnectionMultiplexer.Connect(options.Value.ConnectionString);
         _database = redis.GetDatabase(options.Value.DatabaseIndex);
     }
@@ -57,24 +60,21 @@ public class ProductRepository : IProductRepository
     public async Task<Result<Product>> CreateProduct(CreateProduct.Command command)
     {
         var productCategory = ProductCategory.Create(
-            command.ProductCategoryDto.ProductCategoryId,
-            command.ProductCategoryDto.Details
+            command.ProductCategory.ProductCategoryId,
+            command.ProductCategory.Details
         );
-
+        var fileName = (await _blobService.UploadFileAsync(command.File, ProductKeyPrefix)).Value;
         var product = Product.Create(
             command.Name,
             command.Description,
             command.ProductUseGuide,
+            fileName,
             productCategory
         );
 
         foreach (var variant in command.ProductVariants)
         {
-            var productVariant = ProductVariant.Create(
-                variant.VariantName,
-                variant.ImageUrl,
-                variant.InStock
-            );
+            var productVariant = ProductVariant.Create(variant.VariantName, variant.InStock);
             productVariant.SetPrice(variant.OriginalPrice);
             productVariant.ApplyDiscount(variant.DiscountPercent);
             product.AddProductVariants(productVariant);
@@ -110,10 +110,12 @@ public class ProductRepository : IProductRepository
             }
         )!;
         var value = command.UpdateProductRequest;
+        var fileName = (await _blobService.UploadFileAsync(value.File, ProductKeyPrefix)).Value;
         product.UpdateProduct(
             value.Name,
             value.Description,
             value.ProductUseGuide,
+            fileName,
             value.ProductCategory,
             value.ProductVariants
         );

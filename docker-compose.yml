@@ -11,7 +11,7 @@
     driver: local
 
 services:
-  
+      
   basket_api:
     container_name: basket_api.container
     image: basket_api
@@ -54,7 +54,8 @@ services:
     ports:
       - 8082:8080
     networks:
-      - product_backend.networks 
+      - product_backend.networks
+      - azurite_server
   
   sql_server1:
     image: mcr.microsoft.com/mssql/server:2022-latest
@@ -110,10 +111,12 @@ services:
     ports:
       - 8073:10000
     restart: on-failure
-    volumes:
+    command: azurite --loose --blobHost 0.0.0.0 --location /data --debug /logs
+    volumes: 
       - /home/khauvannam/Azurite/blob-data:/data
-    command:
-      "azurite-blob --blobHost 0.0.0.0 -l /data"
+      - /home/khauvannam/Azurite/logs/debug.log:/logs
+    networks:
+      - azurite_server
 
 networks:
   identity_backend.networks:
@@ -122,3 +125,4 @@ networks:
   message_broker:
   frontend:
   backend:
+  azurite_server:

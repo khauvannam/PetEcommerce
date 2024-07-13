@@ -1,15 +1,17 @@
 ﻿using Azure.Storage.Blobs;
+using Microsoft.AspNetCore.Http;
 using Microsoft.IdentityModel.Tokens;
 using Shared.Domain.Results;
+using Shared.Domain.Services;
 
 namespace Shared.Services;
 
 public class BlobService
 {
-    private readonly BlobServiceClient _client = null!;
+    private readonly BlobServiceClient _client = new(Key.BlobConnectionString);
     private const string ContainerName = "files";
 
-    public async Task<Result<string>> UploadFileAsync(Stream fileStream)
+    public async Task<Result<string>> UploadFileAsync(IFormFile file, string prefix)
     {
         if (ContainerName.IsNullOrEmpty())
         {
@@ -23,10 +25,13 @@ public class BlobService
 
         var clientContainer = _client.GetBlobContainerClient(ContainerName);
         await clientContainer.CreateIfNotExistsAsync();
-        var fileName = Guid.NewGuid().ToString();
+        var fileName = $"{prefix}{Guid.NewGuid().ToString()}";
         var blobClient = clientContainer.GetBlobClient(fileName);
-        await blobClient.UploadAsync(fileStream, true);
-        return Result.Success(fileName);
+        await using var data = file.OpenReadStream();
+
+        await blobClient.UploadAsync(data, true);
+
+        return Result.Success(blobClient.Uri.ToString());
     }
 
     public async Task<Result> DeleteAsync(string fileName)

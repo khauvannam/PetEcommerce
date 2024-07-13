@@ -21,8 +21,7 @@ public static class Extension
 
     public static void AddBlobService(this IServiceCollection services)
     {
-        services.AddSingleton<BlobService>();
-        services.AddSingleton(_ => new BlobServiceClient(Key.BlobConnectionString));
+        services.AddScoped<BlobService>();
     }
 
     public static void AddEmailService(this IServiceCollection services)

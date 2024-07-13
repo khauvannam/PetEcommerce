@@ -15,6 +15,7 @@ public class Product : AggregateRoot
     public string Name { get; private set; }
     public string Description { get; private set; }
     public string ProductUseGuide { get; private set; }
+    public string ImageUrl { get; private set; }
     public DateTime CreatedAt { get; private set; }
     public DateTime UpdatedAt { get; private set; }
     public ProductCategory ProductCategory { get; private set; }
@@ -24,6 +25,7 @@ public class Product : AggregateRoot
         string name,
         string description,
         string productUseGuide,
+        string imageUrl,
         ProductCategory productCategory
     )
     {
@@ -33,6 +35,7 @@ public class Product : AggregateRoot
             Description = description,
             ProductCategory = productCategory,
             ProductUseGuide = productUseGuide,
+            ImageUrl = imageUrl,
             CreatedAt = DateTime.Now,
             UpdatedAt = DateTime.Now
         };
@@ -42,6 +45,7 @@ public class Product : AggregateRoot
         string name,
         string description,
         string productUseGuide,
+        string imageUrl,
         ProductCategory productCategory,
         List<ProductVariant> productVariants
     )
@@ -49,6 +53,7 @@ public class Product : AggregateRoot
         Name = name;
         Description = description;
         ProductUseGuide = productUseGuide;
+        ImageUrl = imageUrl;
         UpdatedAt = DateTime.Now;
         UpdateCategory(productCategory);
         UpdateVariantList(productVariants);

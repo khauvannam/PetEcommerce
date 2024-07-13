@@ -14,7 +14,8 @@ public static class CreateProduct
         string Name,
         string Description,
         string ProductUseGuide,
-        ProductCategoryDto ProductCategoryDto,
+        IFormFile File,
+        ProductCategory ProductCategory,
         List<ProductVariantRequest> ProductVariants
     ) : IRequest<Result<Product>>;
 
@@ -36,18 +37,19 @@ public static class CreateProduct
         public void AddRoutes(IEndpointRouteBuilder app)
         {
             app.MapPost(
-                "/api/product",
-                async (ISender sender, [FromBody] Command command) =>
-                {
-                    var result = await sender.Send(command);
-                    if (result.IsFailure)
+                    "/api/product",
+                    async (ISender sender, [FromForm] Command command) =>
                     {
-                        return Results.BadRequest(result.ErrorTypes);
-                    }
+                        var result = await sender.Send(command);
+                        if (result.IsFailure)
+                        {
+                            return Results.BadRequest(result.ErrorTypes);
+                        }
 
-                    return Results.Ok(result.Value);
-                }
-            );
+                        return Results.Ok(result.Value);
+                    }
+                )
+                .DisableAntiforgery();
         }
     }
 }

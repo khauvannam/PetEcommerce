@@ -1,0 +1,9 @@
+<button class="h-[54px] w-[355px] rounded-full flex justify-center items-center bg-[#00205c] hover:border-[#00205c] hover:border-2 hover:bg-[#FADC6F] group transition-all duration-200">
+    <p class="text-white group-hover:text-main">
+        @Value
+    </p>
+</button>
+
+@code {
+    [Parameter] public string Value { get; set; } = null!;
+}
