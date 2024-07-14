@@ -1,3 +1,4 @@
+using BaseDomain.Results;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Product_API.Databases;
@@ -5,7 +6,7 @@ using Product_API.Domains.Categories;
 using Product_API.Errors;
 using Product_API.Features.Categories;
 using Product_API.Interfaces;
-using Shared.Domain.Results;
+using Shared.Domain.Services;
 using Shared.Services;
 using StackExchange.Redis;
 
@@ -15,7 +16,7 @@ public class CategoryRepository : ICategoryRepository
 {
     private readonly BlobService _blobService;
     private readonly IDatabase _database;
-    private const string CategoryKeyPrefix = "Category:";
+    private const string CategoryKeyPrefix = "Category-";
 
     public CategoryRepository(IOptions<CategoryDatabaseSetting> options, BlobService blobService)
     {
@@ -74,7 +75,14 @@ public class CategoryRepository : ICategoryRepository
             var categoryJson = await _database.StringGetAsync(key);
             if (!categoryJson.IsNullOrEmpty)
             {
-                var category = JsonConvert.DeserializeObject<Category>(categoryJson!);
+                var category = JsonConvert.DeserializeObject<Category>(
+                    categoryJson!,
+                    new JsonSerializerSettings()
+                    {
+                        ConstructorHandling = ConstructorHandling.AllowNonPublicDefaultConstructor,
+                        ContractResolver = new PrivateSetterJsonResolver()
+                    }
+                );
                 categories.Add(category!);
             }
         }

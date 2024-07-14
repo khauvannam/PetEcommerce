@@ -13,6 +13,16 @@ public static class Extension
 {
     public static void AddPersistence(this IServiceCollection services)
     {
+        services.AddCors(options =>
+        {
+            options.AddPolicy(
+                "AllowAllOrigins",
+                builder =>
+                {
+                    builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
+                }
+            );
+        });
         //localhost:8075
         var catalog = new DependencyContextAssemblyCatalog();
         var types = catalog.GetAssemblies().SelectMany(x => x.GetTypes());

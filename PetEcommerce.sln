@@ -45,6 +45,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Customer_API", "Customer_AP
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Administrator_API", "Administrator_API\Administrator_API.csproj", "{0B5BEA92-2FF6-41EB-8A9C-02170E7E279C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BaseDomain", "BaseDomain\BaseDomain.csproj", "{402E2B2D-2583-41D5-AEFA-DC919065A5A7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -102,5 +104,9 @@ Global
 		{0B5BEA92-2FF6-41EB-8A9C-02170E7E279C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0B5BEA92-2FF6-41EB-8A9C-02170E7E279C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0B5BEA92-2FF6-41EB-8A9C-02170E7E279C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{402E2B2D-2583-41D5-AEFA-DC919065A5A7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{402E2B2D-2583-41D5-AEFA-DC919065A5A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{402E2B2D-2583-41D5-AEFA-DC919065A5A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{402E2B2D-2583-41D5-AEFA-DC919065A5A7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

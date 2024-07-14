@@ -1,8 +1,8 @@
+using BaseDomain.Results;
 using Carter;
 using MediatR;
 using Product_API.Domains.Categories;
 using Product_API.Interfaces;
-using Shared.Domain.Results;
 
 namespace Product_API.Features.Categories;
 

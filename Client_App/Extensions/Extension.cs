@@ -10,7 +10,7 @@ public static class Extension
             nameof(ProductService),
             client =>
             {
-                client.BaseAddress = new Uri("https://localhost:8082/api/product");
+                client.BaseAddress = new Uri("http://localhost:8082/");
             }
         );
 
@@ -18,8 +18,9 @@ public static class Extension
             nameof(BasketService),
             client =>
             {
-                client.BaseAddress = new Uri("https://localhost:8080/api/basket");
+                client.BaseAddress = new Uri("http://localhost:8080/api/basket");
             }
         );
+        services.AddScoped<CategoryService>();
     }
 }

@@ -1,9 +1,12 @@
 @page "/"
 @using Client_App.Components.Index
+@using Client_App.Domains.Categories
+@using Client_App.Services
+
 
 <Slider/>
 
-<Discover/>
+<Discover CategoryList="Categories"/>
 
 <ScienceBaked/>
 
@@ -16,5 +19,12 @@
 <Collection/>
 
 @code {
+    public List<Category> Categories = new();
+    [Inject] public CategoryService CategoryServiceRepo { get; set; } = null!;
+
+    protected override async Task OnInitializedAsync()
+    {
+        Categories = await CategoryServiceRepo.GetCategories();
+    }
 
 }

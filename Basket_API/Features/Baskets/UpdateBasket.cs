@@ -1,10 +1,10 @@
+using BaseDomain.Results;
 using Basket_API.Domains.BasketItems;
 using Basket_API.Domains.Baskets;
 using Basket_API.Errors;
 using Basket_API.Interfaces;
 using FluentValidation;
 using MediatR;
-using Shared.Domain.Results;
 
 namespace Basket_API.Features.Baskets
 {

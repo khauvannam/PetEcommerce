@@ -15,7 +15,7 @@ public static class Extension
     public static void AddDatabase(this WebApplicationBuilder builder)
     {
         var conn =
-            "Server=172.19.0.2;Initial Catalog=UsrDatabase;User ID=sa;Password=Nam09189921;TrustServerCertificate=True;Encrypt=False";
+            "Server=sql_server1;Initial Catalog=UsrDatabase;User ID=sa;Password=Nam09189921;TrustServerCertificate=True;Encrypt=False";
         builder.Services.AddDbContext<UserDbContext>(opt => opt.UseSqlServer(conn));
     }
 

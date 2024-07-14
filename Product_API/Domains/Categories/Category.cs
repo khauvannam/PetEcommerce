@@ -2,23 +2,7 @@
 
 public class Category
 {
-    private Category(
-        string categoryName,
-        string description,
-        string imageUrl,
-        HashSet<string> details
-    )
-    {
-        if (details.Count > 15)
-        {
-            throw new ArgumentException("Details is limited at 15");
-        }
-
-        CategoryName = categoryName;
-        Details = details;
-        ImageUrl = imageUrl;
-        Description = description;
-    }
+    private Category() { }
 
     public string CategoryId = Guid.NewGuid().ToString();
     public string CategoryName { get; private set; }
@@ -31,7 +15,14 @@ public class Category
         string description,
         string imageUrl,
         HashSet<string> details
-    ) => new(categoryName, description, imageUrl, details);
+    ) =>
+        new()
+        {
+            CategoryName = categoryName,
+            Description = description,
+            ImageUrl = imageUrl,
+            Details = details
+        };
 
     public void Update(HashSet<string> details, string categoryName) =>
         (Details, CategoryName) = (details, categoryName);

@@ -1,4 +1,4 @@
-﻿namespace Shared.Domain.Bases;
+﻿namespace BaseDomain.Bases;
 
 public abstract class ValueObject
 {

@@ -1,4 +1,5 @@
-﻿using Identity.API.Databases;
+﻿using BaseDomain.Results;
+using Identity.API.Databases;
 using Identity.API.Domains.Tokens;
 using Identity.API.Domains.Users;
 using Identity.API.Errors;
@@ -6,7 +7,6 @@ using Identity.API.Features.Users;
 using Identity.API.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using MimeKit;
-using Shared.Domain.Results;
 using Shared.Extensions.JwtHandlers;
 using Shared.Services;
 

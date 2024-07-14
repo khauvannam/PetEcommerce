@@ -1,5 +1,5 @@
+using BaseDomain.Results;
 using Basket_API.Domains.BasketItems;
-using Shared.Domain.Results;
 
 namespace Basket_API.Interfaces;
 

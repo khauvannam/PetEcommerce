@@ -1,6 +1,6 @@
+using BaseDomain.Results;
 using Basket_API.Interfaces;
 using MediatR;
-using Shared.Domain.Results;
 
 namespace Basket_API.Features.Baskets
 {

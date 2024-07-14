@@ -1,6 +1,6 @@
-﻿using Product_API.Domains.Categories;
+﻿using BaseDomain.Results;
+using Product_API.Domains.Categories;
 using Product_API.Features.Categories;
-using Shared.Domain.Results;
 
 namespace Product_API.Interfaces;
 

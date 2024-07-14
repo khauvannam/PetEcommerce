@@ -1,7 +1,7 @@
-﻿using Identity.API.Databases;
+﻿using BaseDomain.Results;
+using Identity.API.Databases;
 using Identity.API.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using Shared.Domain.Results;
 
 namespace Identity.API.Repositories;
 

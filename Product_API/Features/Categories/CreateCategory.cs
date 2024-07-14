@@ -1,8 +1,8 @@
-﻿using Carter;
+﻿using BaseDomain.Results;
+using Carter;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Product_API.Interfaces;
-using Shared.Domain.Results;
 
 namespace Product_API.Features.Categories;
 

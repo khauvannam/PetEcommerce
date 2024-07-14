@@ -1,4 +1,4 @@
-using Shared.Domain.Bases;
+using BaseDomain.Bases;
 
 namespace Product_API.Domains.Products;
 

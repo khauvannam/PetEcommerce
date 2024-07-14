@@ -1,6 +1,6 @@
-﻿using Identity.API.Domains.Tokens;
+﻿using BaseDomain.Bases;
+using Identity.API.Domains.Tokens;
 using Microsoft.AspNetCore.Identity;
-using Shared.Domain.Bases;
 
 namespace Identity.API.Domains.Users;
 

@@ -1,6 +1,6 @@
-﻿using Product_API.Domains.Products;
+﻿using BaseDomain.Results;
+using Product_API.Domains.Products;
 using Product_API.Features.Products;
-using Shared.Domain.Results;
 
 namespace Product_API.Interfaces;
 

@@ -1,7 +1,7 @@
 ﻿using Azure.Storage.Blobs;
+using Azure.Storage.Blobs.Models;
+using BaseDomain.Results;
 using Microsoft.AspNetCore.Http;
-using Microsoft.IdentityModel.Tokens;
-using Shared.Domain.Results;
 using Shared.Domain.Services;
 
 namespace Shared.Services;
@@ -9,22 +9,13 @@ namespace Shared.Services;
 public class BlobService
 {
     private readonly BlobServiceClient _client = new(Key.BlobConnectionString);
-    private const string ContainerName = "files";
+    private const string ContainerName = "images";
 
     public async Task<Result<string>> UploadFileAsync(IFormFile file, string prefix)
     {
-        if (ContainerName.IsNullOrEmpty())
-        {
-            Result.Failure(
-                new(
-                    "BlobService.Error",
-                    "Maybe the server go down because i dont find any containerName"
-                )
-            );
-        }
-
         var clientContainer = _client.GetBlobContainerClient(ContainerName);
         await clientContainer.CreateIfNotExistsAsync();
+        await clientContainer.SetAccessPolicyAsync(PublicAccessType.Blob);
         var fileName = $"{prefix}{Guid.NewGuid().ToString()}";
         var blobClient = clientContainer.GetBlobClient(fileName);
         await using var data = file.OpenReadStream();

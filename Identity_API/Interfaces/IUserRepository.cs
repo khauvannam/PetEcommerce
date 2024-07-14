@@ -1,6 +1,6 @@
-﻿using Identity.API.Domains.Users;
+﻿using BaseDomain.Results;
+using Identity.API.Domains.Users;
 using Identity.API.Features.Users;
-using Shared.Domain.Results;
 
 namespace Identity.API.Interfaces;
 

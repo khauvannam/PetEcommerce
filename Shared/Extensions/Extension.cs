@@ -1,5 +1,4 @@
-﻿using Azure.Storage.Blobs;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Shared.Domain.Services;
 using Shared.Extensions.Configurations;
 using Shared.Extensions.JwtHandlers;

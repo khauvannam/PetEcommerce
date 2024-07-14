@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
+using BaseDomain.Bases;
 using Basket_API.Domains.BasketItems;
-using Shared.Domain.Bases;
 
 namespace Basket_API.Domains.Baskets;
 

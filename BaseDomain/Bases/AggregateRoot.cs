@@ -1,3 +1,3 @@
-﻿namespace Shared.Domain.Bases;
+﻿namespace BaseDomain.Bases;
 
 public class AggregateRoot : Entity { }

@@ -1,8 +1,8 @@
-﻿using Carter;
+﻿using BaseDomain.Results;
+using Carter;
 using MediatR;
 using Product_API.Domains.Categories;
 using Product_API.Interfaces;
-using Shared.Domain.Results;
 
 namespace Product_API.Features.Categories;
 
@@ -31,12 +31,13 @@ public static class GetAllCategories
                 async (ISender sender) =>
                 {
                     var query = new Query();
-                    if (await sender.Send(query) is { IsFailure: true } result)
+                    var result = await sender.Send(query);
+                    if (result.IsFailure)
                     {
                         return Results.BadRequest(result.ErrorTypes);
                     }
 
-                    return Results.Ok();
+                    return Results.Ok(result.Value);
                 }
             );
         }

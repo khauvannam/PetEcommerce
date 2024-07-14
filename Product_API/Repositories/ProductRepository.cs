@@ -1,11 +1,11 @@
-﻿using Microsoft.Extensions.Options;
+﻿using BaseDomain.Results;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Product_API.Databases;
 using Product_API.Domains.Products;
 using Product_API.Errors;
 using Product_API.Features.Products;
 using Product_API.Interfaces;
-using Shared.Domain.Results;
 using Shared.Domain.Services;
 using Shared.Services;
 using StackExchange.Redis;
@@ -16,7 +16,7 @@ public class ProductRepository : IProductRepository
 {
     private readonly BlobService _blobService;
     private readonly IDatabase _database;
-    private const string ProductKeyPrefix = "Product:";
+    private const string ProductKeyPrefix = "Product-";
 
     public ProductRepository(IOptions<ProductDatabaseSetting> options, BlobService blobService)
     {

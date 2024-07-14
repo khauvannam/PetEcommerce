@@ -1,4 +1,5 @@
 ﻿using System.Security.Claims;
+using BaseDomain.Results;
 using Identity.API.Databases;
 using Identity.API.Domains.Tokens;
 using Identity.API.Domains.Users;
@@ -6,7 +7,6 @@ using Identity.API.Errors;
 using Identity.API.Features.Tokens;
 using Identity.API.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using Shared.Domain.Results;
 using Shared.Extensions.JwtHandlers;
 
 namespace Identity.API.Repositories;
