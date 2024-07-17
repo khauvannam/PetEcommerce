@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Basket_API.Migrations
 {
     [DbContext(typeof(BasketDbContext))]
-    [Migration("20240707045031_Initial")]
+    [Migration("20240717160226_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -25,7 +25,7 @@ namespace Basket_API.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Basket_API.Domain.BasketItems.BasketItem", b =>
+            modelBuilder.Entity("Basket_API.Domains.BasketItems.BasketItem", b =>
                 {
                     b.Property<string>("BasketItemId")
                         .HasMaxLength(255)
@@ -76,7 +76,7 @@ namespace Basket_API.Migrations
                     b.ToTable("BasketItems");
                 });
 
-            modelBuilder.Entity("Basket_API.Domain.Baskets.Basket", b =>
+            modelBuilder.Entity("Basket_API.Domains.Baskets.Basket", b =>
                 {
                     b.Property<string>("BasketId")
                         .HasMaxLength(255)
@@ -92,9 +92,9 @@ namespace Basket_API.Migrations
                     b.ToTable("Baskets");
                 });
 
-            modelBuilder.Entity("Basket_API.Domain.BasketItems.BasketItem", b =>
+            modelBuilder.Entity("Basket_API.Domains.BasketItems.BasketItem", b =>
                 {
-                    b.HasOne("Basket_API.Domain.Baskets.Basket", "Basket")
+                    b.HasOne("Basket_API.Domains.Baskets.Basket", "Basket")
                         .WithMany("BasketItemsList")
                         .HasForeignKey("BasketId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -103,7 +103,7 @@ namespace Basket_API.Migrations
                     b.Navigation("Basket");
                 });
 
-            modelBuilder.Entity("Basket_API.Domain.Baskets.Basket", b =>
+            modelBuilder.Entity("Basket_API.Domains.Baskets.Basket", b =>
                 {
                     b.Navigation("BasketItemsList");
                 });

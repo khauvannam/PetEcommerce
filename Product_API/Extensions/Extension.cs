@@ -1,5 +1,6 @@
 ﻿using Carter;
 using FluentValidation;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Product_API.Databases;
 using Product_API.Features.Products;
@@ -55,16 +56,8 @@ public static class Extension
 
     public static void AddDatabase(this WebApplicationBuilder builder)
     {
-        builder
-            .Services.Configure<ProductDatabaseSetting>(
-                builder.Configuration.GetSection(nameof(ProductDatabaseSetting))
-            )
-            .AddOptionsWithValidateOnStart<ProductDatabaseSetting>();
-
-        builder
-            .Services.Configure<CategoryDatabaseSetting>(
-                builder.Configuration.GetSection(nameof(CategoryDatabaseSetting))
-            )
-            .AddOptionsWithValidateOnStart<CategoryDatabaseSetting>();
+        var conn =
+            "Server=localhost:8070;Initial Catalog=ProductDatabase;User ID=sa;Password=Nam09189921;TrustServerCertificate=True;Encrypt=false";
+        builder.Services.AddDbContext<ProductDbContext>(opt => opt.UseSqlServer(conn));
     }
 }

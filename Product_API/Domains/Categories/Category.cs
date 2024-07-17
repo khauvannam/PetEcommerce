@@ -1,10 +1,19 @@
-﻿namespace Product_API.Domains.Categories;
+﻿using System.ComponentModel.DataAnnotations;
+using BaseDomain.Bases;
 
-public class Category
+namespace Product_API.Domains.Categories;
+
+public class Category : AggregateRoot
 {
     private Category() { }
 
-    public string CategoryId = Guid.NewGuid().ToString();
+    [Key]
+    public string CategoryId
+    {
+        get => Id;
+        private set => Id = value;
+    }
+
     public string CategoryName { get; private set; }
     public string Description { get; private set; }
     public string ImageUrl { get; private set; }

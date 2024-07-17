@@ -1,36 +1,39 @@
-﻿using BaseDomain.Bases;
+﻿using System.ComponentModel.DataAnnotations;
+using BaseDomain.Bases;
 
 namespace Product_API.Domains.Products;
 
 public sealed class ProductVariant : Entity
 {
-    public string VariantId => Id;
+    [Key]
+    public string VariantId
+    {
+        get => Id;
+        private set => Id = value;
+    }
+
     public string VariantName { get; private set; }
-    public int InStock { get; private set; }
+    public int Quantity { get; private set; }
     private OriginalPrice OriginalPrice { get; set; } = null!;
     private Discount Discount { get; set; } = null!;
     public decimal DiscountedPrice => CalculateDiscountedPrice();
 
-    private ProductVariant(string variantName, int inStock)
-    {
-        VariantName = variantName;
-        InStock = inStock;
-    }
+    private ProductVariant() { }
 
-    public static ProductVariant Create(string variantName, int inStock) =>
-        new(variantName, inStock);
+    public static ProductVariant Create(string variantName, int quantity) =>
+        new() { VariantName = variantName, Quantity = quantity };
 
     public void Update(
         string variantName,
         OriginalPrice originalPrice,
         Discount discount,
-        int inStock
+        int quantity
     )
     {
         VariantName = variantName;
         OriginalPrice = originalPrice;
         Discount = discount;
-        InStock = inStock;
+        Quantity = quantity;
     }
 
     public void SetPrice(decimal value) => OriginalPrice = OriginalPrice.Create(value);
@@ -48,18 +51,25 @@ public sealed class ProductVariant : Entity
 
 public class OriginalPrice : ValueObject
 {
-    private OriginalPrice(decimal value, Currency currency) =>
-        (Value, Currency) = (value, currency);
+    private OriginalPrice() { }
 
-    public decimal Value { get; }
-    public Currency Currency { get; }
+    public decimal Value { get; private set; }
+    public Currency Currency { get; private set; }
 
     public static OriginalPrice Create(decimal value, Currency currency = Currency.Usd)
     {
-        if (value < 0)
+        if (value <= 0)
             throw new ArgumentException("Price value must be positive");
 
-        return new(value, currency);
+        return new() { Value = value, Currency = currency };
+    }
+
+    public void Update(decimal value, Currency currency = Currency.Usd)
+    {
+        if (value <= 0)
+            throw new ArgumentException("Price value must be positive");
+        Value = value;
+        Currency = currency;
     }
 
     protected override IEnumerable<object> GetEqualityComponents()

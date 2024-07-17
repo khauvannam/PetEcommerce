@@ -32,7 +32,7 @@ public static class UpdateProduct
                     async (
                         ISender sender,
                         string productId,
-                        [FromBody] UpdateProductRequest updateProductRequest
+                        [FromForm] UpdateProductRequest updateProductRequest
                     ) =>
                     {
                         var command = new Command(productId, updateProductRequest);

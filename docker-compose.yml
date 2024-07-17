@@ -1,17 +1,11 @@
 ﻿volumes:
-  mssql1-data:
-    driver: local
-  mssql2-data:
-    driver: local
-  mongodb-data:
+  mssql-data:
     driver: local
   redis-cache:
     driver: local
-  redis-database:
-    driver: local
 
 services:
-       
+  
   basket_api:
     container_name: basket_api.container
     image: basket_api
@@ -20,11 +14,12 @@ services:
       dockerfile: Basket_API/Dockerfile
     depends_on:
       - redis-cache_server
-      - sql_server2
+      - sql_server
     ports:
       - 8080:8080
     networks:
-      - basket_backend.networks
+      - backend
+      - cache_server
   
   identity_api:
     container_name: identity_api.container
@@ -33,14 +28,11 @@ services:
       context: .
       dockerfile: Identity_API/Dockerfile
     depends_on:
-      - sql_server1
-    environment:
-      - DB_HOST=sql_server1
-      - DB_PASSWORD=Nam09189921
+      - sql_server
     ports:
       - 8081:8080
     networks:
-      - identity_backend.networks
+      - backend
   
   product_api:
     container_name: product_api.container
@@ -49,41 +41,26 @@ services:
       context: .
       dockerfile: Product_API/Dockerfile
     depends_on:
-      - redis-database_server 
+      - sql_server
       - azurite
     ports:
       - 8082:8080
     networks:
-      - product_backend.networks
+      - backend
       - azurite_server
   
-  sql_server1:
+  sql_server:
     image: mcr.microsoft.com/mssql/server:2022-latest
-    container_name: sql_server1.container
+    container_name: sql_server.container
     environment:
       ACCEPT_EULA: Y
       SA_PASSWORD: Nam09189921
-      MSSQL_PID: Express
     ports:
-      - 8070:1433
+      - 1433:1433
     volumes:
-      - mssql1-data:/var/opt/mssql
+      - mssql-data:/var/opt/mssql
     networks:
-      - identity_backend.networks
-  
-  sql_server2:
-    image: mcr.microsoft.com/mssql/server:2022-latest
-    container_name: sql_server2.container
-    environment:
-      ACCEPT_EULA: Y
-      SA_PASSWORD: Nam09189921
-      MSSQL_PID: Express
-    ports:
-      - 8071:1433
-    volumes:
-      - mssql2-data:/var/opt/mssql
-    networks:
-      - basket_backend.networks
+      - backend
   
   redis-cache_server:
     image: redis
@@ -93,18 +70,8 @@ services:
     volumes:
       - redis-cache:/data
     networks:
-      - basket_backend.networks
+      - cache_server
   
-  redis-database_server:
-    image: redis
-    container_name: redis-database_server.container
-    ports:
-      - 8075:6379
-    volumes:
-      - redis-database:/data
-    networks:
-      - product_backend.networks
- 
   azurite:
     container_name: azurite
     image: mcr.microsoft.com/azure-storage/azurite
@@ -112,16 +79,14 @@ services:
       - 8073:10000
     restart: on-failure
     command: azurite --loose --blobHost 0.0.0.0 --location /data --debug /logs
-    volumes: 
+    volumes:
       - /home/khauvannam/Azurite/blob-data:/data
       - /home/khauvannam/Azurite/logs/debug.log:/logs
     networks:
       - azurite_server
 
 networks:
-  identity_backend.networks:
-  basket_backend.networks:
-  product_backend.networks:
+  cache_server:
   message_broker:
   frontend:
   backend:

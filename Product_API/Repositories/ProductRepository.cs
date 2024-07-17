@@ -1,141 +1,157 @@
 ﻿using BaseDomain.Results;
-using Microsoft.Extensions.Options;
-using Newtonsoft.Json;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Product_API.Databases;
 using Product_API.Domains.Products;
 using Product_API.Errors;
 using Product_API.Features.Products;
 using Product_API.Interfaces;
-using Shared.Domain.Services;
+using Shared.Errors;
 using Shared.Services;
-using StackExchange.Redis;
 
-namespace Product_API.Repositories;
-
-public class ProductRepository : IProductRepository
+namespace Product_API.Repositories
 {
-    private readonly BlobService _blobService;
-    private readonly IDatabase _database;
-    private const string ProductKeyPrefix = "Product-";
-
-    public ProductRepository(IOptions<ProductDatabaseSetting> options, BlobService blobService)
+    public class ProductRepository(ProductDbContext dbContext, BlobService blobService)
+        : IProductRepository
     {
-        _blobService = blobService;
-        var redis = ConnectionMultiplexer.Connect(options.Value.ConnectionString);
-        _database = redis.GetDatabase(options.Value.DatabaseIndex);
-    }
-
-    public async Task<Result<List<Product>>> ListAllProducts(ListAllProducts.Query command)
-    {
-        var server = _database.Multiplexer.GetServer(_database.Multiplexer.GetEndPoints().First());
-        var keys = server.Keys(pattern: ProductKeyPrefix + "*").ToArray();
-        var products = new List<Product>();
-
-        foreach (var key in keys.Skip(command.Offset).Take(command.Limit))
+        public async ValueTask<Result<List<Product>>> ListAllProducts(ListAllProducts.Query command)
         {
-            var productJson = await _database.StringGetAsync(key);
-            if (!productJson.IsNullOrEmpty)
+            var query = dbContext.Products.AsQueryable();
+
+            if (!command.CategoryId.IsNullOrEmpty())
             {
-                var product = JsonConvert.DeserializeObject<Product>(
-                    productJson!,
-                    new JsonSerializerSettings
-                    {
-                        ConstructorHandling = ConstructorHandling.AllowNonPublicDefaultConstructor,
-                        ContractResolver = new PrivateSetterJsonResolver()
-                    }
-                )!;
-                if (
-                    command.CategoryId == null
-                    || product.ProductCategory.ProductCategoryId == command.CategoryId
-                )
-                {
-                    products.Add(product);
-                }
+                query = query.Where(p => p.ProductCategory.ProductCategoryId == command.CategoryId);
             }
+
+            var products = await query.Skip(command.Offset).Take(command.Limit).ToListAsync();
+
+            return Result.Success(products);
         }
 
-        return Result.Success(products);
-    }
-
-    public async Task<Result<Product>> CreateProduct(CreateProduct.Command command)
-    {
-        var productCategory = ProductCategory.Create(
-            command.ProductCategory.ProductCategoryId,
-            command.ProductCategory.Details
-        );
-        var fileName = (await _blobService.UploadFileAsync(command.File, ProductKeyPrefix)).Value;
-        var product = Product.Create(
-            command.Name,
-            command.Description,
-            command.ProductUseGuide,
-            fileName,
-            productCategory
-        );
-
-        foreach (var variant in command.ProductVariants)
+        public async Task<Result<Product>> CreateProduct(CreateProduct.Command command)
         {
-            var productVariant = ProductVariant.Create(variant.VariantName, variant.InStock);
-            productVariant.SetPrice(variant.OriginalPrice);
-            productVariant.ApplyDiscount(variant.DiscountPercent);
-            product.AddProductVariants(productVariant);
-        }
+            var productCategory = ProductCategory.Create(
+                command.ProductCategory.ProductCategoryId,
+                command.ProductCategory.Details
+            );
+            var fileName = (await blobService.UploadFileAsync(command.File, "Product-")).Value;
 
-        var productJson = JsonConvert.SerializeObject(product);
-        await _database.StringSetAsync(ProductKeyPrefix + product.ProductId, productJson);
-        return Result.Success(product);
-    }
-
-    public async Task<Result> DeleteProduct(string productId, CancellationToken cancellationToken)
-    {
-        var deleted = await _database.KeyDeleteAsync(ProductKeyPrefix + productId);
-        return deleted ? Result.Success() : Result.Failure(ProductErrors.NotFound);
-    }
-
-    public async Task<Result<Product>> UpdateProduct(
-        UpdateProduct.Command command,
-        CancellationToken cancellationToken
-    )
-    {
-        var productJson = await _database.StringGetAsync(ProductKeyPrefix + command.ProductId);
-        if (productJson.IsNullOrEmpty)
-        {
-            return Result.Failure<Product>(ProductErrors.NotFound);
-        }
-        var product = JsonConvert.DeserializeObject<Product>(
-            productJson!,
-            new JsonSerializerSettings
+            if (string.IsNullOrEmpty(fileName))
             {
-                ConstructorHandling = ConstructorHandling.AllowNonPublicDefaultConstructor,
-                ContractResolver = new PrivateSetterJsonResolver(),
+                return Result.Failure<Product>(BlobErrors.ErrorUploadFile());
             }
-        )!;
-        var value = command.UpdateProductRequest;
-        var fileName = (await _blobService.UploadFileAsync(value.File, ProductKeyPrefix)).Value;
-        product.UpdateProduct(
-            value.Name,
-            value.Description,
-            value.ProductUseGuide,
-            fileName,
-            value.ProductCategory,
-            value.ProductVariants
-        );
 
-        productJson = JsonConvert.SerializeObject(product);
-        await _database.StringSetAsync(ProductKeyPrefix + product.ProductId, productJson);
-        return Result.Success(product);
-    }
+            var product = Product.Create(
+                command.Name,
+                command.Description,
+                command.ProductUseGuide,
+                fileName,
+                productCategory
+            );
 
-    public async Task<Result<Product>> GetProductById(
-        string productId,
-        CancellationToken cancellationToken
-    )
-    {
-        var productJson = await _database.StringGetAsync(ProductKeyPrefix + productId);
-        if (productJson.IsNullOrEmpty)
-        {
-            return Result.Failure<Product>(ProductErrors.NotFound);
+            foreach (var variant in command.ProductVariants)
+            {
+                var productVariant = ProductVariant.Create(variant.VariantName, variant.Quantity);
+                productVariant.SetPrice(variant.OriginalPrice);
+                productVariant.ApplyDiscount(variant.DiscountPercent);
+                product.AddProductVariants(productVariant);
+            }
+
+            dbContext.Products.Add(product);
+            await dbContext.SaveChangesAsync();
+
+            return Result.Success(product);
         }
-        var product = JsonConvert.DeserializeObject<Product>(productJson!)!;
-        return Result.Success(product);
+
+        public async Task<Result> DeleteProduct(
+            string productId,
+            CancellationToken cancellationToken
+        )
+        {
+            var product = await dbContext
+                .Products.Include(p => p.ProductVariants)
+                .FirstOrDefaultAsync(
+                    p => p.ProductId == productId,
+                    cancellationToken: cancellationToken
+                );
+
+            if (product == null)
+            {
+                return Result.Failure(ProductErrors.NotFound);
+            }
+
+            var fileName = new Uri(product.ImageUrl).Segments[^1];
+            dbContext.Products.Remove(product);
+            await blobService.DeleteAsync(fileName);
+            await dbContext.SaveChangesAsync(cancellationToken);
+
+            return Result.Success();
+        }
+
+        public async Task<Result<Product>> UpdateProduct(
+            UpdateProduct.Command command,
+            CancellationToken cancellationToken
+        )
+        {
+            var product = await dbContext
+                .Products.Include(p => p.ProductVariants)
+                .FirstOrDefaultAsync(
+                    p => p.ProductId == command.ProductId,
+                    cancellationToken: cancellationToken
+                );
+
+            if (product == null)
+            {
+                return Result.Failure<Product>(ProductErrors.NotFound);
+            }
+
+            var updateProductRequest = command.UpdateProductRequest;
+            var fileName = (
+                await blobService.UploadFileAsync(updateProductRequest.File, "Product-")
+            ).Value;
+
+            if (string.IsNullOrEmpty(fileName))
+            {
+                return Result.Failure<Product>(BlobErrors.ErrorUploadFile());
+            }
+
+            List<ProductVariant> variants = new();
+            foreach (var variant in updateProductRequest.ProductVariants)
+            {
+                var productVariant = ProductVariant.Create(variant.VariantName, variant.Quantity);
+                productVariant.SetPrice(variant.OriginalPrice);
+                productVariant.ApplyDiscount(variant.DiscountPercent);
+                variants.Add(productVariant);
+            }
+
+            product.UpdateProduct(
+                updateProductRequest.Name,
+                updateProductRequest.Description,
+                updateProductRequest.ProductUseGuide,
+                fileName,
+                updateProductRequest.ProductCategory,
+                variants
+            );
+
+            await dbContext.SaveChangesAsync(cancellationToken);
+            return Result.Success(product);
+        }
+
+        public async Task<Result<Product>> GetProductById(
+            string productId,
+            CancellationToken cancellationToken
+        )
+        {
+            var product = await dbContext
+                .Products.Include(p => p.ProductVariants)
+                .FirstOrDefaultAsync(
+                    p => p.ProductId == productId,
+                    cancellationToken: cancellationToken
+                );
+
+            return product == null
+                ? Result.Failure<Product>(ProductErrors.NotFound)
+                : Result.Success(product);
+        }
     }
 }

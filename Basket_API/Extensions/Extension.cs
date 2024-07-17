@@ -13,7 +13,7 @@ public static class Extension
     {
         // 172.20.0.2
         var conn =
-            "Server=sql_server2;Initial Catalog=BasketDatabase;User ID=sa;Password=Nam09189921;TrustServerCertificate=True;Encrypt=false";
+            "Server=localhost,1433;Initial Catalog=BasketDatabase;User ID=sa;Password=Nam09189921;TrustServerCertificate=True";
         builder.Services.AddDbContext<BasketDbContext>(opt => opt.UseSqlServer(conn));
     }
 

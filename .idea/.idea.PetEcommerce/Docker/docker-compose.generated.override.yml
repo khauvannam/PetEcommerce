@@ -5,97 +5,55 @@ services:
       context: "/mnt/data1/dotnet-repository/petecommercial-project"
       dockerfile: "Basket_API/Dockerfile"
       target: "base"
-      args:
-        BUILD_CONFIGURATION: "Debug"
     command: []
     entrypoint:
-    - "/opt/rider-debugger/linux-x64/JetBrains.Debugger.Worker"
-    - "--runtimeconfig"
-    - "/opt/rider-debugger/JetBrains.Debugger.Worker.runtimeconfig.json"
-    - "--mode=server"
-    - "--frontend-port=57100"
-    - "--backend-port=57300"
-    - "--timeout=60"
+    - "dotnet"
+    - "/app/bin/Debug/net8.0/Basket_API.dll"
     environment:
       ASPNETCORE_ENVIRONMENT: "Development"
       DOTNET_USE_POLLING_FILE_WATCHER: "true"
-      RIDER_DEBUGGER_LOG_DIR: "/var/opt/rider-debugger"
-      RESHARPER_LOG_CONF: "/etc/opt/rider-debugger/backend-log.xml"
     image: "basket_api:dev"
-    ports:
-    - "127.0.0.1:57000:57100"
-    - "127.0.0.1:57200:57300"
+    ports: []
     volumes:
     - "/home/khauvannam/.nuget/packages:/root/.nuget/packages"
     - "/mnt/data1/dotnet-repository/petecommercial-project/Basket_API:/app:rw"
     - "/mnt/data1/dotnet-repository/petecommercial-project:/src:rw"
-    - "/home/khauvannam/.local/share/JetBrains/RiderRemoteDebugger/2024.1.3/Linux64:/opt/rider-debugger"
-    - "/home/khauvannam/jetbrain_ide/JetBrains.Rider-2024.1.3/JetBrains Rider-2024.1.3/bin:/etc/opt/rider-debugger/backend-log.xml"
-    - "/home/khauvannam/.cache/JetBrains/Rider2024.1/log/DebuggerWorker/JetBrains.Debugger.Worker.2024_7_14_16_41_43:/var/opt/rider-debugger:rw"
     working_dir: "/app"
   identity_api:
     build:
       context: "/mnt/data1/dotnet-repository/petecommercial-project"
       dockerfile: "Identity_API/Dockerfile"
       target: "base"
-      args:
-        BUILD_CONFIGURATION: "Debug"
     command: []
     entrypoint:
-    - "/opt/rider-debugger/linux-x64/JetBrains.Debugger.Worker"
-    - "--runtimeconfig"
-    - "/opt/rider-debugger/JetBrains.Debugger.Worker.runtimeconfig.json"
-    - "--mode=server"
-    - "--frontend-port=57100"
-    - "--backend-port=57300"
-    - "--timeout=60"
+    - "dotnet"
+    - "/app/bin/Debug/net8.0/Identity_API.dll"
     environment:
       ASPNETCORE_ENVIRONMENT: "Development"
       DOTNET_USE_POLLING_FILE_WATCHER: "true"
-      RIDER_DEBUGGER_LOG_DIR: "/var/opt/rider-debugger"
-      RESHARPER_LOG_CONF: "/etc/opt/rider-debugger/backend-log.xml"
     image: "identity_api:dev"
-    ports:
-    - "127.0.0.1:57001:57100"
-    - "127.0.0.1:57201:57300"
+    ports: []
     volumes:
     - "/home/khauvannam/.nuget/packages:/root/.nuget/packages"
     - "/mnt/data1/dotnet-repository/petecommercial-project/Identity_API:/app:rw"
     - "/mnt/data1/dotnet-repository/petecommercial-project:/src:rw"
-    - "/home/khauvannam/.local/share/JetBrains/RiderRemoteDebugger/2024.1.3/Linux64:/opt/rider-debugger"
-    - "/home/khauvannam/jetbrain_ide/JetBrains.Rider-2024.1.3/JetBrains Rider-2024.1.3/bin:/etc/opt/rider-debugger/backend-log.xml"
-    - "/home/khauvannam/.cache/JetBrains/Rider2024.1/log/DebuggerWorker/JetBrains.Debugger.Worker.2024_7_14_16_41_43:/var/opt/rider-debugger:rw"
     working_dir: "/app"
   product_api:
     build:
       context: "/mnt/data1/dotnet-repository/petecommercial-project"
       dockerfile: "Product_API/Dockerfile"
       target: "base"
-      args:
-        BUILD_CONFIGURATION: "Debug"
     command: []
     entrypoint:
-    - "/opt/rider-debugger/linux-x64/JetBrains.Debugger.Worker"
-    - "--runtimeconfig"
-    - "/opt/rider-debugger/JetBrains.Debugger.Worker.runtimeconfig.json"
-    - "--mode=server"
-    - "--frontend-port=57100"
-    - "--backend-port=57300"
-    - "--timeout=60"
+    - "dotnet"
+    - "/app/bin/Debug/net8.0/Product_API.dll"
     environment:
       ASPNETCORE_ENVIRONMENT: "Development"
       DOTNET_USE_POLLING_FILE_WATCHER: "true"
-      RIDER_DEBUGGER_LOG_DIR: "/var/opt/rider-debugger"
-      RESHARPER_LOG_CONF: "/etc/opt/rider-debugger/backend-log.xml"
     image: "product_api:dev"
-    ports:
-    - "127.0.0.1:57002:57100"
-    - "127.0.0.1:57202:57300"
+    ports: []
     volumes:
     - "/home/khauvannam/.nuget/packages:/root/.nuget/packages"
     - "/mnt/data1/dotnet-repository/petecommercial-project/Product_API:/app:rw"
     - "/mnt/data1/dotnet-repository/petecommercial-project:/src:rw"
-    - "/home/khauvannam/.local/share/JetBrains/RiderRemoteDebugger/2024.1.3/Linux64:/opt/rider-debugger"
-    - "/home/khauvannam/jetbrain_ide/JetBrains.Rider-2024.1.3/JetBrains Rider-2024.1.3/bin:/etc/opt/rider-debugger/backend-log.xml"
-    - "/home/khauvannam/.cache/JetBrains/Rider2024.1/log/DebuggerWorker/JetBrains.Debugger.Worker.2024_7_14_16_41_43:/var/opt/rider-debugger:rw"
     working_dir: "/app"

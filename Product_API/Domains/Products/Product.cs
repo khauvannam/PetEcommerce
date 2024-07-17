@@ -1,4 +1,5 @@
-﻿using BaseDomain.Bases;
+﻿using System.ComponentModel.DataAnnotations;
+using BaseDomain.Bases;
 
 namespace Product_API.Domains.Products;
 
@@ -6,20 +7,23 @@ public class Product : AggregateRoot
 {
     private Product() { }
 
+    [Key]
     public string ProductId
     {
         get => Id;
         private set => Id = value;
     }
 
+    [MaxLength(255)]
     public string Name { get; private set; }
+
     public string Description { get; private set; }
     public string ProductUseGuide { get; private set; }
     public string ImageUrl { get; private set; }
     public DateTime CreatedAt { get; private set; }
     public DateTime UpdatedAt { get; private set; }
     public ProductCategory ProductCategory { get; private set; }
-    private List<ProductVariant> ProductVariants { get; } = [];
+    public List<ProductVariant> ProductVariants { get; } = [];
 
     public static Product Create(
         string name,
