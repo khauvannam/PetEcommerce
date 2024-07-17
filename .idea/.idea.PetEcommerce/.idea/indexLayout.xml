@@ -2,7 +2,17 @@
 <project version="4">
   <component name="UserContentModel">
     <attachedFolders />
-    <explicitIncludes />
+    <explicitIncludes>
+      <Path>Administrator_API/Controllers</Path>
+      <Path>Administrator_API/Databases</Path>
+      <Path>Administrator_API/Domains</Path>
+      <Path>Administrator_API/Errors</Path>
+      <Path>Administrator_API/Extensions</Path>
+      <Path>Administrator_API/Features</Path>
+      <Path>Administrator_API/Interfaces</Path>
+      <Path>Administrator_API/Repositories</Path>
+      <Path>app-services.yml</Path>
+    </explicitIncludes>
     <explicitExcludes />
   </component>
 </project>

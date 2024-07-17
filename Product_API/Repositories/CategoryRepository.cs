@@ -28,20 +28,7 @@ public class CategoryRepository : ICategoryRepository
     public async Task<Result> CreateCategory(CreateCategory.Command command)
     {
         var fileName = (await _blobService.UploadFileAsync(command.File, CategoryKeyPrefix)).Value;
-        HashSet<string> details = new();
-        foreach (var detail in command.Details)
-        {
-            if (!details.Add(detail))
-            {
-                throw new ArgumentException("Detail cannot be duplicated");
-            }
-        }
-        var category = Category.Create(
-            command.CategoryName,
-            command.Description,
-            fileName,
-            details
-        );
+        var category = Category.Create(command.CategoryName, command.Description, fileName);
         var categoryJson = JsonConvert.SerializeObject(category);
         await _database.StringSetAsync(CategoryKeyPrefix + category.CategoryId, categoryJson);
         return Result.Success();
@@ -73,18 +60,17 @@ public class CategoryRepository : ICategoryRepository
         foreach (var key in keys)
         {
             var categoryJson = await _database.StringGetAsync(key);
-            if (!categoryJson.IsNullOrEmpty)
-            {
-                var category = JsonConvert.DeserializeObject<Category>(
-                    categoryJson!,
-                    new JsonSerializerSettings()
-                    {
-                        ConstructorHandling = ConstructorHandling.AllowNonPublicDefaultConstructor,
-                        ContractResolver = new PrivateSetterJsonResolver()
-                    }
-                );
-                categories.Add(category!);
-            }
+            if (categoryJson.IsNullOrEmpty)
+                continue;
+            var category = JsonConvert.DeserializeObject<Category>(
+                categoryJson!,
+                new JsonSerializerSettings()
+                {
+                    ConstructorHandling = ConstructorHandling.AllowNonPublicDefaultConstructor,
+                    ContractResolver = new PrivateSetterJsonResolver()
+                }
+            );
+            categories.Add(category!);
         }
 
         return Result.Success(categories);

@@ -73,7 +73,19 @@ public class Discount : ValueObject
 {
     public decimal Percent { get; private set; }
 
-    private Discount(decimal percent)
+    private Discount() { }
+
+    public static Discount Create(decimal percent)
+    {
+        if (percent is < 0 or > 100)
+        {
+            throw new ArgumentException("Discount percent must be between 0 and 100");
+        }
+
+        return new() { Percent = percent };
+    }
+
+    public void Update(decimal percent)
     {
         if (percent is < 0 or > 100)
         {
@@ -82,8 +94,6 @@ public class Discount : ValueObject
 
         Percent = percent;
     }
-
-    public static Discount Create(decimal percent) => new(percent);
 
     protected override IEnumerable<object> GetEqualityComponents()
     {

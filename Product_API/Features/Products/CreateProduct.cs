@@ -30,7 +30,7 @@ public static class CreateProduct
         }
     }
 
-    public class Validator : AbstractValidator<Product> { }
+    public class Validator : AbstractValidator<Product>;
 
     public class EndPoint : ICarterModule
     {

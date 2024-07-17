@@ -16,7 +16,7 @@
 
 <Feature/>
 
-<Collection/>
+<Collection Categories="Categories"/>
 
 @code {
     public List<Category> Categories = new();
@@ -26,5 +26,6 @@
     {
         Categories = await CategoryServiceRepo.GetCategories();
     }
+
 
 }
