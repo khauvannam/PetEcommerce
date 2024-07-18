@@ -1,22 +1,33 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 using BaseDomain.Bases;
 
 namespace Product_API.Domains.Products;
 
 public sealed class ProductVariant : Entity
 {
-    [Key]
+    [JsonInclude]
+    [MaxLength(255)]
     public string VariantId
     {
         get => Id;
         private set => Id = value;
     }
 
-    public string VariantName { get; private set; }
+    [MaxLength(500)]
+    public string VariantName { get; private set; } = null!;
+
     public int Quantity { get; private set; }
-    private OriginalPrice OriginalPrice { get; set; } = null!;
-    private Discount Discount { get; set; } = null!;
+    public OriginalPrice OriginalPrice { get; set; } = null!;
+    public Discount Discount { get; set; } = null!;
     public decimal DiscountedPrice => CalculateDiscountedPrice();
+
+    [JsonInclude]
+    [MaxLength(255)]
+    public string ProductId { get; set; } = null!;
+
+    [Newtonsoft.Json.JsonIgnore]
+    public Product Product { get; set; } = null!;
 
     private ProductVariant() { }
 

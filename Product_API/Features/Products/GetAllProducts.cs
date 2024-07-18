@@ -8,7 +8,7 @@ using Product_API.Interfaces;
 
 namespace Product_API.Features.Products;
 
-public static class ListAllProducts
+public static class GetAllProducts
 {
     public record Query(int Limit = 10, int Offset = 0, string? CategoryId = null)
         : IRequest<Result<List<Product>>>;

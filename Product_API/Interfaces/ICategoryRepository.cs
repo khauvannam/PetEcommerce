@@ -8,6 +8,7 @@ public interface ICategoryRepository
 {
     Task<Result> CreateCategory(CreateCategory.Command command);
     Task<Result> DeleteCategory(DeleteCategory.Command command);
-    ValueTask<Result<Category>> GetCategoryById(GetCategoryById.Query command);
+    Task<Result<Category>> UpdateCategory(UpdateCategory.Command command);
+    ValueTask<Result<Category>> GetCategoryById(GetCategoryById.Query query);
     ValueTask<Result<List<Category>>> GetAllCategories();
 }

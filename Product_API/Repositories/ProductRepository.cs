@@ -14,13 +14,13 @@ namespace Product_API.Repositories
     public class ProductRepository(ProductDbContext dbContext, BlobService blobService)
         : IProductRepository
     {
-        public async ValueTask<Result<List<Product>>> ListAllProducts(ListAllProducts.Query command)
+        public async ValueTask<Result<List<Product>>> ListAllProducts(GetAllProducts.Query command)
         {
             var query = dbContext.Products.AsQueryable();
 
             if (!command.CategoryId.IsNullOrEmpty())
             {
-                query = query.Where(p => p.ProductCategory.ProductCategoryId == command.CategoryId);
+                query = query.Where(p => p.CategoryId == command.CategoryId);
             }
 
             var products = await query.Skip(command.Offset).Take(command.Limit).ToListAsync();
@@ -30,11 +30,7 @@ namespace Product_API.Repositories
 
         public async Task<Result<Product>> CreateProduct(CreateProduct.Command command)
         {
-            var productCategory = ProductCategory.Create(
-                command.ProductCategory.ProductCategoryId,
-                command.ProductCategory.Details
-            );
-            var fileName = (await blobService.UploadFileAsync(command.File, "Product-")).Value;
+            var fileName = await blobService.UploadFileAsync(command.File, "Product-");
 
             if (string.IsNullOrEmpty(fileName))
             {
@@ -46,7 +42,7 @@ namespace Product_API.Repositories
                 command.Description,
                 command.ProductUseGuide,
                 fileName,
-                productCategory
+                command.CategoryId
             );
 
             foreach (var variant in command.ProductVariants)
@@ -106,9 +102,7 @@ namespace Product_API.Repositories
             }
 
             var updateProductRequest = command.UpdateProductRequest;
-            var fileName = (
-                await blobService.UploadFileAsync(updateProductRequest.File, "Product-")
-            ).Value;
+            var fileName = await blobService.UploadFileAsync(updateProductRequest.File, "Product-");
 
             if (string.IsNullOrEmpty(fileName))
             {
@@ -129,7 +123,7 @@ namespace Product_API.Repositories
                 updateProductRequest.Description,
                 updateProductRequest.ProductUseGuide,
                 fileName,
-                updateProductRequest.ProductCategory,
+                updateProductRequest.CategoryId,
                 variants
             );
 

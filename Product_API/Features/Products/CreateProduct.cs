@@ -15,7 +15,7 @@ public static class CreateProduct
         string Description,
         string ProductUseGuide,
         IFormFile File,
-        ProductCategory ProductCategory,
+        string CategoryId,
         List<ProductVariantRequest> ProductVariants
     ) : IRequest<Result<Product>>;
 

@@ -6,7 +6,7 @@ namespace Product_API.Interfaces;
 
 public interface IProductRepository
 {
-    ValueTask<Result<List<Product>>> ListAllProducts(ListAllProducts.Query command);
+    ValueTask<Result<List<Product>>> ListAllProducts(GetAllProducts.Query command);
     Task<Result<Product>> CreateProduct(CreateProduct.Command command);
     Task<Result> DeleteProduct(string productId, CancellationToken cancellationToken);
     Task<Result<Product>> UpdateProduct(

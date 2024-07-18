@@ -11,7 +11,7 @@ public class BlobService
     private readonly BlobServiceClient _client = new(Key.BlobConnectionString);
     private const string ContainerName = "images";
 
-    public async Task<Result<string>> UploadFileAsync(IFormFile file, string prefix)
+    public async Task<string> UploadFileAsync(IFormFile file, string prefix)
     {
         var clientContainer = _client.GetBlobContainerClient(ContainerName);
         await clientContainer.CreateIfNotExistsAsync();
@@ -22,14 +22,13 @@ public class BlobService
 
         await blobClient.UploadAsync(data, true);
 
-        return Result.Success(blobClient.Uri.ToString());
+        return blobClient.Uri.ToString();
     }
 
-    public async Task<Result> DeleteAsync(string fileName)
+    public async Task DeleteAsync(string fileName)
     {
         var clientContainer = _client.GetBlobContainerClient(ContainerName);
         var blobClient = clientContainer.GetBlobClient(fileName);
         await blobClient.DeleteIfExistsAsync();
-        return Result.Success();
     }
 }

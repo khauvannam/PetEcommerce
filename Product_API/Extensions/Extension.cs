@@ -47,7 +47,7 @@ public static class Extension
             );
         services.AddBlobService();
 
-        services.AddValidatorsFromAssemblyContaining<ListAllProducts.Validator>();
+        services.AddValidatorsFromAssemblyContaining<GetAllProducts.Validator>();
 
         services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Program).Assembly));
         services.AddScoped<IProductRepository, ProductRepository>();
@@ -57,7 +57,7 @@ public static class Extension
     public static void AddDatabase(this WebApplicationBuilder builder)
     {
         var conn =
-            "Server=localhost:8070;Initial Catalog=ProductDatabase;User ID=sa;Password=Nam09189921;TrustServerCertificate=True;Encrypt=false";
+            "Server=localhost,1433;Initial Catalog=ProductDatabase;User ID=sa;Password=Nam09189921;TrustServerCertificate=True;Encrypt=false";
         builder.Services.AddDbContext<ProductDbContext>(opt => opt.UseSqlServer(conn));
     }
 }

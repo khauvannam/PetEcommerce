@@ -1,5 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 using BaseDomain.Bases;
+using Product_API.Domains.Categories;
 
 namespace Product_API.Domains.Products;
 
@@ -7,7 +9,8 @@ public class Product : AggregateRoot
 {
     private Product() { }
 
-    [Key]
+    [JsonInclude]
+    [MaxLength(255)]
     public string ProductId
     {
         get => Id;
@@ -15,14 +18,27 @@ public class Product : AggregateRoot
     }
 
     [MaxLength(255)]
-    public string Name { get; private set; }
+    public string Name { get; private set; } = null!;
 
-    public string Description { get; private set; }
-    public string ProductUseGuide { get; private set; }
-    public string ImageUrl { get; private set; }
+    [MaxLength(2000)]
+    public string Description { get; private set; } = null!;
+
+    [MaxLength(2000)]
+    public string ProductUseGuide { get; private set; } = null!;
+
+    [MaxLength(500)]
+    public string ImageUrl { get; private set; } = null!;
     public DateTime CreatedAt { get; private set; }
     public DateTime UpdatedAt { get; private set; }
-    public ProductCategory ProductCategory { get; private set; }
+
+    [JsonInclude]
+    [MaxLength(255)]
+    public string CategoryId { get; set; } = null!;
+
+    [Newtonsoft.Json.JsonIgnore]
+    public Category Category { get; set; } = null!;
+
+    [JsonInclude]
     public List<ProductVariant> ProductVariants { get; } = [];
 
     public static Product Create(
@@ -30,14 +46,14 @@ public class Product : AggregateRoot
         string description,
         string productUseGuide,
         string imageUrl,
-        ProductCategory productCategory
+        string categoryId
     )
     {
         return new()
         {
             Name = name,
             Description = description,
-            ProductCategory = productCategory,
+            CategoryId = categoryId,
             ProductUseGuide = productUseGuide,
             ImageUrl = imageUrl,
             CreatedAt = DateTime.Now,
@@ -50,7 +66,7 @@ public class Product : AggregateRoot
         string description,
         string productUseGuide,
         string imageUrl,
-        ProductCategory productCategory,
+        string categoryId,
         List<ProductVariant> productVariants
     )
     {
@@ -59,7 +75,7 @@ public class Product : AggregateRoot
         ProductUseGuide = productUseGuide;
         ImageUrl = imageUrl;
         UpdatedAt = DateTime.Now;
-        UpdateCategory(productCategory);
+        CategoryId = categoryId;
         UpdateVariantList(productVariants);
     }
 
@@ -74,15 +90,6 @@ public class Product : AggregateRoot
         ProductVariants.AddRange(updateVariants);
     }
 
-    private void UpdateCategory(ProductCategory other)
-    {
-        if (ProductCategory.Equals(other))
-        {
-            return;
-        }
-
-        ProductCategory = other;
-    }
     /*private List<ProductVariant>? RemoveVariantIfNotInUpdateList(
         List<ProductVariant> updatedVariants
     )

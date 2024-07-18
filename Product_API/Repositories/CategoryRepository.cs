@@ -14,7 +14,7 @@ namespace Product_API.Repositories
     {
         public async Task<Result> CreateCategory(CreateCategory.Command command)
         {
-            var fileName = (await blobService.UploadFileAsync(command.File, "Category-")).Value;
+            var fileName = await blobService.UploadFileAsync(command.File, "Category-");
             var category = Category.Create(command.CategoryName, command.Description, fileName);
 
             dbContext.Categories.Add(category);
@@ -41,10 +41,33 @@ namespace Product_API.Repositories
             return Result.Success();
         }
 
-        public async ValueTask<Result<Category>> GetCategoryById(GetCategoryById.Query command)
+        public async Task<Result<Category>> UpdateCategory(UpdateCategory.Command command)
+        {
+            var category = dbContext.Categories.FirstOrDefault(c =>
+                c.CategoryId == command.CategoryId
+            );
+            if (category is null)
+            {
+                return Result.Failure<Category>(CategoryErrors.NotFound);
+            }
+
+            var request = command.UpdateCategoryRequest;
+            string fileName;
+            string newFileName = "";
+            if (request.File is not null)
+            {
+                fileName = new Uri(category.ImageUrl).Segments[^1];
+                await blobService.DeleteAsync(fileName);
+                newFileName = await blobService.UploadFileAsync(request.File, "Category-");
+            }
+            category.Update(request.CategoryName, request.Description, newFileName);
+            return Result.Success(category);
+        }
+
+        public async ValueTask<Result<Category>> GetCategoryById(GetCategoryById.Query query)
         {
             var category = await dbContext.Categories.FirstOrDefaultAsync(c =>
-                c.CategoryId == command.CategoryId
+                c.CategoryId == query.CategoryId
             );
 
             return category == null
