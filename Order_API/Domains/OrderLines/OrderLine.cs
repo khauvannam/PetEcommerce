@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 using BaseDomain.Bases;
+using Order.API.Domains.Orders;
 
 namespace Order.API.Domains.OrderLines;
 
@@ -22,7 +23,7 @@ public class OrderLine : Entity
     public string OrderId { get; set; } = null!;
 
     [JsonIgnore]
-    public Orders.Order Order { get; set; } = null!;
+    public OrderModel OrderModel { get; set; } = null!;
 
     public int Quantity { get; private set; }
     public decimal Price { get; private set; }

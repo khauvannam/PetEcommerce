@@ -6,9 +6,9 @@ using Order.API.Domains.ShippingMethods;
 
 namespace Order.API.Domains.Orders;
 
-public class Order : AggregateRoot
+public class OrderModel : AggregateRoot
 {
-    private Order() { }
+    private OrderModel() { }
 
     [MaxLength(255)]
     public string OrderId
@@ -26,7 +26,6 @@ public class Order : AggregateRoot
 
     [MaxLength(255)]
     public string ShippingMethodId { get; set; } = null!;
-    public ShippingMethod ShippingMethod { get; set; }
 
     [MaxLength(500)]
     public string ShippingAddress { get; private set; } = null!;
@@ -34,7 +33,7 @@ public class Order : AggregateRoot
     [JsonInclude]
     public List<OrderLine> OrderLines { get; set; } = null!;
 
-    public static Order Create(
+    public static OrderModel Create(
         string userId,
         string shippingAddress,
         OrderStatus orderStatus = OrderStatus.Pending

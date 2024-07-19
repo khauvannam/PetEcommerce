@@ -1,6 +1,8 @@
+using BaseDomain.Results;
+
 namespace Order.API.Errors;
 
-public class OrderErrors
+public static class OrderErrors
 {
-    
+    public static ErrorType NotFound => new("Order.NotFound", "Order not found.");
 }

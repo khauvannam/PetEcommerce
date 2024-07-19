@@ -29,4 +29,13 @@
       <PackageReference Include="Serilog" Version="4.0.0" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Reference Include="MediatR">
+        <HintPath>..\..\..\..\..\home\khauvannam\.nuget\packages\mediatr\12.3.0\lib\net6.0\MediatR.dll</HintPath>
+      </Reference>
+      <Reference Include="MediatR.Contracts">
+        <HintPath>..\..\..\..\..\home\khauvannam\.nuget\packages\mediatr.contracts\2.0.1\lib\netstandard2.0\MediatR.Contracts.dll</HintPath>
+      </Reference>
+    </ItemGroup>
+
 </Project>

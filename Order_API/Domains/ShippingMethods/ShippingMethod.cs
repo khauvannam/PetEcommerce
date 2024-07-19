@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 using BaseDomain.Bases;
+using Order.API.Domains.Orders;
 
 namespace Order.API.Domains.ShippingMethods;
 
@@ -21,11 +22,8 @@ public class ShippingMethod : AggregateRoot
 
     public static ShippingMethod Create(string name)
     {
-        return new() { Name = name, Orders = [] };
+        return new() { Name = name };
     }
-
-    [JsonInclude]
-    public List<Orders.Order> Orders { get; set; } = null!;
 
     public void SetPrice(decimal price)
     {
@@ -37,8 +35,8 @@ public class ShippingMethod : AggregateRoot
         Price = price;
     }
 
-    public void AddOrder(Orders.Order order)
+    public void Update(string name)
     {
-        Orders.Add(order);
+        Name = name;
     }
 }
