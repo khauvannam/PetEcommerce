@@ -15,7 +15,7 @@ public static class DeleteProduct
     {
         public async Task<Result> Handle(Command request, CancellationToken cancellationToken)
         {
-            var result = await repository.GetProductById(request.ProductId, cancellationToken);
+            var result = await repository.GetByIdAsync(request.ProductId, cancellationToken);
             if (result.IsFailure)
             {
                 return result;
@@ -24,7 +24,7 @@ public static class DeleteProduct
             var product = result.Value;
             var fileName = new Uri(product.ImageUrl).Segments[^1];
             await blobService.DeleteAsync(fileName);
-            return await repository.DeleteProduct(product, cancellationToken);
+            return await repository.DeleteAsync(product, cancellationToken);
         }
     }
 

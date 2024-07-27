@@ -15,7 +15,7 @@ public static class DeleteCategory
     {
         public async Task<Result> Handle(Command request, CancellationToken cancellationToken)
         {
-            var result = await repository.GetCategoryById(request.CategoryId);
+            var result = await repository.GetByIdAsync(request.CategoryId);
             if (result.IsFailure)
             {
                 return result;
@@ -24,7 +24,7 @@ public static class DeleteCategory
             var category = result.Value;
             var fileName = new Uri(category.ImageUrl).Segments[^1];
             await blobService.DeleteAsync(fileName);
-            return await repository.DeleteCategory(category);
+            return await repository.DeleteAsync(category);
         }
     }
 

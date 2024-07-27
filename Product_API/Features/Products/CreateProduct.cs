@@ -51,7 +51,7 @@ public static class CreateProduct
                 productVariant.ApplyDiscount(variant.DiscountPercent);
                 product.AddProductVariants(productVariant);
             }
-            return await repository.CreateProduct(product);
+            return await repository.CreateAsync(product);
         }
     }
 

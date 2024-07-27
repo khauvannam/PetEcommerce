@@ -6,9 +6,9 @@ namespace Product_API.Interfaces;
 
 public interface IProductRepository
 {
-    ValueTask<Result<List<Product>>> ListAllProducts(GetAllProducts.Query command);
-    Task<Result<Product>> CreateProduct(Product product);
-    Task<Result> DeleteProduct(Product product, CancellationToken cancellationToken);
-    Task<Result<Product>> UpdateProduct(Product product, CancellationToken cancellationToken);
-    Task<Result<Product>> GetProductById(string productId, CancellationToken cancellationToken);
+    ValueTask<Result<List<Product>>> ListAllAsync(GetAllProducts.Query command);
+    Task<Result<Product>> CreateAsync(Product product);
+    Task<Result> DeleteAsync(Product product, CancellationToken cancellationToken);
+    Task<Result<Product>> UpdateAsync(Product product, CancellationToken cancellationToken);
+    Task<Result<Product>> GetByIdAsync(string productId, CancellationToken cancellationToken);
 }

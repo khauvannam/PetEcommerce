@@ -25,7 +25,7 @@ public static class GetAllProducts
             var result = Result.Create<List<Product>>(false);
             if (validatorResult.IsValid)
             {
-                return await repository.ListAllProducts(request);
+                return await repository.ListAllAsync(request);
             }
 
             foreach (var error in validatorResult.Errors)

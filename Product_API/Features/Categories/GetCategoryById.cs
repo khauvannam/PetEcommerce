@@ -17,7 +17,7 @@ public static class GetCategoryById
             CancellationToken cancellationToken
         )
         {
-            return await repository.GetCategoryById(request.CategoryId);
+            return await repository.GetByIdAsync(request.CategoryId);
         }
     }
 

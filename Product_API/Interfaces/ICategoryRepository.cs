@@ -6,9 +6,9 @@ namespace Product_API.Interfaces;
 
 public interface ICategoryRepository
 {
-    Task<Result> CreateCategory(Category category);
-    Task<Result> DeleteCategory(Category category);
-    Task<Result<Category>> UpdateCategory(Category category);
-    ValueTask<Result<Category>> GetCategoryById(string categoryId);
-    ValueTask<Result<List<Category>>> GetAllCategories();
+    Task<Result> CreateAsync(Category category);
+    Task<Result> DeleteAsync(Category category);
+    Task<Result<Category>> UpdateAsync(Category category);
+    ValueTask<Result<Category>> GetByIdAsync(string categoryId);
+    ValueTask<Result<List<Category>>> GetAllAsync();
 }

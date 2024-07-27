@@ -18,7 +18,7 @@ public static class GetAllCategories
             CancellationToken cancellationToken
         )
         {
-            return await repository.GetAllCategories();
+            return await repository.GetAllAsync();
         }
     }
 

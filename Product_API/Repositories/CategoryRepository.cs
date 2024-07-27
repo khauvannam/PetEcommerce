@@ -3,16 +3,13 @@ using Microsoft.EntityFrameworkCore;
 using Product_API.Databases;
 using Product_API.Domains.Categories;
 using Product_API.Errors;
-using Product_API.Features.Categories;
 using Product_API.Interfaces;
-using Shared.Services;
 
 namespace Product_API.Repositories
 {
-    public class CategoryRepository(ProductDbContext dbContext, BlobService blobService)
-        : ICategoryRepository
+    public class CategoryRepository(ProductDbContext dbContext) : ICategoryRepository
     {
-        public async Task<Result> CreateCategory(Category category)
+        public async Task<Result> CreateAsync(Category category)
         {
             dbContext.Categories.Add(category);
             await dbContext.SaveChangesAsync();
@@ -20,7 +17,7 @@ namespace Product_API.Repositories
             return Result.Success();
         }
 
-        public async Task<Result> DeleteCategory(Category category)
+        public async Task<Result> DeleteAsync(Category category)
         {
             dbContext.Categories.Remove(category);
             await dbContext.SaveChangesAsync();
@@ -28,13 +25,13 @@ namespace Product_API.Repositories
             return Result.Success();
         }
 
-        public async Task<Result<Category>> UpdateCategory(Category category)
+        public async Task<Result<Category>> UpdateAsync(Category category)
         {
             await dbContext.SaveChangesAsync();
             return Result.Success(category);
         }
 
-        public async ValueTask<Result<Category>> GetCategoryById(string categoryId)
+        public async ValueTask<Result<Category>> GetByIdAsync(string categoryId)
         {
             var category = await dbContext.Categories.FirstOrDefaultAsync(c =>
                 c.CategoryId == categoryId
@@ -45,7 +42,7 @@ namespace Product_API.Repositories
                 : Result.Success(category);
         }
 
-        public async ValueTask<Result<List<Category>>> GetAllCategories()
+        public async ValueTask<Result<List<Category>>> GetAllAsync()
         {
             var categories = await dbContext.Categories.AsQueryable().ToListAsync();
             return Result.Success(categories);

@@ -25,7 +25,7 @@ public static class UpdateCategory
             CancellationToken cancellationToken
         )
         {
-            var result = await repository.GetCategoryById(request.CategoryId);
+            var result = await repository.GetByIdAsync(request.CategoryId);
             if (result.IsFailure)
             {
                 return result;
@@ -41,7 +41,7 @@ public static class UpdateCategory
             }
             category.Update(request.CategoryName, request.Description, newFileName);
 
-            return await repository.UpdateCategory(category);
+            return await repository.UpdateAsync(category);
         }
     }
 

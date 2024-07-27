@@ -6,15 +6,12 @@ using Product_API.Domains.Products;
 using Product_API.Errors;
 using Product_API.Features.Products;
 using Product_API.Interfaces;
-using Shared.Errors;
-using Shared.Services;
 
 namespace Product_API.Repositories
 {
-    public class ProductRepository(ProductDbContext dbContext, BlobService blobService)
-        : IProductRepository
+    public class ProductRepository(ProductDbContext dbContext) : IProductRepository
     {
-        public async ValueTask<Result<List<Product>>> ListAllProducts(GetAllProducts.Query command)
+        public async ValueTask<Result<List<Product>>> ListAllAsync(GetAllProducts.Query command)
         {
             var query = dbContext.Products.AsQueryable();
 
@@ -28,7 +25,7 @@ namespace Product_API.Repositories
             return Result.Success(products);
         }
 
-        public async Task<Result<Product>> CreateProduct(Product product)
+        public async Task<Result<Product>> CreateAsync(Product product)
         {
             dbContext.Products.Add(product);
             await dbContext.SaveChangesAsync();
@@ -36,10 +33,7 @@ namespace Product_API.Repositories
             return Result.Success(product);
         }
 
-        public async Task<Result> DeleteProduct(
-            Product product,
-            CancellationToken cancellationToken
-        )
+        public async Task<Result> DeleteAsync(Product product, CancellationToken cancellationToken)
         {
             dbContext.Products.Remove(product);
 
@@ -48,7 +42,7 @@ namespace Product_API.Repositories
             return Result.Success();
         }
 
-        public async Task<Result<Product>> UpdateProduct(
+        public async Task<Result<Product>> UpdateAsync(
             Product product,
             CancellationToken cancellationToken
         )
@@ -57,7 +51,7 @@ namespace Product_API.Repositories
             return Result.Success(product);
         }
 
-        public async Task<Result<Product>> GetProductById(
+        public async Task<Result<Product>> GetByIdAsync(
             string productId,
             CancellationToken cancellationToken
         )

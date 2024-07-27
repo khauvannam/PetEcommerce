@@ -21,7 +21,7 @@ public static class CreateCategory
             var fileName = await blobService.UploadFileAsync(request.File, "Category-");
             var category = Category.Create(request.CategoryName, request.Description, fileName);
 
-            return await repository.CreateCategory(category);
+            return await repository.CreateAsync(category);
         }
     }
 

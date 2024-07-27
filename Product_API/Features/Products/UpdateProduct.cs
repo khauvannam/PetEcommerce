@@ -22,7 +22,7 @@ public static class UpdateProduct
             CancellationToken cancellationToken
         )
         {
-            var result = await repository.GetProductById(request.ProductId, cancellationToken);
+            var result = await repository.GetByIdAsync(request.ProductId, cancellationToken);
             if (result.IsFailure)
             {
                 return result;
@@ -55,7 +55,7 @@ public static class UpdateProduct
                 variants
             );
 
-            return await repository.UpdateProduct(product, cancellationToken);
+            return await repository.UpdateAsync(product, cancellationToken);
         }
     }
 
