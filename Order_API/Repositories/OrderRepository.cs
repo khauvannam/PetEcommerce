@@ -16,18 +16,9 @@ public class OrderRepository(OrderDbContext context) : IOrderRepository
         return Result.Success(order);
     }
 
-    public async Task<Result> DeleteAsync(string orderId)
+    public async Task<Result> DeleteAsync(OrderModel orderModel)
     {
-        var order = await context
-            .Orders.Include(o => o.OrderLines)
-            .FirstOrDefaultAsync(o => o.OrderId == orderId);
-
-        if (order == null)
-        {
-            return Result.Failure(OrderErrors.NotFound);
-        }
-
-        context.Orders.Remove(order);
+        context.Orders.Remove(orderModel);
         await context.SaveChangesAsync();
 
         return Result.Success();
@@ -36,7 +27,8 @@ public class OrderRepository(OrderDbContext context) : IOrderRepository
     public async Task<Result<OrderModel>> GetByIdAsync(string orderId)
     {
         var order = await context
-            .Orders.Include(o => o.OrderLines)
+            .Orders.AsNoTracking()
+            .Include(o => o.OrderLines)
             .FirstOrDefaultAsync(o => o.OrderId == orderId);
 
         if (order == null)

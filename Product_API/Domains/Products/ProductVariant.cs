@@ -19,8 +19,9 @@ public sealed class ProductVariant : Entity
 
     public int Quantity { get; private set; }
     public OriginalPrice OriginalPrice { get; set; } = null!;
-    public Discount Discount { get; set; } = null!;
-    public decimal DiscountedPrice => CalculateDiscountedPrice();
+
+    [JsonInclude]
+    private decimal DiscountedPrice { get; set; }
 
     [JsonInclude]
     [MaxLength(255)]
@@ -34,30 +35,22 @@ public sealed class ProductVariant : Entity
     public static ProductVariant Create(string variantName, int quantity) =>
         new() { VariantName = variantName, Quantity = quantity };
 
-    public void Update(
-        string variantName,
-        OriginalPrice originalPrice,
-        Discount discount,
-        int quantity
-    )
+    public void Update(string variantName, OriginalPrice originalPrice, int quantity)
     {
         VariantName = variantName;
         OriginalPrice = originalPrice;
-        Discount = discount;
         Quantity = quantity;
     }
 
     public void SetPrice(decimal value) => OriginalPrice = OriginalPrice.Create(value);
 
-    public void ApplyDiscount(decimal discountPercent)
+    public void ApplyDiscount(decimal percent)
     {
-        Discount = Discount.Create(discountPercent);
+        DiscountedPrice =
+            percent == 0
+                ? OriginalPrice.Value
+                : OriginalPrice.Value - OriginalPrice.Value * percent / 100;
     }
-
-    private decimal CalculateDiscountedPrice() =>
-        Discount.Percent == 0
-            ? OriginalPrice.Value
-            : OriginalPrice.Value - OriginalPrice.Value * Discount.Percent / 100;
 }
 
 public class OriginalPrice : ValueObject
@@ -87,38 +80,6 @@ public class OriginalPrice : ValueObject
     {
         yield return Value;
         yield return Currency;
-    }
-}
-
-public class Discount : ValueObject
-{
-    public decimal Percent { get; private set; }
-
-    private Discount() { }
-
-    public static Discount Create(decimal percent)
-    {
-        if (percent is < 0 or > 100)
-        {
-            throw new ArgumentException("Discount percent must be between 0 and 100");
-        }
-
-        return new() { Percent = percent };
-    }
-
-    public void Update(decimal percent)
-    {
-        if (percent is < 0 or > 100)
-        {
-            throw new ArgumentException("Discount percent must be between 0 and 100");
-        }
-
-        Percent = percent;
-    }
-
-    protected override IEnumerable<object> GetEqualityComponents()
-    {
-        yield return Percent;
     }
 }
 

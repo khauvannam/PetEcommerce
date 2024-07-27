@@ -4,15 +4,20 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Product_API.Domains.Categories;
 using Product_API.Interfaces;
+using Shared.Services;
 
 namespace Product_API.Features.Categories;
 
 public static class UpdateCategory
 {
-    public record Command(string CategoryId, UpdateCategoryRequest UpdateCategoryRequest)
-        : IRequest<Result<Category>>;
+    public record Command(
+        string CategoryId,
+        string CategoryName,
+        string Description,
+        IFormFile? File
+    ) : IRequest<Result<Category>>;
 
-    public class Handler(ICategoryRepository repository)
+    public class Handler(ICategoryRepository repository, BlobService blobService)
         : IRequestHandler<Command, Result<Category>>
     {
         public async Task<Result<Category>> Handle(
@@ -20,7 +25,23 @@ public static class UpdateCategory
             CancellationToken cancellationToken
         )
         {
-            return await repository.UpdateCategory(request);
+            var result = await repository.GetCategoryById(request.CategoryId);
+            if (result.IsFailure)
+            {
+                return result;
+            }
+
+            var category = result.Value;
+            var newFileName = "";
+            if (request.File is not null)
+            {
+                var fileName = new Uri(category.ImageUrl).Segments[^1];
+                await blobService.DeleteAsync(fileName);
+                newFileName = await blobService.UploadFileAsync(request.File, "Category-");
+            }
+            category.Update(request.CategoryName, request.Description, newFileName);
+
+            return await repository.UpdateCategory(category);
         }
     }
 
@@ -32,11 +53,16 @@ public static class UpdateCategory
                 "/api/category/{categoryId}",
                 async (
                     string categoryId,
-                    [FromForm] UpdateCategoryRequest updateCategoryRequest,
+                    [FromForm] UpdateCategoryRequest request,
                     ISender sender
                 ) =>
                 {
-                    var command = new Command(categoryId, updateCategoryRequest);
+                    var command = new Command(
+                        categoryId,
+                        request.CategoryName,
+                        request.Description,
+                        request.File
+                    );
                     var result = await sender.Send(command);
                     if (result.IsFailure)
                     {

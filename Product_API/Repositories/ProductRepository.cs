@@ -28,31 +28,8 @@ namespace Product_API.Repositories
             return Result.Success(products);
         }
 
-        public async Task<Result<Product>> CreateProduct(CreateProduct.Command command)
+        public async Task<Result<Product>> CreateProduct(Product product)
         {
-            var fileName = await blobService.UploadFileAsync(command.File, "Product-");
-
-            if (string.IsNullOrEmpty(fileName))
-            {
-                return Result.Failure<Product>(BlobErrors.ErrorUploadFile());
-            }
-
-            var product = Product.Create(
-                command.Name,
-                command.Description,
-                command.ProductUseGuide,
-                fileName,
-                command.CategoryId
-            );
-
-            foreach (var variant in command.ProductVariants)
-            {
-                var productVariant = ProductVariant.Create(variant.VariantName, variant.Quantity);
-                productVariant.SetPrice(variant.OriginalPrice);
-                productVariant.ApplyDiscount(variant.DiscountPercent);
-                product.AddProductVariants(productVariant);
-            }
-
             dbContext.Products.Add(product);
             await dbContext.SaveChangesAsync();
 
@@ -60,73 +37,22 @@ namespace Product_API.Repositories
         }
 
         public async Task<Result> DeleteProduct(
-            string productId,
+            Product product,
             CancellationToken cancellationToken
         )
         {
-            var product = await dbContext
-                .Products.Include(p => p.ProductVariants)
-                .FirstOrDefaultAsync(
-                    p => p.ProductId == productId,
-                    cancellationToken: cancellationToken
-                );
-
-            if (product == null)
-            {
-                return Result.Failure(ProductErrors.NotFound);
-            }
-
-            var fileName = new Uri(product.ImageUrl).Segments[^1];
             dbContext.Products.Remove(product);
-            await blobService.DeleteAsync(fileName);
+
             await dbContext.SaveChangesAsync(cancellationToken);
 
             return Result.Success();
         }
 
         public async Task<Result<Product>> UpdateProduct(
-            UpdateProduct.Command command,
+            Product product,
             CancellationToken cancellationToken
         )
         {
-            var product = await dbContext
-                .Products.Include(p => p.ProductVariants)
-                .FirstOrDefaultAsync(
-                    p => p.ProductId == command.ProductId,
-                    cancellationToken: cancellationToken
-                );
-
-            if (product == null)
-            {
-                return Result.Failure<Product>(ProductErrors.NotFound);
-            }
-
-            var updateProductRequest = command.UpdateProductRequest;
-            var fileName = await blobService.UploadFileAsync(updateProductRequest.File, "Product-");
-
-            if (string.IsNullOrEmpty(fileName))
-            {
-                return Result.Failure<Product>(BlobErrors.ErrorUploadFile());
-            }
-
-            List<ProductVariant> variants = new();
-            foreach (var variant in updateProductRequest.ProductVariants)
-            {
-                var productVariant = ProductVariant.Create(variant.VariantName, variant.Quantity);
-                productVariant.SetPrice(variant.OriginalPrice);
-                productVariant.ApplyDiscount(variant.DiscountPercent);
-                variants.Add(productVariant);
-            }
-
-            product.UpdateProduct(
-                updateProductRequest.Name,
-                updateProductRequest.Description,
-                updateProductRequest.ProductUseGuide,
-                fileName,
-                updateProductRequest.CategoryId,
-                variants
-            );
-
             await dbContext.SaveChangesAsync(cancellationToken);
             return Result.Success(product);
         }

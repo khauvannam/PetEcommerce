@@ -24,10 +24,10 @@ public static class UpdateShippingMethod
             );
             if (shippingMethodResult.IsFailure)
             {
-                return Result.Failure<ShippingMethod>(ShippingMethodErrors.NotFound);
+                return shippingMethodResult;
             }
 
-            var shippingMethod = shippingMethodResult.Value!;
+            var shippingMethod = shippingMethodResult.Value;
 
             shippingMethod.Update(request.Name);
             shippingMethod.SetPrice(request.Price);

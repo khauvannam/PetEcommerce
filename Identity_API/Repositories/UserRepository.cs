@@ -98,7 +98,7 @@ internal class UserRepository(
 
     public async Task<Result> ResetPassword(ResetPassword.Command command)
     {
-        var user = await userManager.FindByEmailAsync(command.Email!);
+        var user = await userManager.FindByEmailAsync(command.Email);
         if (user is null)
         {
             return Result.Failure(UserErrors.NotFound);

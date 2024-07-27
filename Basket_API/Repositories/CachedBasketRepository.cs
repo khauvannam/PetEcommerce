@@ -23,23 +23,20 @@ public class CachedBasketRepository(IDistributedCache cache, IBasketRepository d
         return result;
     }
 
-    public async Task<Result<Basket>> UpdateAsync(
-        List<BasketItemRequest> basketItemRequests,
-        Basket basket
-    )
+    public async Task<Result<Basket>> UpdateAsync(Basket basket)
     {
         var key = $"basket-{basket.BasketId}";
 
         await cache.SetStringAsync(key, JsonConvert.SerializeObject(basket));
 
-        var result = await decorated.UpdateAsync(basketItemRequests, basket);
+        var result = await decorated.UpdateAsync(basket);
         return result;
     }
 
-    public async Task<Result> DeleteAsync(string basketId)
+    public async Task<Result> DeleteAsync(Basket basket)
     {
-        var key = $"basket-{basketId}";
-        var result = await decorated.DeleteAsync(basketId);
+        var key = $"basket-{basket.BasketId}";
+        var result = await decorated.DeleteAsync(basket);
         var cachedBasket = await cache.GetStringAsync(key);
         if (!string.IsNullOrEmpty(cachedBasket))
         {

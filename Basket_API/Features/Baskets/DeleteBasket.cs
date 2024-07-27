@@ -13,7 +13,14 @@ namespace Basket_API.Features.Baskets
         {
             public async Task<Result> Handle(Command request, CancellationToken cancellationToken)
             {
-                return await repository.DeleteAsync(request.BasketId);
+                var result = await repository.GetByIdAsync(request.BasketId);
+                if (result.IsFailure)
+                {
+                    return result;
+                }
+
+                var basket = result.Value;
+                return await repository.DeleteAsync(basket);
             }
         }
     }

@@ -2,6 +2,7 @@
 using Carter;
 using MediatR;
 using Product_API.Interfaces;
+using Shared.Services;
 
 namespace Product_API.Features.Categories;
 
@@ -9,11 +10,21 @@ public static class DeleteCategory
 {
     public record Command(string CategoryId) : IRequest<Result>;
 
-    public class Handler(ICategoryRepository repository) : IRequestHandler<Command, Result>
+    public class Handler(ICategoryRepository repository, BlobService blobService)
+        : IRequestHandler<Command, Result>
     {
         public async Task<Result> Handle(Command request, CancellationToken cancellationToken)
         {
-            return await repository.DeleteCategory(request);
+            var result = await repository.GetCategoryById(request.CategoryId);
+            if (result.IsFailure)
+            {
+                return result;
+            }
+
+            var category = result.Value;
+            var fileName = new Uri(category.ImageUrl).Segments[^1];
+            await blobService.DeleteAsync(fileName);
+            return await repository.DeleteCategory(category);
         }
     }
 

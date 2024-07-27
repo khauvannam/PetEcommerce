@@ -8,12 +8,19 @@ public static class DeleteShippingMethod
 {
     public record Command(string ShippingMethodId) : IRequest<Result>;
 
-    internal sealed class Handler(IShippingMethodRepository shippingMethodRepository)
+    internal sealed class Handler(IShippingMethodRepository repository)
         : IRequestHandler<Command, Result>
     {
         public async Task<Result> Handle(Command request, CancellationToken cancellationToken)
         {
-            return await shippingMethodRepository.DeleteAsync(request.ShippingMethodId);
+            var result = await repository.GetByIdAsync(request.ShippingMethodId);
+            if (result.IsFailure)
+            {
+                return result;
+            }
+
+            var shippingMethod = result.Value;
+            return await repository.DeleteAsync(shippingMethod);
         }
     }
 }

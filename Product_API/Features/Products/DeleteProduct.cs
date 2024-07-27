@@ -2,6 +2,7 @@
 using Carter;
 using MediatR;
 using Product_API.Interfaces;
+using Shared.Services;
 
 namespace Product_API.Features.Products;
 
@@ -9,11 +10,21 @@ public static class DeleteProduct
 {
     public record Command(string ProductId) : IRequest<Result>;
 
-    public class Handler(IProductRepository repository) : IRequestHandler<Command, Result>
+    public class Handler(IProductRepository repository, BlobService blobService)
+        : IRequestHandler<Command, Result>
     {
         public async Task<Result> Handle(Command request, CancellationToken cancellationToken)
         {
-            return await repository.DeleteProduct(request.ProductId, cancellationToken);
+            var result = await repository.GetProductById(request.ProductId, cancellationToken);
+            if (result.IsFailure)
+            {
+                return result;
+            }
+
+            var product = result.Value;
+            var fileName = new Uri(product.ImageUrl).Segments[^1];
+            await blobService.DeleteAsync(fileName);
+            return await repository.DeleteProduct(product, cancellationToken);
         }
     }
 

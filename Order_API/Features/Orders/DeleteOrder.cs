@@ -13,7 +13,12 @@ public class DeleteOrder
     {
         public async Task<Result> Handle(Command request, CancellationToken cancellationToken)
         {
-            return await orderRepository.DeleteAsync(request.OrderId);
+            var result = await orderRepository.GetByIdAsync(request.OrderId);
+            if (result.IsFailure)
+            {
+                return result;
+            }
+            return await orderRepository.DeleteAsync(result.Value);
         }
     }
 }

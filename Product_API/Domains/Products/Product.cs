@@ -28,6 +28,7 @@ public class Product : AggregateRoot
 
     [MaxLength(500)]
     public string ImageUrl { get; private set; } = null!;
+    public DiscountPercent DiscountPercent { get; set; } = null!;
     public DateTime CreatedAt { get; private set; }
     public DateTime UpdatedAt { get; private set; }
 
@@ -89,41 +90,36 @@ public class Product : AggregateRoot
         ProductVariants.Clear();
         ProductVariants.AddRange(updateVariants);
     }
+}
 
-    /*private List<ProductVariant>? RemoveVariantIfNotInUpdateList(
-        List<ProductVariant> updatedVariants
-    )
+public class DiscountPercent : ValueObject
+{
+    public decimal Value { get; private set; }
+
+    private DiscountPercent() { }
+
+    public static DiscountPercent Create(decimal value)
     {
-        if (ProductVariants.SequenceEqual(updatedVariants))
+        if (value is < 0 or > 100)
         {
-            return null;
+            throw new ArgumentException("DiscountPercent value must be between 0 and 100");
         }
-        ProductVariants.RemoveAll(p => !updatedVariants.Contains(p));
-        return ProductVariants;
+
+        return new() { Value = value };
     }
 
-    private void SwapVariantPosition(List<ProductVariant> updatedVariants)
+    public void Update(decimal value)
     {
-        foreach (var productVariant in ProductVariants.ToList())
+        if (value is < 0 or > 100)
         {
-            var newIndex = updatedVariants.FindIndex(v => v.VariantId == productVariant.VariantId);
-            var oldIndex = ProductVariants.FindIndex(v =>
-                v.VariantId == updatedVariants[newIndex].VariantId
-            );
-            if (newIndex == oldIndex)
-                return;
-            if (Math.Min(oldIndex, newIndex) < 0)
-                return;
-            (ProductVariants[oldIndex], ProductVariants[newIndex]) = (
-                ProductVariants[newIndex],
-                ProductVariants[oldIndex]
-            );
+            throw new ArgumentException("DiscountPercent value must be between 0 and 100");
         }
+
+        Value = value;
     }
 
-    private void AddVariantIfNotExit(List<ProductVariant> updatedVariants)
+    protected override IEnumerable<object> GetEqualityComponents()
     {
-        ProductVariants.AddRange(updatedVariants);
+        yield return Value;
     }
-*/
 }

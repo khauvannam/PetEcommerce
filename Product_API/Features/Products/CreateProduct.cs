@@ -5,6 +5,8 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Product_API.Domains.Products;
 using Product_API.Interfaces;
+using Shared.Errors;
+using Shared.Services;
 
 namespace Product_API.Features.Products;
 
@@ -19,14 +21,37 @@ public static class CreateProduct
         List<ProductVariantRequest> ProductVariants
     ) : IRequest<Result<Product>>;
 
-    public class Handler(IProductRepository repository) : IRequestHandler<Command, Result<Product>>
+    public class Handler(IProductRepository repository, BlobService blobService)
+        : IRequestHandler<Command, Result<Product>>
     {
         public async Task<Result<Product>> Handle(
             Command request,
             CancellationToken cancellationToken
         )
         {
-            return await repository.CreateProduct(request);
+            var fileName = await blobService.UploadFileAsync(request.File, "Product-");
+
+            if (string.IsNullOrEmpty(fileName))
+            {
+                return Result.Failure<Product>(BlobErrors.ErrorUploadFile());
+            }
+
+            var product = Product.Create(
+                request.Name,
+                request.Description,
+                request.ProductUseGuide,
+                fileName,
+                request.CategoryId
+            );
+
+            foreach (var variant in request.ProductVariants)
+            {
+                var productVariant = ProductVariant.Create(variant.VariantName, variant.Quantity);
+                productVariant.SetPrice(variant.OriginalPrice);
+                productVariant.ApplyDiscount(variant.DiscountPercent);
+                product.AddProductVariants(productVariant);
+            }
+            return await repository.CreateProduct(product);
         }
     }
 

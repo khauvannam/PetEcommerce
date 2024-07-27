@@ -8,6 +8,6 @@ public interface IOrderRepository
     Task<Result<OrderModel>> CreateAsync(OrderModel orderModel);
 
     //    Task<Result<OrderModel>> UpdateAsync(OrderModel orderModel);
-    Task<Result> DeleteAsync(string orderId);
+    Task<Result> DeleteAsync(OrderModel orderModel);
     Task<Result<OrderModel>> GetByIdAsync(string orderId);
 }

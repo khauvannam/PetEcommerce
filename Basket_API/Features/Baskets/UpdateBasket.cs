@@ -36,8 +36,16 @@ namespace Basket_API.Features.Baskets
                 }
 
                 var basket = result.Value;
-
-                return await repository.UpdateAsync(request.BasketItemRequests, basket);
+                if (request.BasketItemRequests.Count == 0)
+                {
+                    basket.RemoveAllBasketItem();
+                }
+                basket.RemoveAllBasketItemNotExist(request.BasketItemRequests);
+                foreach (var basketItemRequest in request.BasketItemRequests)
+                {
+                    basket.UpdateBasket(basketItemRequest);
+                }
+                return await repository.UpdateAsync(basket);
             }
         }
 

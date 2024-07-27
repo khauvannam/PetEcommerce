@@ -22,16 +22,11 @@ public class ShippingMethodRepository(OrderDbContext context) : IShippingMethodR
         return Result.Success(shippingMethod);
     }
 
-    public async Task<Result> DeleteAsync(string shippingMethodId)
+    public async Task<Result> DeleteAsync(ShippingMethod shippingMethod)
     {
-        var shippingMethod = await context.ShippingMethods.FindAsync(shippingMethodId);
-        if (shippingMethod != null)
-        {
-            context.ShippingMethods.Remove(shippingMethod);
-            await context.SaveChangesAsync();
-            return Result.Success();
-        }
-        return Result.Failure(ShippingMethodErrors.NotFound);
+        context.ShippingMethods.Remove(shippingMethod);
+        await context.SaveChangesAsync();
+        return Result.Success();
     }
 
     public async Task<Result<ShippingMethod>> GetByIdAsync(string shippingMethodId)

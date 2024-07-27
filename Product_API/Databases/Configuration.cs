@@ -20,6 +20,10 @@ public static class Configuration
                 .WithOne(pv => pv.Product)
                 .HasForeignKey(pv => pv.ProductId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            builder
+                .Property(p => p.DiscountPercent)
+                .HasConversion(d => d.Value, arg => DiscountPercent.Create(arg));
         }
     }
 
@@ -32,9 +36,6 @@ public static class Configuration
             builder.HasKey(pv => pv.VariantId);
 
             builder.ComplexProperty(pv => pv.OriginalPrice);
-            builder
-                .Property(pv => pv.Discount)
-                .HasConversion(d => d.Percent, arg => Discount.Create(arg));
         }
     }
 
