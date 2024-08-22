@@ -8,7 +8,7 @@ public class User : IdentityUser
 {
     public override string Id { get; set; } = Guid.NewGuid().ToString();
     public RefreshToken? RefreshToken { get; private set; }
-    public Address Address { get; private set; } = null!;
+    public Address Address { get; private set; } = Address.Create();
 
     public void AddToken(RefreshToken refreshToken)
     {
@@ -22,20 +22,19 @@ public class User : IdentityUser
 
     public void UpdateAddress(Address address)
     {
-        if (Address.Equals(address))
-            return;
-
         Address = address;
     }
 }
 
 public class Address : ValueObject
 {
-    private Address() { }
+    private Address()
+    {
+    }
 
-    public string Street { get; private set; }
-    public string City { get; private set; }
-    public string ZipCode { get; private set; }
+    public string Street { get; private init; } = null!;
+    public string City { get; private init; } = null!;
+    public string ZipCode { get; private init; } = null!;
 
     protected override IEnumerable<object> GetEqualityComponents()
     {
@@ -44,7 +43,7 @@ public class Address : ValueObject
         yield return ZipCode;
     }
 
-    public static Address Create(string street, string city, string zipCode) =>
+    public static Address Create(string street = "", string city = "", string zipCode = "") =>
         new()
         {
             Street = street,

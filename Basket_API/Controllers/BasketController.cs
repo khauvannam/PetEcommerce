@@ -8,20 +8,8 @@ namespace Basket_API.Controllers;
 [Route("api/[controller]")]
 public class BasketController(ISender sender) : ControllerBase
 {
-    [HttpPost]
-    public async Task<IActionResult> Create([FromBody] CreateBasket.Command command)
-    {
-        var result = await sender.Send(command);
-        if (!result.IsFailure)
-        {
-            return Ok(result.Value);
-        }
-
-        return BadRequest(result.ErrorTypes);
-    }
-
-    [HttpPut]
-    public async Task<IActionResult> Update([FromBody] UpdateBasket.Command command)
+    [HttpPost("/add")]
+    public async Task<IActionResult> Update([FromBody] AddToBasket.Command command)
     {
         var result = await sender.Send(command);
         if (!result.IsFailure)

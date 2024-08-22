@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Shared.Domain.Services;
 using Shared.Extensions.Configurations;
 using Shared.Extensions.JwtHandlers;
@@ -16,15 +18,46 @@ public static class Extension
             .AddJwtBearer(opt => opt.BearerOptionsConfig(jwtSecret));
 
         services.AddAuthorization(opt => opt.AuthorizationConfig());
+        services.AddHttpContextAccessor();
     }
 
-    public static void AddBlobService(this IServiceCollection services)
+    public static void AddScopeService(this IServiceCollection services)
     {
         services.AddScoped<BlobService>();
+        services.AddScoped<UserClaimService>();
     }
 
-    public static void AddEmailService(this IServiceCollection services)
+    public static void AddSingletonService(this IServiceCollection services)
     {
         services.AddSingleton(typeof(EmailService));
+    }
+
+    public static void AddCorsAllowAll(this IServiceCollection services)
+    {
+        services.AddCors(options =>
+        {
+            options.AddPolicy(
+                "AllowAllOrigins",
+                builder =>
+                {
+                    builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
+                }
+            );
+        });
+    }
+
+    public static void AddSwaggerConfig(this IServiceCollection services)
+    {
+        services.AddSwaggerGen(opt => opt.AddSwaggerAuth());
+    }
+
+    public static void UseSwaggerConfig(this WebApplication app)
+    {
+        if (!app.Environment.IsDevelopment())
+            return;
+
+        app.UseDeveloperExceptionPage();
+        app.UseSwagger();
+        app.UseSwaggerUI(opt => opt.AddSwaggerUiConfig());
     }
 }

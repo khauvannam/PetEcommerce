@@ -4,10 +4,9 @@ using Identity.API.Features.Users;
 
 namespace Identity.API.Interfaces;
 
-internal interface IUserRepository
+public interface IUserRepository
 {
-    Task<Result> Register(Register.Command command);
+    Task<Result> Register(User user, string password);
     Task<Result<LoginResponse>> Login(Login.Command command);
-    Task<Result<string>> ForgotPassword(ForgotPassword.Command command);
     Task<Result> ResetPassword(ResetPassword.Command command);
 }

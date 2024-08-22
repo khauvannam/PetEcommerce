@@ -16,7 +16,7 @@ services:
       - redis-cache_server
       - sql_server
     ports:
-      - 8080:8080
+      - "8080:8080"
     networks:
       - backend
       - cache_server
@@ -30,7 +30,7 @@ services:
     depends_on:
       - sql_server
     ports:
-      - 8081:8080
+      - "8081:8080"
     networks:
       - backend
   
@@ -44,7 +44,7 @@ services:
       - sql_server
       - azurite
     ports:
-      - 8082:8080
+      - "8082:8080"
     networks:
       - backend
       - azurite_server
@@ -56,7 +56,7 @@ services:
       ACCEPT_EULA: Y
       SA_PASSWORD: Nam09189921
     ports:
-      - 1433:1433
+      - "1433:1433"
     volumes:
       - mssql-data:/var/opt/mssql
     networks:
@@ -66,7 +66,7 @@ services:
     image: redis
     container_name: redis-cache_server.container
     ports:
-      - 8074:6379
+      - "8074:6379"
     volumes:
       - redis-cache:/data
     networks:
@@ -76,7 +76,7 @@ services:
     container_name: azurite
     image: mcr.microsoft.com/azure-storage/azurite
     ports:
-      - 8073:10000
+      - "8073:10000"
     restart: on-failure
     command: azurite --loose --blobHost 0.0.0.0 --location /data --debug /logs
     volumes:

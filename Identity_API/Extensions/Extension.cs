@@ -3,8 +3,10 @@ using Identity.API.Databases;
 using Identity.API.Domains.Users;
 using Identity.API.Interfaces;
 using Identity.API.Repositories;
+using Identity.API.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Shared.Domain.Services;
 using Shared.Extensions;
 using Shared.Extensions.JwtHandlers;
 
@@ -15,7 +17,7 @@ public static class Extension
     public static void AddDatabase(this WebApplicationBuilder builder)
     {
         var conn =
-            "Server=localhost,1433;Initial Catalog=UsrDatabase;User ID=sa;Password=Nam09189921;TrustServerCertificate=True;Encrypt=False";
+            ConnString.SqlServer("UserDatabase");
         builder.Services.AddDbContext<UserDbContext>(opt => opt.UseSqlServer(conn));
     }
 
@@ -33,10 +35,11 @@ public static class Extension
         services.AddValidatorsFromAssembly(assembly);
 
         // Add outside services
-        services.AddBlobService();
+        services.AddScopeService();
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<ITokenRepository, TokenRepository>();
         services.AddScoped<IUserServiceRepository, UserServiceRepository>();
+        services.AddScoped<UserEmailService>();
         services.AddTransient<JwtHandler>();
     }
 }

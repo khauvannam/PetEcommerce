@@ -18,8 +18,8 @@ public class BlobService
         await clientContainer.SetAccessPolicyAsync(PublicAccessType.Blob);
         var fileName = $"{prefix}{Guid.NewGuid().ToString()}";
         var blobClient = clientContainer.GetBlobClient(fileName);
-        await using var data = file.OpenReadStream();
 
+        await using var data = file.OpenReadStream();
         await blobClient.UploadAsync(data, true);
 
         return blobClient.Uri.ToString();
@@ -29,6 +29,7 @@ public class BlobService
     {
         var clientContainer = _client.GetBlobContainerClient(ContainerName);
         var blobClient = clientContainer.GetBlobClient(fileName);
+
         await blobClient.DeleteIfExistsAsync();
     }
 }

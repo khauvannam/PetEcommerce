@@ -13,25 +13,44 @@ public static class Register
     {
         public string? Email { get; init; }
         public string? Username { get; init; }
-        public string? Password { get; init; }
+        public string Password { get; init; } = null!;
         public string? PhoneNumber { get; init; }
-        public string SecurityStamp { get; init; } = Guid.NewGuid().ToString();
-        public Address Address { get; init; } = null!;
+        public string SecurityStamp { get; } = Guid.NewGuid().ToString();
+        public Address? Address { get; init; }
     }
 
-    internal sealed class Handler(IUserRepository repository, IValidator<Command> validator)
+    public sealed class Handler(IUserRepository repository, IValidator<Command> validator)
         : IRequestHandler<Command, Result>
     {
         public async Task<Result> Handle(Command request, CancellationToken cancellationToken)
         {
             var validateResult = await validator.ValidateAsync(request, cancellationToken);
 
+            var user = new User
+            {
+                Email = request.Email,
+                UserName = request.Username,
+                SecurityStamp = request.SecurityStamp,
+                PhoneNumber = request.PhoneNumber
+            };
+
+            var city = request.Address?.City;
+            var street = request.Address?.Street;
+            var zipCode = request.Address?.ZipCode;
+
+            if (street != null && city != null && zipCode != null)
+            {
+                var address = Address.Create(street, city, zipCode);
+                user.UpdateAddress(address);
+            }
+
             if (validateResult.IsValid)
             {
-                return await repository.Register(request);
+                return await repository.Register(user, request.Password);
             }
 
             var result = Result.Create();
+
             foreach (var error in validateResult.Errors)
             {
                 result.AddResultList(new("Register.Command", error.ToString()));

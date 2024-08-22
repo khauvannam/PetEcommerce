@@ -1,4 +1,5 @@
 ﻿using Identity.API.Features.Users;
+using Identity.API.Services;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -7,7 +8,7 @@ namespace Identity.API.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class UserController(ISender sender) : ControllerBase
+public class UserController(ISender sender, UserEmailService userEmailService) : ControllerBase
 {
     [HttpPost("Register")]
     public async Task<IActionResult> Register([FromBody] Register.Command command)
@@ -17,6 +18,7 @@ public class UserController(ISender sender) : ControllerBase
         {
             return BadRequest(result.ErrorTypes);
         }
+
         return Ok("User is created successfully");
     }
 
@@ -33,9 +35,9 @@ public class UserController(ISender sender) : ControllerBase
     }
 
     [HttpGet(nameof(ForgotPassword))]
-    public async Task<IActionResult> ForgotPassword(ForgotPassword.Command command)
+    public async Task<IActionResult> ForgotPassword(string email)
     {
-        var result = await sender.Send(command);
+        var result = await userEmailService.SendResetPasswordEmail(email);
         if (result.IsFailure)
         {
             return BadRequest(result.ErrorTypes);
@@ -52,6 +54,7 @@ public class UserController(ISender sender) : ControllerBase
         {
             return BadRequest(result.ErrorTypes);
         }
+
         return Ok(result);
     }
 }

@@ -6,6 +6,7 @@ using Product_API.Databases;
 using Product_API.Features.Products;
 using Product_API.Interfaces;
 using Product_API.Repositories;
+using Shared.Domain.Services;
 using Shared.Extensions;
 
 namespace Product_API.Extensions;
@@ -14,16 +15,6 @@ public static class Extension
 {
     public static void AddPersistence(this IServiceCollection services)
     {
-        services.AddCors(options =>
-        {
-            options.AddPolicy(
-                "AllowAllOrigins",
-                builder =>
-                {
-                    builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
-                }
-            );
-        });
         //localhost:8075
         var catalog = new DependencyContextAssemblyCatalog();
         var types = catalog.GetAssemblies().SelectMany(x => x.GetTypes());
@@ -45,7 +36,7 @@ public static class Extension
             .AddNewtonsoftJson(opt =>
                 opt.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore
             );
-        services.AddBlobService();
+        services.AddScopeService();
 
         services.AddValidatorsFromAssemblyContaining<GetAllProducts.Validator>();
 
@@ -56,8 +47,7 @@ public static class Extension
 
     public static void AddDatabase(this WebApplicationBuilder builder)
     {
-        var conn =
-            "Server=localhost,1433;Initial Catalog=ProductDatabase;User ID=sa;Password=Nam09189921;TrustServerCertificate=True;Encrypt=false";
+        var conn = ConnString.SqlServer("ProductDatabase");
         builder.Services.AddDbContext<ProductDbContext>(opt => opt.UseSqlServer(conn));
     }
 }

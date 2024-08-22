@@ -58,7 +58,7 @@ public class Product : AggregateRoot
             ProductUseGuide = productUseGuide,
             ImageUrl = imageUrl,
             CreatedAt = DateTime.Now,
-            UpdatedAt = DateTime.Now
+            UpdatedAt = DateTime.Now,
         };
     }
 
@@ -82,6 +82,13 @@ public class Product : AggregateRoot
 
     public void AddProductVariants(ProductVariant productVariant)
     {
+        if (ProductVariants.Count > 5)
+        {
+            throw new InvalidOperationException(
+                "Product variant list cannot contain more than 5 parts"
+            );
+        }
+
         ProductVariants.Add(productVariant);
     }
 
@@ -94,7 +101,7 @@ public class Product : AggregateRoot
 
 public class DiscountPercent : ValueObject
 {
-    public decimal Value { get; private set; }
+    public decimal Value { get; private init; }
 
     private DiscountPercent() { }
 
@@ -106,16 +113,6 @@ public class DiscountPercent : ValueObject
         }
 
         return new() { Value = value };
-    }
-
-    public void Update(decimal value)
-    {
-        if (value is < 0 or > 100)
-        {
-            throw new ArgumentException("DiscountPercent value must be between 0 and 100");
-        }
-
-        Value = value;
     }
 
     protected override IEnumerable<object> GetEqualityComponents()

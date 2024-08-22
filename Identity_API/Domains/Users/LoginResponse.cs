@@ -1,3 +1,3 @@
 ﻿namespace Identity.API.Domains.Users;
 
-internal record LoginResponse(string RefreshToken, string AccessToken);
+public record LoginResponse(string RefreshToken, string AccessToken);

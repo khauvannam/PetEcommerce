@@ -11,9 +11,26 @@ public class Discount : Entity
     public string Name { get; private set; } = null!;
 
     public decimal Percent { get; private set; }
+    public DateTime StartDate { get; private set; } = DateTime.Now;
 
-    public static Discount Create(string name, decimal percent)
+    public DateTime EndDate { get; private set; }
+
+    public static Discount Create(
+        string name,
+        decimal percent,
+        DateTime startDate,
+        DateTime endDate
+    )
     {
-        return new() { Name = name, Percent = percent };
+        if (startDate > endDate)
+            throw new ArgumentException("Start date cannot be greater than end date");
+
+        return new Discount
+        {
+            Name = name,
+            Percent = percent,
+            StartDate = startDate,
+            EndDate = endDate,
+        };
     }
 }

@@ -1,4 +1,5 @@
-﻿using BaseDomain.Results;
+﻿using System.Security.Claims;
+using BaseDomain.Results;
 using Identity.API.Databases;
 using Identity.API.Domains.Tokens;
 using Identity.API.Domains.Users;
@@ -19,28 +20,11 @@ internal class UserRepository(
     JwtHandler jwtHandler
 ) : IUserRepository
 {
-    public async Task<Result> Register(Register.Command command)
+    public async Task<Result> Register(User user, string password)
     {
-        var user = new User
-        {
-            Email = command.Email,
-            UserName = command.Username,
-            SecurityStamp = command.SecurityStamp,
-            PhoneNumber = command.PhoneNumber
-        };
-        var city = command.Address.City;
-        var street = command.Address.Street;
-        var zipCode = command.Address.ZipCode;
-        var address = Address.Create(street, city, zipCode);
-        user.UpdateAddress(address);
+        var result = await userManager.CreateAsync(user, password);
 
-        var result = await userManager.CreateAsync(user, command.Password!);
-        if (!result.Succeeded)
-        {
-            return Result.Failure(UserErrors.WentWrong);
-        }
-
-        return Result.Success();
+        return !result.Succeeded ? Result.Failure(UserErrors.WentWrong) : Result.Success();
     }
 
     public async Task<Result<LoginResponse>> Login(Login.Command command)
@@ -62,7 +46,11 @@ internal class UserRepository(
             return Result.Failure<LoginResponse>(UserErrors.NotFound);
         }
 
-        var claims = await userManager.GetClaimsAsync(user);
+        var claims = new List<Claim>
+        {
+            new("Username", user.UserName!),
+            new("UserId", user.Id),
+        };
         var accessToken = jwtHandler.GenerateAccessToken(claims);
         var refreshToken = jwtHandler.GenerateRefreshToken();
         var expiredTime = DateTime.Now.AddDays(1);
@@ -71,29 +59,12 @@ internal class UserRepository(
             var token = RefreshToken.Create(refreshToken, expiredTime);
             user.AddToken(token);
         }
+
         user.RefreshToken!.Refresh(refreshToken, expiredTime);
         await dbContext.SaveChangesAsync();
 
         var loginResponse = new LoginResponse(refreshToken, accessToken);
         return Result.Success(loginResponse);
-    }
-
-    public async Task<Result<string>> ForgotPassword(ForgotPassword.Command command)
-    {
-        var user = await userManager.FindByEmailAsync(command.Email!);
-        if (user is null)
-        {
-            return Result.Failure<string>(UserErrors.NotFound);
-        }
-        var token = await userManager.GeneratePasswordResetTokenAsync(user);
-        var message = EmailService.CreateEmail(
-            command.Email!,
-            user.UserName!,
-            "Your Reset Password Code",
-            new TextPart("plain") { Text = token }
-        );
-        await EmailService.SendEmailAsync(message);
-        return Result.Success(user.Email!);
     }
 
     public async Task<Result> ResetPassword(ResetPassword.Command command)
@@ -113,6 +84,7 @@ internal class UserRepository(
         {
             return Result.Failure(TokenErrors.WrongToken("Reset Password"));
         }
+
         return Result.Success();
     }
 }
