@@ -16,8 +16,7 @@ public static class Extension
 {
     public static void AddDatabase(this WebApplicationBuilder builder)
     {
-        var conn =
-            ConnString.SqlServer("UserDatabase");
+        var conn = ConnString.SqlServer();
         builder.Services.AddDbContext<UserDbContext>(opt => opt.UseSqlServer(conn));
     }
 
@@ -35,7 +34,7 @@ public static class Extension
         services.AddValidatorsFromAssembly(assembly);
 
         // Add outside services
-        services.AddScopeService();
+        services.AddBlobService();
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<ITokenRepository, TokenRepository>();
         services.AddScoped<IUserServiceRepository, UserServiceRepository>();

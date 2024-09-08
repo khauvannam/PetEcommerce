@@ -1,5 +1,6 @@
 ﻿using BaseDomain.Results;
 using Carter;
+using Carter.OpenApi;
 using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -56,25 +57,4 @@ public static class CreateProduct
     }
 
     public class Validator : AbstractValidator<Product>;
-
-    public class EndPoint : ICarterModule
-    {
-        public void AddRoutes(IEndpointRouteBuilder app)
-        {
-            app.MapPost(
-                    "/api/product",
-                    async (ISender sender, [FromForm] Command command) =>
-                    {
-                        var result = await sender.Send(command);
-                        if (result.IsFailure)
-                        {
-                            return Results.BadRequest(result.ErrorTypes);
-                        }
-
-                        return Results.Ok(result.Value);
-                    }
-                )
-                .DisableAntiforgery();
-        }
-    }
 }

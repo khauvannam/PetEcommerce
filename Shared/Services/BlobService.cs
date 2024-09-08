@@ -1,6 +1,5 @@
 ﻿using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
-using BaseDomain.Results;
 using Microsoft.AspNetCore.Http;
 using Shared.Domain.Services;
 
@@ -8,7 +7,7 @@ namespace Shared.Services;
 
 public class BlobService
 {
-    private readonly BlobServiceClient _client = new(Key.BlobConnectionString);
+    private readonly BlobServiceClient _client = new(ConnString.BlobConnectionString);
     private const string ContainerName = "images";
 
     public async Task<string> UploadFileAsync(IFormFile file, string prefix)

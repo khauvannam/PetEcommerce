@@ -2,6 +2,8 @@ using Microsoft.EntityFrameworkCore;
 using Order.API.Databases;
 using Order.API.Interfaces;
 using Order.API.Repositories;
+using Shared.Domain.Services;
+using Shared.Extensions;
 using IShippingMethodRepository = Order.API.Interfaces.IShippingMethodRepository;
 
 namespace Order.API.Extensions;
@@ -11,8 +13,7 @@ public static class Extension
     public static void AddDatabase(this WebApplicationBuilder builder)
     {
         // 172.20.0.2
-        var conn =
-            "Server=localhost,1433;Initial Catalog=OrderDatabase;User ID=sa;Password=Nam09189921;TrustServerCertificate=True";
+        var conn = ConnString.SqlServer();
         builder.Services.AddDbContext<OrderDbContext>(opt => opt.UseSqlServer(conn));
     }
 
@@ -23,5 +24,6 @@ public static class Extension
         services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(assembly));
         services.AddScoped<IOrderRepository, OrderRepository>();
         services.AddScoped<IShippingMethodRepository, ShippingMethodRepository>();
+        services.AddCorsAllowAll();
     }
 }
