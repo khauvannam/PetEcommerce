@@ -37,7 +37,6 @@ public class Basket : AggregateRoot
         )
         {
             basketItem.SetPrice(basketItemRequest.Price);
-            basketItem.SetOnSale(basketItemRequest.OnSale);
             basketItem.ChangeQuantity(basketItemRequest.Quantity);
             return;
         }
@@ -47,8 +46,7 @@ public class Basket : AggregateRoot
             basketItemRequest.Name,
             Quantity.Create(basketItemRequest.Quantity),
             basketItemRequest.Price,
-            basketItemRequest.ImageUrl,
-            basketItemRequest.OnSale
+            basketItemRequest.ImageUrl
         );
 
         BasketItemsList.Add(newBasketItem);

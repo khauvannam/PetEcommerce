@@ -15,11 +15,12 @@ public class CachedBasketRepository(IDistributedCache cache, IBasketRepository d
     {
         var key = $"basket-{basket.BasketId}";
         var result = await decorated.CreateAsync(basket);
-        if (result.IsFailure)
+
+        if (!result.IsFailure)
         {
-            return result;
+            await cache.SetStringAsync(key, JsonConvert.SerializeObject(basket));
         }
-        await cache.SetStringAsync(key, JsonConvert.SerializeObject(basket));
+
         return result;
     }
 
@@ -65,7 +66,7 @@ public class CachedBasketRepository(IDistributedCache cache, IBasketRepository d
             new JsonSerializerSettings
             {
                 ConstructorHandling = ConstructorHandling.AllowNonPublicDefaultConstructor,
-                ContractResolver = new PrivateSetterJsonResolver()
+                ContractResolver = new PrivateSetterJsonResolver(),
             }
         )!;
         return Result.Success(basket);

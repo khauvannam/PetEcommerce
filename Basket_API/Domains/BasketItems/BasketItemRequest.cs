@@ -7,6 +7,5 @@ public record BasketItemRequest(
     string Name,
     int Quantity,
     decimal Price,
-    bool OnSale,
     string ImageUrl
 );

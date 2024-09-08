@@ -4,6 +4,8 @@ using Basket_API.Repositories;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Distributed;
+using Shared.Domain.Services;
+using Shared.Extensions;
 
 namespace Basket_API.Extensions;
 
@@ -12,8 +14,7 @@ public static class Extension
     public static void AddDatabase(this WebApplicationBuilder builder)
     {
         // 172.20.0.2
-        var conn =
-            "Server=localhost,1433;Initial Catalog=BasketDatabase;User ID=sa;Password=Nam09189921;TrustServerCertificate=True";
+        var conn = ConnString.SqlServer();
         builder.Services.AddDbContext<BasketDbContext>(opt => opt.UseSqlServer(conn));
     }
 
@@ -31,5 +32,7 @@ public static class Extension
             return new CachedBasketRepository(cache, repository);
         });
         services.AddScoped<IBasketItemRepository, BasketItemRepository>();
+
+        services.AddSwaggerConfig();
     }
 }

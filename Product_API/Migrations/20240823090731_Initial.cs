@@ -26,6 +26,23 @@ namespace Product_API.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Discounts",
+                columns: table => new
+                {
+                    DiscountId = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Percent = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    CategoryId = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
+                    ProductIdListJson = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
+                    StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    EndDate = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Discounts", x => x.DiscountId);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Products",
                 columns: table => new
                 {
@@ -34,6 +51,7 @@ namespace Product_API.Migrations
                     Description = table.Column<string>(type: "nvarchar(2000)", maxLength: 2000, nullable: false),
                     ProductUseGuide = table.Column<string>(type: "nvarchar(2000)", maxLength: 2000, nullable: false),
                     ImageUrl = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
+                    DiscountPercent = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CategoryId = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false)
@@ -56,7 +74,6 @@ namespace Product_API.Migrations
                     VariantId = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
                     VariantName = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
                     Quantity = table.Column<int>(type: "int", nullable: false),
-                    Discount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     ProductId = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
                     OriginalPrice_Currency = table.Column<int>(type: "int", nullable: false),
                     OriginalPrice_Value = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
@@ -86,6 +103,9 @@ namespace Product_API.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "Discounts");
+
             migrationBuilder.DropTable(
                 name: "ProductVariants");
 

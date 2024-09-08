@@ -1,5 +1,6 @@
 using Basket_API.Extensions;
 using Newtonsoft.Json;
+using Shared.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.AddDatabase();
@@ -15,7 +16,7 @@ builder.Services.AddStackExchangeRedisCache(opt =>
 {
     var conn = builder.Configuration.GetConnectionString("RedisUrl");
     if (string.IsNullOrEmpty(conn))
-        throw new Exception("redis conn can't be null");
+        throw new Exception("The redis connection string is missing.");
 
     opt.Configuration = conn;
 });
@@ -23,4 +24,5 @@ builder.Services.AddStackExchangeRedisCache(opt =>
 var app = builder.Build();
 
 app.MapControllers();
+app.UseSwaggerConfig();
 app.Run();

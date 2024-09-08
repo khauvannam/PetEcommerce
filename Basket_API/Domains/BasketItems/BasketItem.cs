@@ -36,7 +36,6 @@ public class BasketItem : Entity
     public string Name { get; private set; }
     public Quantity Quantity { get; private set; }
     public decimal Price { get; private set; }
-    public bool OnSale { get; private set; }
     public DateTime AddedAt { get; private set; }
 
     public static BasketItem Create(
@@ -45,8 +44,7 @@ public class BasketItem : Entity
         string name,
         Quantity quantity,
         decimal price,
-        string imageUrl,
-        bool onSale = false
+        string imageUrl
     )
     {
         return new()
@@ -55,21 +53,15 @@ public class BasketItem : Entity
             VariantId = variantId,
             Name = name,
             Price = price,
-            OnSale = onSale,
             ImageUrl = imageUrl,
             Quantity = quantity,
-            AddedAt = DateTime.Now
+            AddedAt = DateTime.Now,
         };
     }
 
     public decimal GetTotalPrice() => Price * Quantity.Value;
 
     public void SetPrice(decimal price) => Price = price;
-
-    public void SetOnSale(bool onSale = true)
-    {
-        OnSale = onSale;
-    }
 
     public void ChangeQuantity(int quantity) => Quantity.Update(quantity);
 }

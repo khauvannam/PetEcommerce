@@ -45,8 +45,7 @@ public static class AddToBasket
                         basketItemRequest.Name,
                         Quantity.Create(basketItemRequest.Quantity),
                         basketItemRequest.Price,
-                        basketItemRequest.ImageUrl,
-                        basketItemRequest.OnSale
+                        basketItemRequest.ImageUrl
                     );
 
                     basket.BasketItemsList.Add(basketItem);

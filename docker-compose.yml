@@ -5,7 +5,6 @@
     driver: local
 
 services:
-  
   basket_api:
     container_name: basket_api.container
     image: basket_api
@@ -20,7 +19,7 @@ services:
     networks:
       - backend
       - cache_server
-  
+
   identity_api:
     container_name: identity_api.container
     image: identity_api
@@ -33,7 +32,7 @@ services:
       - "8081:8080"
     networks:
       - backend
-  
+
   product_api:
     container_name: product_api.container
     image: product_api
@@ -48,7 +47,7 @@ services:
     networks:
       - backend
       - azurite_server
-  
+
   sql_server:
     image: mcr.microsoft.com/mssql/server:2022-latest
     container_name: sql_server.container
@@ -61,7 +60,7 @@ services:
       - mssql-data:/var/opt/mssql
     networks:
       - backend
-  
+
   redis-cache_server:
     image: redis
     container_name: redis-cache_server.container
@@ -71,17 +70,16 @@ services:
       - redis-cache:/data
     networks:
       - cache_server
-  
+
   azurite:
     container_name: azurite
     image: mcr.microsoft.com/azure-storage/azurite
     ports:
       - "8073:10000"
-    restart: on-failure
     command: azurite --loose --blobHost 0.0.0.0 --location /data --debug /logs
     volumes:
-      - /home/khauvannam/Azurite/blob-data:/data
-      - /home/khauvannam/Azurite/logs/debug.log:/logs
+      - D:/Azurite/blob-data:/data
+      - D:/Azurite/logs/debug.log:/logs
     networks:
       - azurite_server
 

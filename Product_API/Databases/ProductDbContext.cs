@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Product_API.Domains.Categories;
+using Product_API.Domains.Discounts;
 using Product_API.Domains.Products;
 
 namespace Product_API.Databases;
@@ -11,6 +12,8 @@ public class ProductDbContext(DbContextOptions<ProductDbContext> options) : DbCo
     public DbSet<ProductVariant> ProductVariants { get; set; }
     public DbSet<Category> Categories { get; set; }
 
+    public DbSet<Discount> Discounts { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfiguration(Configuration.ProductConfigure.Create());
@@ -18,5 +21,7 @@ public class ProductDbContext(DbContextOptions<ProductDbContext> options) : DbCo
         modelBuilder.ApplyConfiguration(Configuration.ProductVariantConfigure.Create());
 
         modelBuilder.ApplyConfiguration(Configuration.CategoryConfigure.Create());
+
+        modelBuilder.ApplyConfiguration(Configuration.DiscountConfigure.Create());
     }
 }

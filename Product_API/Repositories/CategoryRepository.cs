@@ -44,7 +44,7 @@ namespace Product_API.Repositories
 
         public async ValueTask<Result<List<Category>>> GetAllAsync()
         {
-            var categories = await dbContext.Categories.AsQueryable().ToListAsync();
+            var categories = await dbContext.Categories.AsNoTracking().AsQueryable().ToListAsync();
             return Result.Success(categories);
         }
     }

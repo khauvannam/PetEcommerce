@@ -1,3 +1,3 @@
 namespace EventBusRabbitMq.ProductEvents;
 
-public class RemoveProductEvent { }
+public class RemovedProductEvent { }

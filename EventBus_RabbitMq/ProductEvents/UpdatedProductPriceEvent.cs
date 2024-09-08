@@ -1,3 +1,3 @@
 ﻿namespace EventBusRabbitMq.ProductEvents;
 
-public record UpdateProductPriceEvent { }
+public record UpdatedProductPriceEvent { }

@@ -1,3 +1,3 @@
 namespace EventBusRabbitMq.OrderEvents;
 
-public record PlaceOrderEvent();
+public record PlacedOrderEvent();

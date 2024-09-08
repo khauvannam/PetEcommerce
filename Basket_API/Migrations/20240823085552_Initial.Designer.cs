@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Basket_API.Migrations
 {
     [DbContext(typeof(BasketDbContext))]
-    [Migration("20240718035935_Initial")]
+    [Migration("20240823085552_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -48,9 +48,6 @@ namespace Basket_API.Migrations
                         .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
-
-                    b.Property<bool>("OnSale")
-                        .HasColumnType("bit");
 
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");

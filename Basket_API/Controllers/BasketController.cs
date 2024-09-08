@@ -1,3 +1,4 @@
+using Basket_API.Domains.Baskets;
 using Basket_API.Features.Baskets;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -8,9 +9,15 @@ namespace Basket_API.Controllers;
 [Route("api/[controller]")]
 public class BasketController(ISender sender) : ControllerBase
 {
-    [HttpPost("/add")]
-    public async Task<IActionResult> Update([FromBody] AddToBasket.Command command)
+    [HttpPost("/api/[controller]/add/{basketId}")]
+    public async Task<IActionResult> Update([FromBody] AddToBasketRequest request, string basketId)
     {
+        var command = new AddToBasket.Command(
+            request.CustomerId,
+            basketId,
+            request.BasketItemRequests
+        );
+
         var result = await sender.Send(command);
         if (!result.IsFailure)
         {

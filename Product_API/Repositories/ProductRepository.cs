@@ -13,7 +13,7 @@ namespace Product_API.Repositories
     {
         public async ValueTask<Result<List<Product>>> ListAllAsync(GetAllProducts.Query command)
         {
-            var query = dbContext.Products.AsQueryable();
+            var query = dbContext.Products.AsQueryable().AsNoTracking();
 
             if (!command.CategoryId.IsNullOrEmpty())
             {

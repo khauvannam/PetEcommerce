@@ -4,9 +4,8 @@ namespace Product_API.Domains.Discounts;
 
 public record DiscountRequest
 {
-    public decimal Value { get; } = 0;
-    public List<Product> Products { get; } = [];
-    public string? CategoryId { get; } = null;
+    public string Name { get; init; } = string.Empty;
+    public decimal Percent { get; } = 0;
     public DateTime StartDate { get; private set; } = DateTime.Now;
     public DateTime EndDate { get; private set; } = default;
 }

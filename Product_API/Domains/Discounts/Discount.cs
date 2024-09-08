@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 using BaseDomain.Bases;
 
 namespace Product_API.Domains.Discounts;
@@ -7,10 +8,25 @@ public class Discount : Entity
 {
     private Discount() { }
 
+    [JsonInclude]
+    [MaxLength(255)]
+    public string DiscountId
+    {
+        get => Id;
+        private set => Id = value;
+    }
+
     [MaxLength(100)]
     public string Name { get; private set; } = null!;
 
     public decimal Percent { get; private set; }
+
+    [MaxLength(255)]
+    public string? CategoryId { get; private set; }
+
+    [MaxLength(255)]
+    public string ProductIdListJson { get; private set; } = null!;
+    public DiscountStatus Status { get; private set; } = DiscountStatus.Happening;
     public DateTime StartDate { get; private set; } = DateTime.Now;
 
     public DateTime EndDate { get; private set; }
@@ -18,6 +34,8 @@ public class Discount : Entity
     public static Discount Create(
         string name,
         decimal percent,
+        string? categoryId,
+        string productIdListJson,
         DateTime startDate,
         DateTime endDate
     )
@@ -31,6 +49,30 @@ public class Discount : Entity
             Percent = percent,
             StartDate = startDate,
             EndDate = endDate,
+            CategoryId = categoryId,
+            ProductIdListJson = productIdListJson,
         };
     }
+
+    public void Update(string name, decimal percent, DateTime startDate, DateTime endDate)
+    {
+        if (startDate > endDate)
+            throw new ArgumentException("Start date cannot be greater than end date");
+
+        Name = name;
+        Percent = percent;
+        StartDate = startDate;
+        EndDate = endDate;
+    }
+
+    public void SetDiscountEnd()
+    {
+        Status = DiscountStatus.End;
+    }
+}
+
+public enum DiscountStatus
+{
+    Happening = 0,
+    End = 1,
 }

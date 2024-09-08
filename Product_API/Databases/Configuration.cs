@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Product_API.Domains.Categories;
+using Product_API.Domains.Discounts;
 using Product_API.Domains.Products;
 
 namespace Product_API.Databases;
@@ -52,6 +53,17 @@ public static class Configuration
                 .WithOne(p => p.Category)
                 .HasForeignKey(p => p.CategoryId)
                 .OnDelete(DeleteBehavior.Cascade);
+        }
+    }
+
+    public class DiscountConfigure : IEntityTypeConfiguration<Discount>
+    {
+        public static DiscountConfigure Create() => new();
+
+        public void Configure(EntityTypeBuilder<Discount> builder)
+        {
+            builder.HasKey(d => d.DiscountId);
+            builder.Property(d => d.Percent).HasColumnType("decimal(18, 2)");
         }
     }
 }
