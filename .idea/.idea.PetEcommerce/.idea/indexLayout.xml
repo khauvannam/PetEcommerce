@@ -12,6 +12,7 @@
       <Path>Administrator_API/Interfaces</Path>
       <Path>Administrator_API/Repositories</Path>
       <Path>app-services.yml</Path>
+      <Path>nginx.conf</Path>
     </explicitIncludes>
     <explicitExcludes />
   </component>

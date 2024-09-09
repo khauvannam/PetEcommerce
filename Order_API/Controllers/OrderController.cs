@@ -13,13 +13,11 @@ public class OrdersController(ISender sender) : ControllerBase
     {
         var result = await sender.Send(command);
         if (!result.IsFailure)
-        {
             return CreatedAtAction(
                 nameof(GetOrderById),
                 new { orderId = result.Value.OrderId },
                 result.Value
             );
-        }
         return BadRequest(result.ErrorTypes);
     }
 
@@ -29,9 +27,7 @@ public class OrdersController(ISender sender) : ControllerBase
         var command = new DeleteOrder.Command(orderId);
         var result = await sender.Send(command);
         if (!result.IsFailure)
-        {
             return NoContent();
-        }
         return NotFound(result.ErrorTypes);
     }
 
@@ -41,9 +37,7 @@ public class OrdersController(ISender sender) : ControllerBase
         var query = new GetOrderById.Query(orderId);
         var result = await sender.Send(query);
         if (!result.IsFailure)
-        {
             return Ok(result.Value);
-        }
         return NotFound(result.ErrorTypes);
     }
 }

@@ -1,7 +1,5 @@
 ﻿using BaseDomain.Results;
-using Carter;
 using MediatR;
-using Microsoft.AspNetCore.Mvc;
 using Product_API.Domains.Discounts;
 using Product_API.Events.DiscountEvents;
 using Product_API.Interfaces;

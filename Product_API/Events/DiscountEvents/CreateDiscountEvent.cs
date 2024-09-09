@@ -17,10 +17,8 @@ public class CreateDiscountEvent : INotification
     )
     {
         if (categoryId is null && productIdList.Count < 0)
-        {
             throw new ArgumentException("At least one product id is required");
-        }
-        return new()
+        return new CreateDiscountEvent
         {
             Percent = percent,
             CategoryId = categoryId,

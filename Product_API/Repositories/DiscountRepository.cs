@@ -34,16 +34,14 @@ public class DiscountRepository(ProductDbContext context) : IDiscountRepository
     {
         var discount = await context.Discounts.FirstOrDefaultAsync(d => d.DiscountId == id);
         if (discount is null)
-        {
             return Result.Failure<Discount>(DiscountErrors.NotFound());
-        }
 
         return Result.Success(discount);
     }
 
-    public async Task<Result<List<Discount>>> GetAllAsync()
+    public async ValueTask<Result<List<Discount>>> GetAllAsync()
     {
-        var discounts = await context.Discounts.AsQueryable().AsNoTracking().ToListAsync();
+        var discounts = await context.Discounts.AsNoTracking().ToListAsync();
         return Result.Success(discounts);
     }
 }

@@ -30,9 +30,7 @@ public static class CreateDiscount
         public async Task<Result> Handle(Command request, CancellationToken cancellationToken)
         {
             if (string.IsNullOrEmpty(request.CategoryId) && request.ProductIdList.Count <= 0)
-            {
                 return Result.Failure(DiscountErrors.CreateForNothing());
-            }
 
             var productIdListJson = JsonConvert.SerializeObject(request.ProductIdList);
 

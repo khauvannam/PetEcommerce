@@ -6,6 +6,8 @@ namespace Product_API.Domains.Products;
 
 public sealed class ProductVariant : Entity
 {
+    private ProductVariant() { }
+
     [JsonInclude]
     [MaxLength(255)]
     public string VariantId
@@ -30,10 +32,10 @@ public sealed class ProductVariant : Entity
     [Newtonsoft.Json.JsonIgnore]
     public Product Product { get; set; } = null!;
 
-    private ProductVariant() { }
-
-    public static ProductVariant Create(string variantName, int quantity) =>
-        new() { VariantName = variantName, Quantity = quantity };
+    public static ProductVariant Create(string variantName, int quantity)
+    {
+        return new ProductVariant { VariantName = variantName, Quantity = quantity };
+    }
 
     public void Update(string variantName, OriginalPrice originalPrice, int quantity)
     {
@@ -42,7 +44,10 @@ public sealed class ProductVariant : Entity
         Quantity = quantity;
     }
 
-    public void SetPrice(decimal value) => OriginalPrice = OriginalPrice.Create(value);
+    public void SetPrice(decimal value)
+    {
+        OriginalPrice = OriginalPrice.Create(value);
+    }
 
     public void ApplyDiscount(decimal percent)
     {
@@ -65,7 +70,7 @@ public class OriginalPrice : ValueObject
         if (value <= 0)
             throw new ArgumentException("Price value must be positive");
 
-        return new() { Value = value, Currency = currency };
+        return new OriginalPrice { Value = value, Currency = currency };
     }
 
     public void Update(decimal value, Currency currency = Currency.Usd)

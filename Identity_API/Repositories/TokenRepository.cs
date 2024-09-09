@@ -21,19 +21,13 @@ public class TokenRepository(UserDbContext dbContext, JwtHandler jwtHandler) : I
             .Users.Include(user => user.RefreshToken)
             .FirstOrDefault(u => u.Id == userId);
         if (user is null)
-        {
             return Result.Failure<TokenResponse>(UserErrors.NotFound);
-        }
 
         if (CheckInValidToken(user, command.RefreshToken))
-        {
             return Result.Failure<TokenResponse>(TokenErrors.WrongToken("refresh token"));
-        }
 
         if (ChecKTokenIsExpired(user))
-        {
             return Result.Failure<TokenResponse>(TokenErrors.ExpiredToken());
-        }
 
         var refreshToken = jwtHandler.GenerateRefreshToken();
         var accessToken = jwtHandler.GenerateAccessToken(claimsPrincipal.Claims);
@@ -52,9 +46,7 @@ public class TokenRepository(UserDbContext dbContext, JwtHandler jwtHandler) : I
             .Users.Include(user => user.RefreshToken!)
             .FirstOrDefault(u => u.Id == userId);
         if (user is null)
-        {
             return Result.Failure(UserErrors.NotFound);
-        }
 
         dbContext.RefreshTokens.Remove(user.RefreshToken!);
         user.RevokeToken();

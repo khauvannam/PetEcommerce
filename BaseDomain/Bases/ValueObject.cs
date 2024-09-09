@@ -7,9 +7,7 @@ public abstract class ValueObject
     public override bool Equals(object? obj)
     {
         if (obj is null || obj.GetType() != GetType())
-        {
             return false;
-        }
 
         var valueObject = (ValueObject)obj;
         return GetEqualityComponents().SequenceEqual(valueObject.GetEqualityComponents());

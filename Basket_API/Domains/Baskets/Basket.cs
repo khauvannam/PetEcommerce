@@ -24,8 +24,10 @@ public class Basket : AggregateRoot
     [JsonInclude]
     public HashSet<BasketItem> BasketItemsList { get; private init; } = null!;
 
-    public static Basket Create(string customerId) =>
-        new() { CustomerId = customerId, BasketItemsList = [] };
+    public static Basket Create(string customerId)
+    {
+        return new Basket { CustomerId = customerId, BasketItemsList = [] };
+    }
 
     public void UpdateBasket(BasketItemRequest basketItemRequest)
     {
@@ -40,6 +42,7 @@ public class Basket : AggregateRoot
             basketItem.ChangeQuantity(basketItemRequest.Quantity);
             return;
         }
+
         var newBasketItem = BasketItem.Create(
             basketItemRequest.ProductId,
             basketItemRequest.VariantId,
@@ -52,10 +55,15 @@ public class Basket : AggregateRoot
         BasketItemsList.Add(newBasketItem);
     }
 
-    public void RemoveAllBasketItemNotExist(List<BasketItemRequest> basketItemRequests) =>
+    public void RemoveAllBasketItemNotExist(List<BasketItemRequest> basketItemRequests)
+    {
         BasketItemsList.RemoveWhere(b =>
             basketItemRequests.All(bi => bi.BasketItemId != b.BasketId)
         );
+    }
 
-    public void RemoveAllBasketItem() => BasketItemsList.Clear();
+    public void RemoveAllBasketItem()
+    {
+        BasketItemsList.Clear();
+    }
 }

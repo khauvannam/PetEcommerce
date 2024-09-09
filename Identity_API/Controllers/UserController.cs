@@ -1,7 +1,6 @@
 ﻿using Identity.API.Features.Users;
 using Identity.API.Services;
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Identity.API.Controllers;
@@ -15,9 +14,7 @@ public class UserController(ISender sender, UserEmailService userEmailService) :
     {
         var result = await sender.Send(command);
         if (result.IsFailure)
-        {
             return BadRequest(result.ErrorTypes);
-        }
 
         return Ok("User is created successfully");
     }
@@ -27,9 +24,7 @@ public class UserController(ISender sender, UserEmailService userEmailService) :
     {
         var result = await sender.Send(command);
         if (result.IsFailure)
-        {
             return BadRequest(result.ErrorTypes);
-        }
 
         return Ok(result);
     }
@@ -39,9 +34,7 @@ public class UserController(ISender sender, UserEmailService userEmailService) :
     {
         var result = await userEmailService.SendResetPasswordEmail(email);
         if (result.IsFailure)
-        {
             return BadRequest(result.ErrorTypes);
-        }
 
         return Ok(result);
     }
@@ -51,9 +44,7 @@ public class UserController(ISender sender, UserEmailService userEmailService) :
     {
         var result = await sender.Send(command);
         if (result.IsFailure)
-        {
             return BadRequest(result.ErrorTypes);
-        }
 
         return Ok(result);
     }

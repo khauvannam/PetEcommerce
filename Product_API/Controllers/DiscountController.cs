@@ -13,9 +13,7 @@ public class DiscountController(ISender sender) : ControllerBase
     {
         var result = await sender.Send(command);
         if (result.IsFailure)
-        {
             return Ok(); // Or another appropriate response
-        }
         return BadRequest(result.ErrorTypes);
     }
 
@@ -24,9 +22,7 @@ public class DiscountController(ISender sender) : ControllerBase
     {
         var result = await sender.Send(command);
         if (result.IsFailure)
-        {
             return Ok(); // Or another appropriate response
-        }
         return BadRequest(result.ErrorTypes);
     }
 
@@ -35,9 +31,17 @@ public class DiscountController(ISender sender) : ControllerBase
     {
         var result = await sender.Send(command);
         if (result.IsFailure)
-        {
             return Ok(); // Or another appropriate response
-        }
+        return BadRequest(result.ErrorTypes);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> GetAllDiscounts()
+    {
+        var query = new GetAllDiscount.Query();
+        var result = await sender.Send(query);
+        if (result.IsFailure)
+            return Ok(); // Or another appropriate response
         return BadRequest(result.ErrorTypes);
     }
 }

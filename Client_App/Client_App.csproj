@@ -10,28 +10,28 @@
     <ItemGroup>
         <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.5"/>
         <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="8.0.5" PrivateAssets="all"/>
-        <PackageReference Include="Microsoft.Extensions.Http.Polly" Version="8.0.5" />
+        <PackageReference Include="Microsoft.Extensions.Http.Polly" Version="8.0.5"/>
     </ItemGroup>
 
     <ItemGroup>
-      <_ContentIncludedByDefault Remove="wwwroot\css\bootstrap\bootstrap.min.css" />
-      <_ContentIncludedByDefault Remove="wwwroot\css\bootstrap\bootstrap.min.css.map" />
+        <_ContentIncludedByDefault Remove="wwwroot\css\bootstrap\bootstrap.min.css"/>
+        <_ContentIncludedByDefault Remove="wwwroot\css\bootstrap\bootstrap.min.css.map"/>
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Domains\Products\" />
-      <Folder Include="wwwroot\images\index\discovers\" />
-      <Folder Include="wwwroot\images\index\products\" />
+        <Folder Include="Domains\Products\"/>
+        <Folder Include="wwwroot\images\index\discovers\"/>
+        <Folder Include="wwwroot\images\index\products\"/>
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\BaseDomain\BaseDomain.csproj" />
+        <ProjectReference Include="..\BaseDomain\BaseDomain.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
-      <Reference Include="Newtonsoft.Json">
-        <HintPath>..\..\..\..\..\home\khauvannam\.nuget\packages\newtonsoft.json\13.0.3\lib\net6.0\Newtonsoft.Json.dll</HintPath>
-      </Reference>
+        <Reference Include="Newtonsoft.Json">
+            <HintPath>..\..\..\..\..\home\khauvannam\.nuget\packages\newtonsoft.json\13.0.3\lib\net6.0\Newtonsoft.Json.dll</HintPath>
+        </Reference>
     </ItemGroup>
 
 </Project>

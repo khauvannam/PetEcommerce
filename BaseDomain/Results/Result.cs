@@ -17,22 +17,34 @@ public class Result
     private bool IsSuccess { get; }
     public bool IsFailure => !IsSuccess;
 
-    public static Result<T> Success<T>(T value) => new(value, true, Errors.None);
+    public static Result<T> Success<T>(T value)
+    {
+        return new Result<T>(value, true, Errors.None);
+    }
 
-    public static Result Success() => new(true, Errors.None);
+    public static Result Success()
+    {
+        return new Result(true, Errors.None);
+    }
 
-    public static Result<T> Failure<T>(ErrorType errorType) => new(default, false, errorType);
+    public static Result<T> Failure<T>(ErrorType errorType)
+    {
+        return new Result<T>(default, false, errorType);
+    }
 
-    public static Result Failure(ErrorType errorType) => new(false, errorType);
+    public static Result Failure(ErrorType errorType)
+    {
+        return new Result(false, errorType);
+    }
 
     public static Result Create(bool isSuccess = false)
     {
-        return new(isSuccess);
+        return new Result(isSuccess);
     }
 
     public static Result<T> Create<T>(bool isSuccess)
     {
-        return new(isSuccess);
+        return new Result<T>(isSuccess);
     }
 
     public void AddResultList(ErrorType errorType)
@@ -43,6 +55,8 @@ public class Result
 
 public class Result<T> : Result
 {
+    private readonly T? _value;
+
     internal Result(T? value, bool isSuccess, ErrorType error)
         : base(isSuccess, error)
     {
@@ -51,8 +65,6 @@ public class Result<T> : Result
 
     internal Result(bool isSuccess)
         : base(isSuccess) { }
-
-    private readonly T? _value;
 
     public T Value => _value!;
 }

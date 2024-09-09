@@ -26,6 +26,7 @@ public class Discount : Entity
 
     [MaxLength(255)]
     public string ProductIdListJson { get; private set; } = null!;
+
     public DiscountStatus Status { get; private set; } = DiscountStatus.Happening;
     public DateTime StartDate { get; private set; } = DateTime.Now;
 

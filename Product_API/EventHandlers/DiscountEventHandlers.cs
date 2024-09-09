@@ -11,6 +11,23 @@ public static class DiscountEventHandlers
     {
         public Task Handle(CreateDiscountEvent notification, CancellationToken cancellationToken)
         {
+            if (!string.IsNullOrEmpty(notification.CategoryId))
+                foreach (
+                    var product in context.Products.Where(p =>
+                        p.CategoryId == notification.CategoryId
+                    )
+                )
+                    product.ApplyDiscount(notification.Percent);
+
+            if (notification.ProductIdList.Count > 0)
+                foreach (
+                    var product in context.Products.Where(p =>
+                        notification.ProductIdList.Contains(p.ProductId)
+                    )
+                )
+                    product.ApplyDiscount(notification.Percent);
+            context.SaveChanges();
+
             return Task.CompletedTask;
         }
     }

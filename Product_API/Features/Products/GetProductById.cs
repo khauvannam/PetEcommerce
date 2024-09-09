@@ -1,5 +1,4 @@
 ﻿using BaseDomain.Results;
-using Carter;
 using MediatR;
 using Product_API.Domains.Products;
 using Product_API.Interfaces;

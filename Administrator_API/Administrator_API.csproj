@@ -7,12 +7,12 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="MediatR" Version="12.3.0" />
+        <PackageReference Include="MediatR" Version="12.3.0"/>
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.5"/>
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\BaseDomain\BaseDomain.csproj" />
+        <ProjectReference Include="..\BaseDomain\BaseDomain.csproj"/>
     </ItemGroup>
 
 </Project>

@@ -21,9 +21,7 @@ public static class CreateOrder
         {
             var order = OrderModel.Create(request.UserId, request.ShippingAddress);
             foreach (var orderLine in request.OrderLines)
-            {
                 order.AddOrderLine(orderLine);
-            }
 
             return await orderRepository.CreateAsync(order);
         }

@@ -1,7 +1,5 @@
 ﻿using BaseDomain.Results;
-using Carter;
 using MediatR;
-using Microsoft.AspNetCore.Mvc;
 using Product_API.Domains.Products;
 using Product_API.Interfaces;
 using Shared.Errors;
@@ -24,18 +22,14 @@ public static class UpdateProduct
         {
             var result = await repository.GetByIdAsync(request.ProductId, cancellationToken);
             if (result.IsFailure)
-            {
                 return result;
-            }
 
             var product = result.Value;
             var updateProductRequest = request.UpdateProductRequest;
             var fileName = await blobService.UploadFileAsync(updateProductRequest.File, "Product-");
 
             if (string.IsNullOrEmpty(fileName))
-            {
                 return Result.Failure<Product>(BlobErrors.ErrorUploadFile());
-            }
 
             List<ProductVariant> variants = new();
             foreach (var variant in updateProductRequest.ProductVariants)

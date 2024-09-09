@@ -1,6 +1,5 @@
 using BaseDomain.Results;
 using Basket_API.Database;
-using Basket_API.Domains.BasketItems;
 using Basket_API.Domains.Baskets;
 using Basket_API.Errors;
 using Basket_API.Interfaces;
@@ -36,9 +35,7 @@ public class BasketRepository(BasketDbContext context) : IBasketRepository
             .Baskets.Include(b => b.BasketItemsList)
             .FirstOrDefaultAsync(b => b.BasketId == basketId);
         if (basket != null)
-        {
             return Result.Success(basket);
-        }
         return Result.Failure<Basket>(BasketErrors.NotFound);
     }
 }

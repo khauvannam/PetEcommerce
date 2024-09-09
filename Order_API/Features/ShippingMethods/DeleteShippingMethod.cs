@@ -15,9 +15,7 @@ public static class DeleteShippingMethod
         {
             var result = await repository.GetByIdAsync(request.ShippingMethodId);
             if (result.IsFailure)
-            {
                 return result;
-            }
 
             var shippingMethod = result.Value;
             return await repository.DeleteAsync(shippingMethod);

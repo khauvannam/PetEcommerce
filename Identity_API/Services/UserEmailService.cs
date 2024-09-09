@@ -13,9 +13,7 @@ public class UserEmailService(UserManager<User> userManager)
     {
         var user = await userManager.FindByEmailAsync(email);
         if (user is null)
-        {
             return Result.Failure<string>(UserErrors.NotFound);
-        }
 
         var token = await userManager.GeneratePasswordResetTokenAsync(user);
         var message = EmailService.CreateEmail(

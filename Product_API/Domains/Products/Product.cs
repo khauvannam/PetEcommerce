@@ -28,6 +28,7 @@ public class Product : AggregateRoot
 
     [MaxLength(500)]
     public string ImageUrl { get; private set; } = null!;
+
     public DiscountPercent DiscountPercent { get; set; } = null!;
     public DateTime CreatedAt { get; private set; }
     public DateTime UpdatedAt { get; private set; }
@@ -50,7 +51,7 @@ public class Product : AggregateRoot
         string categoryId
     )
     {
-        return new()
+        return new Product
         {
             Name = name,
             Description = description,
@@ -83,13 +84,17 @@ public class Product : AggregateRoot
     public void AddProductVariants(ProductVariant productVariant)
     {
         if (ProductVariants.Count > 5)
-        {
             throw new InvalidOperationException(
                 "Product variant list cannot contain more than 5 parts"
             );
-        }
 
         ProductVariants.Add(productVariant);
+    }
+
+    public void ApplyDiscount(decimal percent)
+    {
+        foreach (var variant in ProductVariants)
+            variant.ApplyDiscount(percent);
     }
 
     private void UpdateVariantList(List<ProductVariant> updateVariants)
@@ -101,18 +106,16 @@ public class Product : AggregateRoot
 
 public class DiscountPercent : ValueObject
 {
-    public decimal Value { get; private init; }
-
     private DiscountPercent() { }
+
+    public decimal Value { get; private init; }
 
     public static DiscountPercent Create(decimal value)
     {
         if (value is < 0 or > 100)
-        {
             throw new ArgumentException("DiscountPercent value must be between 0 and 100");
-        }
 
-        return new() { Value = value };
+        return new DiscountPercent { Value = value };
     }
 
     protected override IEnumerable<object> GetEqualityComponents()

@@ -7,8 +7,8 @@ namespace Shared.Services;
 
 public class BlobService
 {
-    private readonly BlobServiceClient _client = new(ConnString.BlobConnectionString);
     private const string ContainerName = "images";
+    private readonly BlobServiceClient _client = new(ConnString.BlobConnectionString);
 
     public async Task<string> UploadFileAsync(IFormFile file, string prefix)
     {

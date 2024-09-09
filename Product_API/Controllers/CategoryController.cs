@@ -12,9 +12,7 @@ public class CategoryController(ISender sender) : ControllerBase
     public async Task<IActionResult> Add([FromBody] CreateCategory.Command command)
     {
         if (await sender.Send(command) is { IsFailure: true } result)
-        {
             return BadRequest(result.ErrorTypes);
-        }
 
         return Ok();
     }
@@ -24,9 +22,7 @@ public class CategoryController(ISender sender) : ControllerBase
     {
         var command = new DeleteCategory.Command(categoryId);
         if (await sender.Send(command) is { IsFailure: true } result)
-        {
             return BadRequest(result.ErrorTypes);
-        }
 
         return Ok();
     }
@@ -36,9 +32,7 @@ public class CategoryController(ISender sender) : ControllerBase
     {
         var result = await sender.Send(new GetCategoryById.Query(categoryId));
         if (!result.IsFailure)
-        {
             return Ok(result.Value);
-        }
 
         return NotFound(result.ErrorTypes);
     }
@@ -48,9 +42,7 @@ public class CategoryController(ISender sender) : ControllerBase
     {
         var result = await sender.Send(new GetAllCategories.Query());
         if (!result.IsFailure)
-        {
             return Ok(result.Value);
-        }
 
         return NotFound(result.ErrorTypes);
     }

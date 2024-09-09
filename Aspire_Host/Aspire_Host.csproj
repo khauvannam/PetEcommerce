@@ -14,7 +14,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Basket_API\Basket_API.csproj" />
+        <ProjectReference Include="..\Basket_API\Basket_API.csproj"/>
     </ItemGroup>
 
 </Project>

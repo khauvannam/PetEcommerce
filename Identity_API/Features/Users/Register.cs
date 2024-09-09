@@ -31,7 +31,7 @@ public static class Register
                 Email = request.Email,
                 UserName = request.Username,
                 SecurityStamp = request.SecurityStamp,
-                PhoneNumber = request.PhoneNumber
+                PhoneNumber = request.PhoneNumber,
             };
 
             var city = request.Address?.City;
@@ -45,16 +45,12 @@ public static class Register
             }
 
             if (validateResult.IsValid)
-            {
                 return await repository.Register(user, request.Password);
-            }
 
             var result = Result.Create();
 
             foreach (var error in validateResult.Errors)
-            {
-                result.AddResultList(new("Register.Command", error.ToString()));
-            }
+                result.AddResultList(new ErrorType("Register.Command", error.ToString()));
 
             return result;
         }

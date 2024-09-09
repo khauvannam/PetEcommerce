@@ -15,13 +15,11 @@ public class ShippingMethodsController(ISender sender) : ControllerBase
     {
         var result = await sender.Send(command);
         if (!result.IsFailure)
-        {
             return CreatedAtAction(
                 nameof(GetShippingMethodById),
                 new { shippingMethodId = result.Value!.ShippingMethodId },
                 result.Value
             );
-        }
         return BadRequest(result.ErrorTypes);
     }
 
@@ -32,15 +30,11 @@ public class ShippingMethodsController(ISender sender) : ControllerBase
     )
     {
         if (shippingMethodId != command.ShippingMethodId)
-        {
             return BadRequest("Shipping Method ID mismatch.");
-        }
 
         var result = await sender.Send(command);
         if (!result.IsFailure)
-        {
             return Ok(result.Value);
-        }
         return BadRequest(result.ErrorTypes);
     }
 
@@ -50,9 +44,7 @@ public class ShippingMethodsController(ISender sender) : ControllerBase
         var command = new DeleteShippingMethod.Command(shippingMethodId);
         var result = await sender.Send(command);
         if (!result.IsFailure)
-        {
             return NoContent();
-        }
         return NotFound(result.ErrorTypes);
     }
 
@@ -62,9 +54,7 @@ public class ShippingMethodsController(ISender sender) : ControllerBase
         var query = new GetShippingMethodById.Query(shippingMethodId);
         var result = await sender.Send(query);
         if (!result.IsFailure)
-        {
             return Ok(result.Value);
-        }
         return NotFound(result.ErrorTypes);
     }
 }

@@ -31,7 +31,7 @@ public class Category : AggregateRoot
 
     public static Category Create(string categoryName, string description, string imageUrl)
     {
-        return new()
+        return new Category
         {
             CategoryName = categoryName,
             Description = description,

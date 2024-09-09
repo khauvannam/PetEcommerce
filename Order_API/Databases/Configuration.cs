@@ -10,8 +10,6 @@ public static class Configuration
 {
     public class OrderConfigure : IEntityTypeConfiguration<OrderModel>
     {
-        public static OrderConfigure Create() => new();
-
         public void Configure(EntityTypeBuilder<OrderModel> builder)
         {
             builder.HasKey(o => o.OrderId);
@@ -21,25 +19,36 @@ public static class Configuration
                 .HasForeignKey(ol => ol.OrderId)
                 .OnDelete(DeleteBehavior.Cascade);
         }
+
+        public static OrderConfigure Create()
+        {
+            return new OrderConfigure();
+        }
     }
 
     public class OrderLineConfigure : IEntityTypeConfiguration<OrderLine>
     {
-        public static OrderConfigure Create() => new();
-
         public void Configure(EntityTypeBuilder<OrderLine> builder)
         {
             builder.HasKey(ol => ol.OrderLineId);
+        }
+
+        public static OrderConfigure Create()
+        {
+            return new OrderConfigure();
         }
     }
 
     public class ShippingMethodConfigure : IEntityTypeConfiguration<ShippingMethod>
     {
-        public static ShippingMethodConfigure Create() => new();
-
         public void Configure(EntityTypeBuilder<ShippingMethod> builder)
         {
             builder.HasKey(s => s.ShippingMethodId);
+        }
+
+        public static ShippingMethodConfigure Create()
+        {
+            return new ShippingMethodConfigure();
         }
     }
 }

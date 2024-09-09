@@ -4,5 +4,8 @@ namespace Shared.Errors;
 
 public static class BlobErrors
 {
-    public static ErrorType ErrorUploadFile() => new("Blob.Errors", "Upload file to storage wrong");
+    public static ErrorType ErrorUploadFile()
+    {
+        return new ErrorType("Blob.Errors", "Upload file to storage wrong");
+    }
 }

@@ -7,9 +7,7 @@ using Identity.API.Errors;
 using Identity.API.Features.Users;
 using Identity.API.Interfaces;
 using Microsoft.AspNetCore.Identity;
-using MimeKit;
 using Shared.Extensions.JwtHandlers;
-using Shared.Services;
 
 namespace Identity.API.Repositories;
 
@@ -31,9 +29,7 @@ internal class UserRepository(
     {
         var user = await userManager.FindByEmailAsync(command.Email!);
         if (user is null)
-        {
             return Result.Failure<LoginResponse>(UserErrors.NotFound);
-        }
 
         var result = await signInManager.PasswordSignInAsync(
             user.UserName!,
@@ -42,15 +38,9 @@ internal class UserRepository(
             false
         );
         if (!result.Succeeded)
-        {
             return Result.Failure<LoginResponse>(UserErrors.NotFound);
-        }
 
-        var claims = new List<Claim>
-        {
-            new("Username", user.UserName!),
-            new("UserId", user.Id),
-        };
+        var claims = new List<Claim> { new("Username", user.UserName!), new("UserId", user.Id) };
         var accessToken = jwtHandler.GenerateAccessToken(claims);
         var refreshToken = jwtHandler.GenerateRefreshToken();
         var expiredTime = DateTime.Now.AddDays(1);
@@ -71,9 +61,7 @@ internal class UserRepository(
     {
         var user = await userManager.FindByEmailAsync(command.Email);
         if (user is null)
-        {
             return Result.Failure(UserErrors.NotFound);
-        }
 
         var resultPasswordAsync = await userManager.ResetPasswordAsync(
             user,
@@ -81,9 +69,7 @@ internal class UserRepository(
             command.Password
         );
         if (!resultPasswordAsync.Succeeded)
-        {
             return Result.Failure(TokenErrors.WrongToken("Reset Password"));
-        }
 
         return Result.Success();
     }

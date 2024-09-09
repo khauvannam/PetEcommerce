@@ -10,8 +10,6 @@ public static class Configuration
 {
     public class ProductConfigure : IEntityTypeConfiguration<Product>
     {
-        public static ProductConfigure Create() => new();
-
         public void Configure(EntityTypeBuilder<Product> builder)
         {
             builder.HasKey(p => p.ProductId);
@@ -26,24 +24,30 @@ public static class Configuration
                 .Property(p => p.DiscountPercent)
                 .HasConversion(d => d.Value, arg => DiscountPercent.Create(arg));
         }
+
+        public static ProductConfigure Create()
+        {
+            return new ProductConfigure();
+        }
     }
 
     public class ProductVariantConfigure : IEntityTypeConfiguration<ProductVariant>
     {
-        public static ProductVariantConfigure Create() => new();
-
         public void Configure(EntityTypeBuilder<ProductVariant> builder)
         {
             builder.HasKey(pv => pv.VariantId);
 
             builder.ComplexProperty(pv => pv.OriginalPrice);
         }
+
+        public static ProductVariantConfigure Create()
+        {
+            return new ProductVariantConfigure();
+        }
     }
 
     public class CategoryConfigure : IEntityTypeConfiguration<Category>
     {
-        public static CategoryConfigure Create() => new();
-
         public void Configure(EntityTypeBuilder<Category> builder)
         {
             builder.HasKey(c => c.CategoryId);
@@ -54,16 +58,24 @@ public static class Configuration
                 .HasForeignKey(p => p.CategoryId)
                 .OnDelete(DeleteBehavior.Cascade);
         }
+
+        public static CategoryConfigure Create()
+        {
+            return new CategoryConfigure();
+        }
     }
 
     public class DiscountConfigure : IEntityTypeConfiguration<Discount>
     {
-        public static DiscountConfigure Create() => new();
-
         public void Configure(EntityTypeBuilder<Discount> builder)
         {
             builder.HasKey(d => d.DiscountId);
             builder.Property(d => d.Percent).HasColumnType("decimal(18, 2)");
+        }
+
+        public static DiscountConfigure Create()
+        {
+            return new DiscountConfigure();
         }
     }
 }

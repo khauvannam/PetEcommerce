@@ -2,7 +2,6 @@ using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 using BaseDomain.Bases;
 using Order.API.Domains.OrderLines;
-using Order.API.Domains.ShippingMethods;
 
 namespace Order.API.Domains.Orders;
 
@@ -39,13 +38,13 @@ public class OrderModel : AggregateRoot
         OrderStatus orderStatus = OrderStatus.Pending
     )
     {
-        return new()
+        return new OrderModel
         {
             UserId = userId,
             OrderStatus = orderStatus,
             ShippingAddress = shippingAddress,
             OrderDate = DateTime.Now,
-            OrderLines = []
+            OrderLines = [],
         };
     }
 

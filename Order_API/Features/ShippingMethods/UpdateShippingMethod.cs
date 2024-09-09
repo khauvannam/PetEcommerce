@@ -1,7 +1,6 @@
 using BaseDomain.Results;
 using MediatR;
 using Order.API.Domains.ShippingMethods;
-using Order.API.Errors;
 using Order.API.Interfaces;
 
 namespace Order.API.Features.ShippingMethods;
@@ -23,9 +22,7 @@ public static class UpdateShippingMethod
                 request.ShippingMethodId
             );
             if (shippingMethodResult.IsFailure)
-            {
                 return shippingMethodResult;
-            }
 
             var shippingMethod = shippingMethodResult.Value;
 

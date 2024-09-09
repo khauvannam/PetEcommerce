@@ -2,7 +2,13 @@
 
 public static class ValidatorMessage
 {
-    public static string NotEmpty(string type) => $"You have to fill your {type}";
+    public static string NotEmpty(string type)
+    {
+        return $"You have to fill your {type}";
+    }
 
-    public static string MustBeUnique(string type) => $"Your {type} must be unique";
+    public static string MustBeUnique(string type)
+    {
+        return $"Your {type} must be unique";
+    }
 }

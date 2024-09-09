@@ -20,9 +20,7 @@ public class BasketController(ISender sender) : ControllerBase
 
         var result = await sender.Send(command);
         if (!result.IsFailure)
-        {
             return Ok(result.Value);
-        }
 
         return BadRequest(result.ErrorTypes);
     }
@@ -32,9 +30,7 @@ public class BasketController(ISender sender) : ControllerBase
     {
         var result = await sender.Send(new DeleteBasket.Command(id));
         if (!result.IsFailure)
-        {
             return NoContent();
-        }
 
         return BadRequest(result.ErrorTypes);
     }
@@ -44,9 +40,7 @@ public class BasketController(ISender sender) : ControllerBase
     {
         var result = await sender.Send(new GetBasketById.Query(id));
         if (!result.IsFailure)
-        {
             return Ok(result.Value);
-        }
 
         return NotFound(result.ErrorTypes);
     }

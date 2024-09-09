@@ -1,5 +1,4 @@
 ﻿using BaseDomain.Results;
-using Carter;
 using MediatR;
 using Product_API.Interfaces;
 using Shared.Services;
@@ -17,9 +16,7 @@ public static class DeleteCategory
         {
             var result = await repository.GetByIdAsync(request.CategoryId);
             if (result.IsFailure)
-            {
                 return result;
-            }
 
             var category = result.Value;
             var fileName = new Uri(category.ImageUrl).Segments[^1];

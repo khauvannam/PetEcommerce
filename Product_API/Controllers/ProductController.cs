@@ -14,9 +14,7 @@ public class ProductController(ISender sender) : ControllerBase
     {
         var result = await sender.Send(command);
         if (!result.IsFailure)
-        {
             return Ok(result.Value);
-        }
 
         return BadRequest(result.ErrorTypes);
     }
@@ -26,9 +24,7 @@ public class ProductController(ISender sender) : ControllerBase
     {
         var result = await sender.Send(new DeleteProduct.Command(productId));
         if (!result.IsFailure)
-        {
             return NoContent();
-        }
 
         return BadRequest(result.ErrorTypes);
     }
@@ -38,9 +34,7 @@ public class ProductController(ISender sender) : ControllerBase
     {
         var result = await sender.Send(new GetProductById.Query(productId));
         if (!result.IsFailure)
-        {
             return Ok(result.Value);
-        }
 
         return NotFound(result.ErrorTypes);
     }
@@ -50,9 +44,7 @@ public class ProductController(ISender sender) : ControllerBase
     {
         var result = await sender.Send(new GetAllProducts.Query());
         if (!result.IsFailure)
-        {
             return Ok(result.Value);
-        }
 
         return NotFound(result.ErrorTypes);
     }
@@ -66,9 +58,7 @@ public class ProductController(ISender sender) : ControllerBase
         var command = new UpdateProduct.Command(productId, request);
         var result = await sender.Send(command);
         if (!result.IsFailure)
-        {
             return Ok(result.Value);
-        }
 
         return BadRequest(result.ErrorTypes);
     }

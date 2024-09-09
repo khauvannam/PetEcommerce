@@ -25,11 +25,9 @@ public static class AddToBasket
         {
             var validationResult = await validator.ValidateAsync(request, cancellationToken);
             if (!validationResult.IsValid)
-            {
                 return Result.Failure<Basket>(
-                    new("UpdateBasket.Command", validationResult.Errors.ToString()!)
+                    new ErrorType("UpdateBasket.Command", validationResult.Errors.ToString()!)
                 );
-            }
 
             Basket basket;
             var result = await repository.GetByIdAsync(request.BasketId);
@@ -56,16 +54,12 @@ public static class AddToBasket
 
             basket = result.Value;
             if (request.BasketItemRequests.Count == 0)
-            {
                 basket.RemoveAllBasketItem();
-            }
 
             basket.RemoveAllBasketItemNotExist(request.BasketItemRequests);
             foreach (var basketItemRequest in request.BasketItemRequests)
-            {
                 // CHANGE QUANTITY IF EXIST OR CREATE NEW BASKET ITEM IF NOT
                 basket.UpdateBasket(basketItemRequest);
-            }
 
             return await repository.UpdateAsync(basket);
         }

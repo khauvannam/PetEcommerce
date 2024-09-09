@@ -1,6 +1,5 @@
 ﻿using BaseDomain.Results;
 using Product_API.Domains.Categories;
-using Product_API.Features.Categories;
 
 namespace Product_API.Interfaces;
 

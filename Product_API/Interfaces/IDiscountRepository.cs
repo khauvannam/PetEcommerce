@@ -9,5 +9,5 @@ public interface IDiscountRepository
     public Task<Result> DeleteAsync(Discount discount);
     public Task<Result> UpdateAsync(Discount discount);
     public Task<Result<Discount>> GetByIdAsync(string id);
-    public Task<Result<List<Discount>>> GetAllAsync();
+    public ValueTask<Result<List<Discount>>> GetAllAsync();
 }

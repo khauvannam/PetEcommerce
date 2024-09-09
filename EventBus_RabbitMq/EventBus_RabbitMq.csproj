@@ -8,7 +8,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="PromotionEvents\" />
+        <Folder Include="PromotionEvents\"/>
     </ItemGroup>
 
 </Project>

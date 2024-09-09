@@ -28,9 +28,7 @@ public class User : IdentityUser
 
 public class Address : ValueObject
 {
-    private Address()
-    {
-    }
+    private Address() { }
 
     public string Street { get; private init; } = null!;
     public string City { get; private init; } = null!;
@@ -43,11 +41,13 @@ public class Address : ValueObject
         yield return ZipCode;
     }
 
-    public static Address Create(string street = "", string city = "", string zipCode = "") =>
-        new()
+    public static Address Create(string street = "", string city = "", string zipCode = "")
+    {
+        return new Address
         {
             Street = street,
             City = city,
-            ZipCode = zipCode
+            ZipCode = zipCode,
         };
+    }
 }

@@ -30,11 +30,11 @@ public class OrderLine : Entity
 
     public static OrderLine Create(string productId, int quantity, decimal price)
     {
-        return new()
+        return new OrderLine
         {
             ProductId = productId,
             Quantity = quantity,
-            Price = price
+            Price = price,
         };
     }
 }

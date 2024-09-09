@@ -1,7 +1,5 @@
 using BaseDomain.Results;
-using Carter;
 using MediatR;
-using Microsoft.AspNetCore.Mvc;
 using Product_API.Domains.Categories;
 using Product_API.Interfaces;
 using Shared.Services;
@@ -27,9 +25,7 @@ public static class UpdateCategory
         {
             var result = await repository.GetByIdAsync(request.CategoryId);
             if (result.IsFailure)
-            {
                 return result;
-            }
 
             var category = result.Value;
             var newFileName = "";
@@ -39,6 +35,7 @@ public static class UpdateCategory
                 await blobService.DeleteAsync(fileName);
                 newFileName = await blobService.UploadFileAsync(request.File, "Category-");
             }
+
             category.Update(request.CategoryName, request.Description, newFileName);
 
             return await repository.UpdateAsync(category);

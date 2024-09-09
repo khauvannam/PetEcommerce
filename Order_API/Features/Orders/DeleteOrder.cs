@@ -15,9 +15,7 @@ public class DeleteOrder
         {
             var result = await orderRepository.GetByIdAsync(request.OrderId);
             if (result.IsFailure)
-            {
                 return result;
-            }
             return await orderRepository.DeleteAsync(result.Value);
         }
     }

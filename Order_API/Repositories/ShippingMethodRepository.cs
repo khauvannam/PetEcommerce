@@ -33,9 +33,7 @@ public class ShippingMethodRepository(OrderDbContext context) : IShippingMethodR
     {
         var shippingMethod = await context.ShippingMethods.FindAsync(shippingMethodId);
         if (shippingMethod != null)
-        {
             return Result.Success(shippingMethod);
-        }
         return Result.Failure<ShippingMethod>(ShippingMethodErrors.NotFound);
     }
 }

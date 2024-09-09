@@ -1,5 +1,4 @@
 using BaseDomain.Results;
-using Basket_API.Domains.BasketItems;
 using Basket_API.Domains.Baskets;
 using Basket_API.Interfaces;
 using Microsoft.Extensions.Caching.Distributed;
@@ -17,9 +16,7 @@ public class CachedBasketRepository(IDistributedCache cache, IBasketRepository d
         var result = await decorated.CreateAsync(basket);
 
         if (!result.IsFailure)
-        {
             await cache.SetStringAsync(key, JsonConvert.SerializeObject(basket));
-        }
 
         return result;
     }
@@ -40,9 +37,7 @@ public class CachedBasketRepository(IDistributedCache cache, IBasketRepository d
         var result = await decorated.DeleteAsync(basket);
         var cachedBasket = await cache.GetStringAsync(key);
         if (!string.IsNullOrEmpty(cachedBasket))
-        {
             await cache.RemoveAsync(key);
-        }
 
         return result;
     }

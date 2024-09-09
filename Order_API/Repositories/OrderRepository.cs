@@ -32,9 +32,7 @@ public class OrderRepository(OrderDbContext context) : IOrderRepository
             .FirstOrDefaultAsync(o => o.OrderId == orderId);
 
         if (order == null)
-        {
             return Result.Failure<OrderModel>(OrderErrors.NotFound);
-        }
 
         return Result.Success(order);
     }

@@ -1,5 +1,4 @@
 ﻿using BaseDomain.Results;
-using Carter;
 using MediatR;
 using Product_API.Interfaces;
 using Shared.Services;
@@ -17,9 +16,7 @@ public static class DeleteProduct
         {
             var result = await repository.GetByIdAsync(request.ProductId, cancellationToken);
             if (result.IsFailure)
-            {
                 return result;
-            }
 
             var product = result.Value;
             var fileName = new Uri(product.ImageUrl).Segments[^1];

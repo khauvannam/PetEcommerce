@@ -1,8 +1,6 @@
 ﻿using BaseDomain.Results;
-using Carter;
 using FluentValidation;
 using MediatR;
-using Microsoft.AspNetCore.Mvc;
 using Product_API.Domains.Products;
 using Product_API.Interfaces;
 
@@ -24,14 +22,10 @@ public static class GetAllProducts
             var validatorResult = await validator.ValidateAsync(request, cancellationToken);
             var result = Result.Create<List<Product>>(false);
             if (validatorResult.IsValid)
-            {
                 return await repository.ListAllAsync(request);
-            }
 
             foreach (var error in validatorResult.Errors)
-            {
-                result.AddResultList(new("ListAllProduct.Query", error.ToString()));
-            }
+                result.AddResultList(new ErrorType("ListAllProduct.Query", error.ToString()));
 
             return result;
         }

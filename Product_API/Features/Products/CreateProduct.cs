@@ -1,9 +1,6 @@
 ﻿using BaseDomain.Results;
-using Carter;
-using Carter.OpenApi;
 using FluentValidation;
 using MediatR;
-using Microsoft.AspNetCore.Mvc;
 using Product_API.Domains.Products;
 using Product_API.Interfaces;
 using Shared.Errors;
@@ -33,9 +30,7 @@ public static class CreateProduct
             var fileName = await blobService.UploadFileAsync(request.File, "Product-");
 
             if (string.IsNullOrEmpty(fileName))
-            {
                 return Result.Failure<Product>(BlobErrors.ErrorUploadFile());
-            }
 
             var product = Product.Create(
                 request.Name,
@@ -51,6 +46,7 @@ public static class CreateProduct
                 productVariant.SetPrice(variant.OriginalPrice);
                 product.AddProductVariants(productVariant);
             }
+
             return await repository.CreateAsync(product);
         }
     }

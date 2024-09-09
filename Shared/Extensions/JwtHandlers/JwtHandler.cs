@@ -21,9 +21,9 @@ public class JwtHandler
     {
         var signingCredentials = GetSigningCredentials();
         var tokenOption = new JwtSecurityToken(
-            issuer: "http://localhost:8080",
-            audience: "http://localhost:8080",
-            claims: claims,
+            "http://localhost:8080",
+            "http://localhost:8080",
+            claims,
             expires: DateTime.Now.AddMinutes(30),
             signingCredentials: signingCredentials
         );
@@ -45,7 +45,7 @@ public class JwtHandler
             ValidateIssuer = false,
             ValidateLifetime = false,
             ValidateIssuerSigningKey = false,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_secret))
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_secret)),
         };
         var tokenHandler = new JwtSecurityTokenHandler();
         var principals = tokenHandler.ValidateToken(
@@ -54,9 +54,7 @@ public class JwtHandler
             out var securityToken
         );
         if (securityToken is null)
-        {
             throw new SecurityTokenException("Invalid Token");
-        }
 
         return principals;
     }
