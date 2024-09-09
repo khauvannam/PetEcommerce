@@ -42,7 +42,6 @@ public static class UpdateProduct
             {
                 var productVariant = ProductVariant.Create(variant.VariantName, variant.Quantity);
                 productVariant.SetPrice(variant.OriginalPrice);
-                productVariant.ApplyDiscount(variant.DiscountPercent);
                 variants.Add(productVariant);
             }
 
@@ -56,32 +55,6 @@ public static class UpdateProduct
             );
 
             return await repository.UpdateAsync(product, cancellationToken);
-        }
-    }
-
-    public class Endpoint : ICarterModule
-    {
-        public void AddRoutes(IEndpointRouteBuilder app)
-        {
-            app.MapGet(
-                    "api/product/{productId}",
-                    async (
-                        ISender sender,
-                        string productId,
-                        [FromForm] UpdateProductRequest updateProductRequest
-                    ) =>
-                    {
-                        var command = new Command(productId, updateProductRequest);
-                        var result = await sender.Send(command);
-                        if (!result.IsFailure)
-                        {
-                            return Results.Ok(result.Value);
-                        }
-
-                        return Results.BadRequest(result.ErrorTypes);
-                    }
-                )
-                .DisableAntiforgery();
         }
     }
 }

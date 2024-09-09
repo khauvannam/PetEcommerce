@@ -49,7 +49,6 @@ public static class CreateProduct
             {
                 var productVariant = ProductVariant.Create(variant.VariantName, variant.Quantity);
                 productVariant.SetPrice(variant.OriginalPrice);
-                productVariant.ApplyDiscount(variant.DiscountPercent);
                 product.AddProductVariants(productVariant);
             }
             return await repository.CreateAsync(product);

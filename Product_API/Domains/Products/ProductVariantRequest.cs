@@ -1,8 +1,3 @@
 namespace Product_API.Domains.Products;
 
-public sealed record ProductVariantRequest(
-    string VariantName,
-    decimal OriginalPrice,
-    decimal DiscountPercent,
-    int Quantity
-);
+public sealed record ProductVariantRequest(string VariantName, decimal OriginalPrice, int Quantity);

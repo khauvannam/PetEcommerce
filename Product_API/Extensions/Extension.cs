@@ -17,21 +17,6 @@ public static class Extension
     public static void AddPersistence(this IServiceCollection services)
     {
         //localhost:8075
-        var catalog = new DependencyContextAssemblyCatalog();
-        var types = catalog.GetAssemblies().SelectMany(x => x.GetTypes());
-
-        var modules = types
-            .Where(t =>
-                !t.IsAbstract
-                && typeof(ICarterModule).IsAssignableFrom(t)
-                && (t.IsPublic || t.IsNestedPublic)
-            )
-            .ToList();
-
-        services.AddCarter(configurator: c =>
-        {
-            c.WithModules(modules.ToArray());
-        });
         services
             .AddControllers()
             .AddNewtonsoftJson(opt =>

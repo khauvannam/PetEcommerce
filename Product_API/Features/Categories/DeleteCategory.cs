@@ -27,24 +27,4 @@ public static class DeleteCategory
             return await repository.DeleteAsync(category);
         }
     }
-
-    public class Endpoint : ICarterModule
-    {
-        public void AddRoutes(IEndpointRouteBuilder app)
-        {
-            app.MapDelete(
-                "/api/category/{categoryId}",
-                async (ISender sender, string categoryId) =>
-                {
-                    var command = new Command(categoryId);
-                    if (await sender.Send(command) is { IsFailure: true } result)
-                    {
-                        return Results.BadRequest(result.ErrorTypes);
-                    }
-
-                    return Results.Ok();
-                }
-            );
-        }
-    }
 }

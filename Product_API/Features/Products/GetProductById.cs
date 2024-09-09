@@ -20,25 +20,4 @@ public static class GetProductById
             return await repository.GetByIdAsync(request.ProductId, cancellationToken);
         }
     }
-
-    public class Endpoint : ICarterModule
-    {
-        public void AddRoutes(IEndpointRouteBuilder app)
-        {
-            app.MapGet(
-                "api/product/{productId}",
-                async (string productId, ISender sender) =>
-                {
-                    var query = new Query(productId);
-                    var result = await sender.Send(query);
-                    if (result.IsFailure)
-                    {
-                        return Results.BadRequest(result.ErrorTypes);
-                    }
-
-                    return Results.Ok(result.Value);
-                }
-            );
-        }
-    }
 }

@@ -20,25 +20,4 @@ public static class GetCategoryById
             return await repository.GetByIdAsync(request.CategoryId);
         }
     }
-
-    public class Endpoint : ICarterModule
-    {
-        public void AddRoutes(IEndpointRouteBuilder app)
-        {
-            app.MapGet(
-                "/api/category/{categoryId}",
-                async (ISender sender, string categoryId) =>
-                {
-                    var query = new Query(categoryId);
-                    var result = await sender.Send(query);
-                    if (result.IsFailure)
-                    {
-                        return Results.BadRequest(result.ErrorTypes);
-                    }
-
-                    return Results.Ok(result.Value);
-                }
-            );
-        }
-    }
 }

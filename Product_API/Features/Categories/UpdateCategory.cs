@@ -44,34 +44,4 @@ public static class UpdateCategory
             return await repository.UpdateAsync(category);
         }
     }
-
-    public class Endpoint : ICarterModule
-    {
-        public void AddRoutes(IEndpointRouteBuilder app)
-        {
-            app.MapPut(
-                "/api/category/{categoryId}",
-                async (
-                    string categoryId,
-                    [FromForm] UpdateCategoryRequest request,
-                    ISender sender
-                ) =>
-                {
-                    var command = new Command(
-                        categoryId,
-                        request.CategoryName,
-                        request.Description,
-                        request.File
-                    );
-                    var result = await sender.Send(command);
-                    if (result.IsFailure)
-                    {
-                        return Results.BadRequest(result.ErrorTypes);
-                    }
-
-                    return Results.Ok(result.Value);
-                }
-            );
-        }
-    }
 }

@@ -1,4 +1,3 @@
-using Carter;
 using Hangfire;
 using Product_API.Extensions;
 using Shared.Extensions;
@@ -16,6 +15,6 @@ var app = builder.Build();
 
 app.UseHangfireDashboard();
 app.UseCors("AllowAllOrigins");
-app.MapCarter();
+app.MapControllers();
 app.UseSwaggerConfig();
 app.Run();

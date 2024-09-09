@@ -24,24 +24,4 @@ public static class CreateCategory
             return await repository.CreateAsync(category);
         }
     }
-
-    public class Endpoint : ICarterModule
-    {
-        public void AddRoutes(IEndpointRouteBuilder app)
-        {
-            app.MapPost(
-                    "/api/category",
-                    async (ISender sender, [FromForm] Command command) =>
-                    {
-                        if (await sender.Send(command) is { IsFailure: true } result)
-                        {
-                            return Results.BadRequest(result.ErrorTypes);
-                        }
-
-                        return Results.Ok();
-                    }
-                )
-                .DisableAntiforgery();
-        }
-    }
 }

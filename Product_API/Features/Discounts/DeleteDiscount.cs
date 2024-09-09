@@ -29,19 +29,4 @@ public static class DeleteDiscount
             return result;
         }
     }
-
-    public class Endpoint : ICarterModule
-    {
-        public void AddRoutes(IEndpointRouteBuilder app)
-        {
-            app.MapDelete(
-                "/api/discount",
-                async ([FromBody] Command command, ISender sender) =>
-                {
-                    var result = await sender.Send(command);
-                    return result.IsFailure ? Results.Ok() : Results.BadRequest(result.ErrorTypes);
-                }
-            );
-        }
-    }
 }

@@ -45,24 +45,4 @@ public static class GetAllProducts
             RuleFor(c => c.Offset).GreaterThan(-1).WithMessage("Offset have to greater than 0");
         }
     }
-
-    public class Endpoint : CarterModule
-    {
-        public override void AddRoutes(IEndpointRouteBuilder app)
-        {
-            app.MapGet(
-                "api/product",
-                async (ISender sender, [FromBody] Query query) =>
-                {
-                    var result = await sender.Send(query);
-                    if (result.IsFailure)
-                    {
-                        return Results.NotFound(result.ErrorTypes);
-                    }
-
-                    return Results.Ok(result);
-                }
-            );
-        }
-    }
 }

@@ -1,8 +1,5 @@
 using BaseDomain.Results;
-using Carter;
-using Hangfire;
 using MediatR;
-using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Product_API.Domains.Discounts;
 using Product_API.Errors;
@@ -62,21 +59,6 @@ public static class CreateDiscount
             }
 
             return result;
-        }
-    }
-
-    public class Endpoint : ICarterModule
-    {
-        public void AddRoutes(IEndpointRouteBuilder app)
-        {
-            app.MapPost(
-                "/api/discount",
-                async ([FromBody] Command command, ISender sender) =>
-                {
-                    var result = await sender.Send(command);
-                    return result.IsFailure ? Results.Ok() : Results.BadRequest(result.ErrorTypes);
-                }
-            );
         }
     }
 }
