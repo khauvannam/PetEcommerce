@@ -1,5 +1,4 @@
-﻿using Hangfire;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Shared.Domain.Services;
@@ -54,16 +53,6 @@ public static class Extension
     public static void AddSwaggerConfig(this IServiceCollection services)
     {
         services.AddSwaggerGen(opt => opt.AddSwaggerAuth());
-    }
-
-    public static void AddHangFireConfig(this IServiceCollection services)
-    {
-        services.AddHangfire(cfg =>
-            cfg.UseSimpleAssemblyNameTypeSerializer()
-                .UseRecommendedSerializerSettings()
-                .UseSqlServerStorage(ConnString.SqlServer())
-        );
-        services.AddHangfireServer();
     }
 
     public static void UseSwaggerConfig(this WebApplication app)

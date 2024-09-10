@@ -29,7 +29,7 @@ public static class UpdateDiscount
                 );
                 await repository.UpdateAsync(discount);
 
-                var @event = new UpdateDiscountEvent(discount.DiscountId, discountRequest.Percent);
+                var @event = new UpdateDiscountEvent(discount, discountRequest.Percent);
                 await mediator.Publish(@event, cancellationToken);
             }
 

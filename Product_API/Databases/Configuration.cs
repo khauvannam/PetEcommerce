@@ -38,6 +38,8 @@ public static class Configuration
             builder.HasKey(pv => pv.VariantId);
 
             builder.ComplexProperty(pv => pv.OriginalPrice);
+
+            builder.Property(pv => pv.DiscountPercent).HasColumnType("decimal(18,2)");
         }
 
         public static ProductVariantConfigure Create()

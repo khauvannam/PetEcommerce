@@ -1,5 +1,6 @@
 ﻿using MediatR;
+using Product_API.Domains.Discounts;
 
 namespace Product_API.Events.DiscountEvents;
 
-public record UpdateDiscountEvent(string DiscountId, decimal Percent) : INotification;
+public record UpdateDiscountEvent(Discount Discount, decimal Percent) : INotification;

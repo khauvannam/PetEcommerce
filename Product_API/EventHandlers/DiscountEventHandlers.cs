@@ -1,4 +1,6 @@
 ﻿using MediatR;
+using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using Product_API.Databases;
 using Product_API.Events.DiscountEvents;
 
@@ -6,29 +8,105 @@ namespace Product_API.EventHandlers;
 
 public static class DiscountEventHandlers
 {
+    private static async Task ApplyDiscountToProductsAsync(
+        ProductDbContext context,
+        string? categoryId,
+        List<string>? productIdList,
+        decimal discountPercent
+    )
+    {
+        // Apply discount to all products within the given category
+        if (!string.IsNullOrEmpty(categoryId))
+        {
+            var categoryProducts = await context
+                .Products.Where(p => p.CategoryId == categoryId)
+                .ToListAsync();
+
+            foreach (var product in categoryProducts)
+            {
+                product.ApplyDiscount(discountPercent);
+            }
+        }
+
+        if (productIdList is { Count: > 0 })
+        {
+            var selectedProducts = await context
+                .Products.Where(p => productIdList.Contains(p.ProductId))
+                .ToListAsync();
+
+            foreach (var product in selectedProducts)
+            {
+                product.ApplyDiscount(discountPercent);
+            }
+        }
+
+        await context.SaveChangesAsync();
+    }
+
     public class CreateDiscountEventHandler(ProductDbContext context)
         : INotificationHandler<CreateDiscountEvent>
     {
-        public Task Handle(CreateDiscountEvent notification, CancellationToken cancellationToken)
+        public async Task Handle(
+            CreateDiscountEvent notification,
+            CancellationToken cancellationToken
+        )
         {
-            if (!string.IsNullOrEmpty(notification.CategoryId))
-                foreach (
-                    var product in context.Products.Where(p =>
-                        p.CategoryId == notification.CategoryId
-                    )
-                )
-                    product.ApplyDiscount(notification.Percent);
+            await ApplyDiscountToProductsAsync(
+                context,
+                notification.CategoryId,
+                notification.ProductIdList,
+                notification.Percent
+            );
+        }
+    }
 
-            if (notification.ProductIdList.Count > 0)
-                foreach (
-                    var product in context.Products.Where(p =>
-                        notification.ProductIdList.Contains(p.ProductId)
-                    )
-                )
-                    product.ApplyDiscount(notification.Percent);
-            context.SaveChanges();
+    public class DeleteDiscountEventHandler(ProductDbContext context)
+        : INotificationHandler<DeleteDiscountEvent>
+    {
+        public async Task Handle(
+            DeleteDiscountEvent notification,
+            CancellationToken cancellationToken
+        )
+        {
+            var discount = await context.Discounts.FirstOrDefaultAsync(
+                d => d.DiscountId == notification.DiscountId,
+                cancellationToken
+            );
 
-            return Task.CompletedTask;
+            if (discount is null)
+                return;
+
+            var productIdList =
+                JsonConvert.DeserializeObject<List<string>>(discount.ProductIdListJson) ?? [];
+
+            await ApplyDiscountToProductsAsync(
+                context,
+                discount.CategoryId,
+                productIdList,
+                default // Reset discount to default (0%)
+            );
+        }
+    }
+
+    public class UpdateDiscountEventHandler(ProductDbContext context)
+        : INotificationHandler<UpdateDiscountEvent>
+    {
+        public async Task Handle(
+            UpdateDiscountEvent notification,
+            CancellationToken cancellationToken
+        )
+        {
+            var discount = notification.Discount;
+
+            var productIdList =
+                JsonConvert.DeserializeObject<List<string>>(discount.ProductIdListJson) ?? [];
+
+            await ApplyDiscountToProductsAsync(
+                context,
+                discount.CategoryId,
+                productIdList,
+                discount.Percent
+            );
         }
     }
 }

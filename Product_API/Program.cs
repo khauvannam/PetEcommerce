@@ -1,4 +1,3 @@
-using Hangfire;
 using Product_API.Extensions;
 using Shared.Extensions;
 
@@ -13,7 +12,6 @@ service.AddCorsAllowAll();
 
 var app = builder.Build();
 
-app.UseHangfireDashboard();
 app.UseCors("AllowAllOrigins");
 app.MapControllers();
 app.UseSwaggerConfig();
