@@ -4,8 +4,8 @@ using Product_API.Features.Discounts;
 
 namespace Product_API.Controllers;
 
-[Microsoft.AspNetCore.Components.Route("api/[controller]")]
 [ApiController]
+[Route("api/[controller]")]
 public class DiscountController(ISender sender) : ControllerBase
 {
     [HttpPost]

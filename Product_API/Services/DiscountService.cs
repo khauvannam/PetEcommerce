@@ -12,7 +12,6 @@ public class DiscountService(ProductDbContext context, IMediator mediator)
         var discount = context.Discounts.FirstOrDefault(d => d.DiscountId == discountId)!;
         BackgroundJob.Schedule(() => discount.SetDiscountEnd(), discount.EndDate);
 
-        await mediator.Publish(new DeleteDiscountEvent(discountId));
         await context.SaveChangesAsync();
     }
 }
