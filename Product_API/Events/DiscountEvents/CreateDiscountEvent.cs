@@ -9,11 +9,13 @@ public class CreateDiscountEvent : INotification
     public decimal Percent { get; private set; }
     public List<string> ProductIdList { get; private set; } = [];
     public string? CategoryId { get; private set; }
+    public int Priority { get; private set; }
 
     public static CreateDiscountEvent Create(
         decimal percent,
         string? categoryId,
-        List<string> productIdList
+        List<string> productIdList,
+        int priority
     )
     {
         if (categoryId is null && productIdList.Count < 0)
@@ -23,6 +25,7 @@ public class CreateDiscountEvent : INotification
             Percent = percent,
             CategoryId = categoryId,
             ProductIdList = productIdList,
+            Priority = priority,
         };
     }
 }

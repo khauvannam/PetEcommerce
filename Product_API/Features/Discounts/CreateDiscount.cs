@@ -11,7 +11,7 @@ namespace Product_API.Features.Discounts;
 
 public static class CreateDiscount
 {
-    public record Command : IRequest<Result>
+    public class Command : IRequest<Result>
     {
         public string Name { get; set; } = null!;
         public decimal Percent { get; set; } = 0;
@@ -19,6 +19,7 @@ public static class CreateDiscount
         public string? CategoryId { get; } = null;
         public DateTime StartDate { get; } = DateTime.Now;
         public DateTime EndDate { get; } = default;
+        public int Priority { get; } = 0;
     }
 
     public class Handler(
@@ -29,6 +30,8 @@ public static class CreateDiscount
     {
         public async Task<Result> Handle(Command request, CancellationToken cancellationToken)
         {
+            var discounts = (await discountRepository.GetAllAsync()).Value;
+
             if (string.IsNullOrEmpty(request.CategoryId) && request.ProductIdList.Count <= 0)
                 return Result.Failure(DiscountErrors.CreateForNothing());
 
@@ -50,7 +53,8 @@ public static class CreateDiscount
                 var @event = CreateDiscountEvent.Create(
                     request.Percent,
                     request.CategoryId,
-                    request.ProductIdList
+                    request.ProductIdList,
+                    request.Priority
                 );
                 await mediator.Publish(@event, cancellationToken);
                 await service.SetDiscountEnd(discount.DiscountId);

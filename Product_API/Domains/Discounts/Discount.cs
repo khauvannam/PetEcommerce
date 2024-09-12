@@ -29,7 +29,6 @@ public class Discount : Entity
 
     public DiscountStatus Status { get; private set; } = DiscountStatus.Happening;
     public DateTime StartDate { get; private set; } = DateTime.Now;
-
     public DateTime EndDate { get; private set; }
 
     public static Discount Create(

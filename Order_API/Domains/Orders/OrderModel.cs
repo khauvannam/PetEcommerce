@@ -22,8 +22,12 @@ public class OrderModel : AggregateRoot
     public DateTime OrderDate { get; private init; }
     public decimal OrderTotal { get; private set; }
     public OrderStatus OrderStatus { get; private set; }
+    public PaymentStatus PaymentStatus { get; private set; }
 
-    [MaxLength(255)]
+    [MaxLength(100)]
+    public string PaymentMethodId { get; private set; } = null!;
+
+    [MaxLength(100)]
     public string ShippingMethodId { get; set; } = null!;
 
     [MaxLength(500)]
@@ -58,6 +62,17 @@ public class OrderModel : AggregateRoot
     {
         OrderStatus = orderStatus;
     }
+
+    public void UpdatePaymentStatus(PaymentStatus paymentStatus)
+    {
+        PaymentStatus = paymentStatus;
+    }
+
+    public void ProcessOrder(string paymentMethodId, string shippingMethodId)
+    {
+        PaymentMethodId = paymentMethodId;
+        ShippingMethodId = shippingMethodId;
+    }
 }
 
 public enum OrderStatus
@@ -65,4 +80,11 @@ public enum OrderStatus
     Pending = 0,
     Shipping = 1,
     Finish = 2,
+}
+
+public enum PaymentStatus
+{
+    Pending,
+    Completed,
+    Failed,
 }

@@ -1,6 +1,7 @@
 ﻿using BaseDomain.Results;
 using MediatR;
 using Product_API.Domains.Discounts;
+using Product_API.Errors;
 using Product_API.Events.DiscountEvents;
 using Product_API.Interfaces;
 
@@ -16,6 +17,7 @@ public static class UpdateDiscount
         public async Task<Result> Handle(Command request, CancellationToken cancellationToken)
         {
             var result = await repository.GetByIdAsync(request.DiscountId);
+
             if (!result.IsFailure)
             {
                 var discount = result.Value;

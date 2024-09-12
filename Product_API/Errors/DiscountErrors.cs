@@ -13,4 +13,9 @@ public static class DiscountErrors
     {
         return new ErrorType("Discount.CreateForNothing", "You cannot create Discount for nothing");
     }
+
+    public static ErrorType CurrentlyActive()
+    {
+        return new ErrorType("Discount.CurrentlyActive", "You cannot create the current discount ");
+    }
 }

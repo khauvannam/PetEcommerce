@@ -15,6 +15,12 @@
 
     <ItemGroup>
         <ProjectReference Include="..\Basket_API\Basket_API.csproj"/>
+        <ProjectReference Include="..\Client_App\Client_App.csproj" />
+        <ProjectReference Include="..\Customer_API\Customer_API.csproj" />
+        <ProjectReference Include="..\Identity_API\Identity_API.csproj" />
+        <ProjectReference Include="..\Order_API\Order_API.csproj" />
+        <ProjectReference Include="..\Product_API\Product_API.csproj" />
+        <ProjectReference Include="..\Promotion_API\Promotion_API.csproj" />
     </ItemGroup>
 
 </Project>

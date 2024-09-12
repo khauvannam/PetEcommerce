@@ -6,7 +6,7 @@ namespace Product_API.Features.Discounts;
 
 public static class GetAllDiscount
 {
-    public record Query : IRequest<Result>;
+    public class Query : IRequest<Result>;
 
     public class Handler(IDiscountRepository repository) : IRequestHandler<Query, Result>
     {

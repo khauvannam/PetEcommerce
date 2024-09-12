@@ -31,7 +31,7 @@ public static class Extension
         services.AddScoped<UserClaimService>();
     }
 
-    public static void AddSingletonService(this IServiceCollection services)
+    public static void AddMailerService(this IServiceCollection services)
     {
         services.AddSingleton(typeof(EmailService));
     }
@@ -52,7 +52,13 @@ public static class Extension
 
     public static void AddSwaggerConfig(this IServiceCollection services)
     {
-        services.AddSwaggerGen(opt => opt.AddSwaggerAuth());
+        services.AddSwaggerGen(opt =>
+        {
+            opt.AddSwaggerAuth();
+
+            // solve conflict records
+            opt.CustomSchemaIds(x => x.FullName);
+        });
     }
 
     public static void UseSwaggerConfig(this WebApplication app)

@@ -19,13 +19,11 @@
 <Collection Categories="Categories"/>
 
 @code {
-    public List<Category> Categories = new();
+    public List<Category> Categories = [];
     [Inject] public CategoryService CategoryServiceRepo { get; set; } = null!;
 
     protected override async Task OnInitializedAsync()
     {
         Categories = await CategoryServiceRepo.GetCategories();
     }
-
-
 }

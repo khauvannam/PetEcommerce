@@ -22,6 +22,7 @@ public static class Extension
         var assembly = typeof(Program).Assembly;
 
         services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(assembly));
+
         services.AddScoped<IOrderRepository, OrderRepository>();
         services.AddScoped<IShippingMethodRepository, ShippingMethodRepository>();
         services.AddCorsAllowAll();
