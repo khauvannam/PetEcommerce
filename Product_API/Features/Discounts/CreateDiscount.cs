@@ -30,8 +30,6 @@ public static class CreateDiscount
     {
         public async Task<Result> Handle(Command request, CancellationToken cancellationToken)
         {
-            var discounts = (await discountRepository.GetAllAsync()).Value;
-
             if (string.IsNullOrEmpty(request.CategoryId) && request.ProductIdList.Count <= 0)
                 return Result.Failure(DiscountErrors.CreateForNothing());
 
