@@ -93,8 +93,7 @@ public class Product : AggregateRoot
 
     public void ApplyDiscount(decimal percent)
     {
-        foreach (var variant in ProductVariants)
-            variant.SetDiscountPercent(percent);
+        DiscountPercent = DiscountPercent.Create(percent);
     }
 
     private void UpdateVariantList(List<ProductVariant> updateVariants)

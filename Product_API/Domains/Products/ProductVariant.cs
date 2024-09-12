@@ -23,9 +23,6 @@ public sealed class ProductVariant : Entity
     public OriginalPrice OriginalPrice { get; set; } = null!;
 
     [JsonInclude]
-    public decimal DiscountPercent { get; private set; }
-
-    [JsonInclude]
     [MaxLength(255)]
     public string ProductId { get; set; } = null!;
 
@@ -47,11 +44,6 @@ public sealed class ProductVariant : Entity
     public void SetPrice(decimal value)
     {
         OriginalPrice = OriginalPrice.Create(value);
-    }
-
-    public void SetDiscountPercent(decimal percent)
-    {
-        DiscountPercent = percent;
     }
 }
 

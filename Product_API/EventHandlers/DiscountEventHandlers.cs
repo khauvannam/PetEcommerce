@@ -22,7 +22,7 @@ public static class DiscountEventHandlers
                 .Products.Where(p => p.CategoryId == categoryId)
                 .ToListAsync();
 
-            foreach (var product in categoryProducts)
+            foreach (var product in categoryProducts.Where(p => p.DiscountPercent.Value != 0))
             {
                 product.ApplyDiscount(discountPercent);
             }
@@ -34,7 +34,9 @@ public static class DiscountEventHandlers
                 .Products.Where(p => productIdList.Contains(p.ProductId))
                 .ToListAsync();
 
-            foreach (var product in selectedProducts)
+            foreach (
+                var product in selectedProducts.Where(product => product.DiscountPercent.Value == 0)
+            )
             {
                 product.ApplyDiscount(discountPercent);
             }
