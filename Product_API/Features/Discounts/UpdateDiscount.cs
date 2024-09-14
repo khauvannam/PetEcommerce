@@ -9,7 +9,7 @@ namespace Product_API.Features.Discounts;
 
 public static class UpdateDiscount
 {
-    public record Command(string DiscountId, DiscountRequest Request) : IRequest<Result>;
+    public record Command(Guid DiscountId, DiscountRequest Request) : IRequest<Result>;
 
     public class Handler(IDiscountRepository repository, IMediator mediator)
         : IRequestHandler<Command, Result>

@@ -7,7 +7,7 @@ namespace Product_API.Features.Categories;
 
 public static class GetCategoryById
 {
-    public record Query(string CategoryId) : IRequest<Result<Category>>;
+    public record Query(Guid CategoryId) : IRequest<Result<Category>>;
 
     public class Handler(ICategoryRepository repository) : IRequestHandler<Query, Result<Category>>
     {

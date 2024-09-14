@@ -29,7 +29,7 @@ public static class Extension
         services.AddValidatorsFromAssemblyContaining<GetAllProducts.Validator>();
         services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Program).Assembly));
 
-        // Carovel
+        // Coravel
         services.AddScheduler();
         services.AddQueue();
 
@@ -46,5 +46,12 @@ public static class Extension
     {
         var conn = ConnString.SqlServer();
         builder.Services.AddDbContext<ProductDbContext>(opt => opt.UseSqlServer(conn));
+    }
+
+    public static void AddDataSeeder(this IServiceProvider serviceProvider)
+    {
+        DataSeeder.SeedCategory(serviceProvider);
+
+        DataSeeder.SeedProduct(serviceProvider);
     }
 }

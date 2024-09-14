@@ -9,8 +9,8 @@ namespace Product_API.Controllers;
 [Route("api/[controller]")]
 public class ProductController(ISender sender) : ControllerBase
 {
-    [HttpPost("/api/[controller]/add/")]
-    public async Task<IActionResult> Add([FromForm] CreateProduct.Command command, string productId)
+    [HttpPost]
+    public async Task<IActionResult> Add([FromForm] CreateProduct.Command command)
     {
         var result = await sender.Send(command);
         if (!result.IsFailure)
@@ -20,7 +20,7 @@ public class ProductController(ISender sender) : ControllerBase
     }
 
     [HttpDelete("{productId}")]
-    public async Task<IActionResult> Delete(string productId)
+    public async Task<IActionResult> Delete(Guid productId)
     {
         var result = await sender.Send(new DeleteProduct.Command(productId));
         if (!result.IsFailure)
@@ -30,7 +30,7 @@ public class ProductController(ISender sender) : ControllerBase
     }
 
     [HttpGet("{productId}")]
-    public async Task<IActionResult> GetById(string productId)
+    public async Task<IActionResult> GetById(Guid productId)
     {
         var result = await sender.Send(new GetProductById.Query(productId));
         if (!result.IsFailure)
@@ -50,10 +50,7 @@ public class ProductController(ISender sender) : ControllerBase
     }
 
     [HttpPut("{productId}")]
-    public async Task<IActionResult> Update(
-        string productId,
-        [FromForm] UpdateProductRequest request
-    )
+    public async Task<IActionResult> Update(Guid productId, [FromForm] UpdateProductRequest request)
     {
         var command = new UpdateProduct.Command(productId, request);
         var result = await sender.Send(command);

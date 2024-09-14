@@ -18,7 +18,7 @@ public class CategoryController(ISender sender) : ControllerBase
     }
 
     [HttpDelete("{categoryId}")]
-    public async Task<IActionResult> Delete(string categoryId)
+    public async Task<IActionResult> Delete(Guid categoryId)
     {
         var command = new DeleteCategory.Command(categoryId);
         if (await sender.Send(command) is { IsFailure: true } result)
@@ -28,7 +28,7 @@ public class CategoryController(ISender sender) : ControllerBase
     }
 
     [HttpGet("{categoryId}")]
-    public async Task<IActionResult> GetById(string categoryId)
+    public async Task<IActionResult> GetById(Guid categoryId)
     {
         var result = await sender.Send(new GetCategoryById.Query(categoryId));
         if (!result.IsFailure)

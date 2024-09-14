@@ -16,6 +16,6 @@ public static class DiscountErrors
 
     public static ErrorType CurrentlyActive()
     {
-        return new ErrorType("Discount.CurrentlyActive", "You cannot create the current discount ");
+        return new ErrorType("Discount.CurrentlyActive", "One of the discount is currently active");
     }
 }

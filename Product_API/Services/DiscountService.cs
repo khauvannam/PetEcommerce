@@ -6,9 +6,9 @@ namespace Product_API.Services;
 
 public class DiscountService(ProductDbContext context, IQueue queue)
 {
-    private readonly ConcurrentDictionary<string, CancellationTokenSource> _cancellations = new();
+    private readonly ConcurrentDictionary<Guid, CancellationTokenSource> _cancellations = new();
 
-    public async Task SetDiscountEnd(string discountId)
+    public async Task SetDiscountEnd(Guid discountId)
     {
         var discount = context.Discounts.FirstOrDefault(d => d.DiscountId == discountId)!;
         var timeUntilEnd = discount.EndDate - DateTime.Now;
@@ -45,7 +45,7 @@ public class DiscountService(ProductDbContext context, IQueue queue)
         await context.SaveChangesAsync();
     }
 
-    public bool CancelDiscountEnd(string discountId)
+    public bool CancelDiscountEnd(Guid discountId)
     {
         if (_cancellations.TryGetValue(discountId, out var cts))
         {

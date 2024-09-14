@@ -31,7 +31,7 @@ public class CategoryRepository(ProductDbContext dbContext) : ICategoryRepositor
         return Result.Success(category);
     }
 
-    public async ValueTask<Result<Category>> GetByIdAsync(string categoryId)
+    public async ValueTask<Result<Category>> GetByIdAsync(Guid categoryId)
     {
         var category = await dbContext.Categories.FirstOrDefaultAsync(c =>
             c.CategoryId == categoryId

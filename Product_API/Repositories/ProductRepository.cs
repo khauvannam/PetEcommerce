@@ -15,7 +15,7 @@ public class ProductRepository(ProductDbContext dbContext) : IProductRepository
     {
         var query = dbContext.Products.AsQueryable().AsNoTracking();
 
-        if (!command.CategoryId.IsNullOrEmpty())
+        if (command.CategoryId is not null)
             query = query.Where(p => p.CategoryId == command.CategoryId);
 
         var products = await query.Skip(command.Offset).Take(command.Limit).ToListAsync();
@@ -50,7 +50,7 @@ public class ProductRepository(ProductDbContext dbContext) : IProductRepository
     }
 
     public async Task<Result<Product>> GetByIdAsync(
-        string productId,
+        Guid productId,
         CancellationToken cancellationToken
     )
     {

@@ -30,7 +30,7 @@ public class DiscountRepository(ProductDbContext context) : IDiscountRepository
         return Result.Success();
     }
 
-    public async Task<Result<Discount>> GetByIdAsync(string id)
+    public async Task<Result<Discount>> GetByIdAsync(Guid id)
     {
         var discount = await context.Discounts.FirstOrDefaultAsync(d => d.DiscountId == id);
         if (discount is null)

@@ -15,7 +15,8 @@ public static class CreateProduct
         string Description,
         string ProductUseGuide,
         IFormFile File,
-        string CategoryId,
+        Guid CategoryId,
+        decimal Percent,
         List<ProductVariantRequest> ProductVariants
     ) : IRequest<Result<Product>>;
 
@@ -46,6 +47,8 @@ public static class CreateProduct
                 productVariant.SetPrice(variant.OriginalPrice);
                 product.AddProductVariants(productVariant);
             }
+
+            product.ApplyDiscount(request.Percent);
 
             return await repository.CreateAsync(product);
         }

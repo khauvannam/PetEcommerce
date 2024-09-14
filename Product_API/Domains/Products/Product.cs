@@ -1,7 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 using BaseDomain.Bases;
-using Product_API.Domains.Categories;
 
 namespace Product_API.Domains.Products;
 
@@ -11,10 +10,17 @@ public class Product : AggregateRoot
 
     [JsonInclude]
     [MaxLength(255)]
-    public string ProductId
+    public Guid ProductId
     {
         get => Id;
-        private set => Id = value;
+        private init => Id = value;
+    }
+
+    [JsonIgnore]
+    public new int ClusterId
+    {
+        get => base.ClusterId;
+        init => base.ClusterId = value;
     }
 
     [MaxLength(255)]
@@ -35,10 +41,7 @@ public class Product : AggregateRoot
 
     [JsonInclude]
     [MaxLength(255)]
-    public string CategoryId { get; set; } = null!;
-
-    [Newtonsoft.Json.JsonIgnore]
-    public Category Category { get; set; } = null!;
+    public Guid CategoryId { get; set; }
 
     [JsonInclude]
     public List<ProductVariant> ProductVariants { get; } = [];
@@ -48,7 +51,7 @@ public class Product : AggregateRoot
         string description,
         string productUseGuide,
         string imageUrl,
-        string categoryId
+        Guid categoryId
     )
     {
         return new Product
@@ -68,7 +71,7 @@ public class Product : AggregateRoot
         string description,
         string productUseGuide,
         string imageUrl,
-        string categoryId,
+        Guid categoryId,
         List<ProductVariant> productVariants
     )
     {

@@ -8,7 +8,7 @@ namespace Product_API.Features.Products;
 
 public static class GetAllProducts
 {
-    public record Query(int Limit = 10, int Offset = 0, string? CategoryId = null)
+    public record Query(int Limit = 10, int Offset = 0, Guid? CategoryId = null)
         : IRequest<Result<List<Product>>>;
 
     public class Handler(IProductRepository repository, IValidator<Query> validator)

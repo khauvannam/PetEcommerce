@@ -56,7 +56,6 @@ namespace Product_API.Migrations
                         .HasColumnType("nvarchar(255)");
 
                     b.Property<string>("CategoryId")
-                        .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
@@ -78,6 +77,9 @@ namespace Product_API.Migrations
 
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
 
                     b.HasKey("DiscountId");
 
@@ -126,8 +128,6 @@ namespace Product_API.Migrations
 
                     b.HasKey("ProductId");
 
-                    b.HasIndex("CategoryId");
-
                     b.ToTable("Products");
                 });
 
@@ -168,17 +168,6 @@ namespace Product_API.Migrations
                     b.ToTable("ProductVariants");
                 });
 
-            modelBuilder.Entity("Product_API.Domains.Products.Product", b =>
-                {
-                    b.HasOne("Product_API.Domains.Categories.Category", "Category")
-                        .WithMany("Products")
-                        .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Category");
-                });
-
             modelBuilder.Entity("Product_API.Domains.Products.ProductVariant", b =>
                 {
                     b.HasOne("Product_API.Domains.Products.Product", "Product")
@@ -188,11 +177,6 @@ namespace Product_API.Migrations
                         .IsRequired();
 
                     b.Navigation("Product");
-                });
-
-            modelBuilder.Entity("Product_API.Domains.Categories.Category", b =>
-                {
-                    b.Navigation("Products");
                 });
 
             modelBuilder.Entity("Product_API.Domains.Products.Product", b =>

@@ -7,7 +7,7 @@ namespace Product_API.Features.Categories;
 
 public static class DeleteCategory
 {
-    public record Command(string CategoryId) : IRequest<Result>;
+    public record Command(Guid CategoryId) : IRequest<Result>;
 
     public class Handler(ICategoryRepository repository, BlobService blobService)
         : IRequestHandler<Command, Result>

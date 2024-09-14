@@ -8,12 +8,8 @@ namespace Product_API.Features.Categories;
 
 public static class UpdateCategory
 {
-    public record Command(
-        string CategoryId,
-        string CategoryName,
-        string Description,
-        IFormFile? File
-    ) : IRequest<Result<Category>>;
+    public record Command(Guid CategoryId, string CategoryName, string Description, IFormFile? File)
+        : IRequest<Result<Category>>;
 
     public class Handler(ICategoryRepository repository, BlobService blobService)
         : IRequestHandler<Command, Result<Category>>
@@ -28,7 +24,7 @@ public static class UpdateCategory
                 return result;
 
             var category = result.Value;
-            var newFileName = "";
+            var newFileName = string.Empty;
             if (request.File is not null)
             {
                 var fileName = new Uri(category.ImageUrl).Segments[^1];

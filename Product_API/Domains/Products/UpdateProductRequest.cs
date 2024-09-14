@@ -4,7 +4,8 @@ public record UpdateProductRequest(
     string Name,
     string Description,
     string ProductUseGuide,
-    IFormFile File,
-    string CategoryId,
-    List<ProductVariantRequest> ProductVariants
+    IFormFile? File,
+    Guid CategoryId,
+    List<ProductVariantRequest> ProductVariants,
+    decimal Percent
 );

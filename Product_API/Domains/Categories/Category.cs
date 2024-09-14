@@ -11,23 +11,27 @@ public class Category : AggregateRoot
 
     [JsonInclude]
     [MaxLength(255)]
-    public string CategoryId
+    public Guid CategoryId
     {
         get => Id;
-        private set => Id = value;
+        private init => Id = value;
+    }
+
+    [JsonIgnore]
+    public new int ClusterId
+    {
+        get => base.ClusterId;
+        init => base.ClusterId = value;
     }
 
     [MaxLength(255)]
-    public string CategoryName { get; private set; }
+    public string CategoryName { get; private set; } = null!;
 
     [MaxLength(2000)]
-    public string Description { get; private set; }
+    public string Description { get; private set; } = null!;
 
     [MaxLength(500)]
-    public string ImageUrl { get; private set; }
-
-    [JsonInclude]
-    public List<Product> Products { get; set; }
+    public string ImageUrl { get; private set; } = null!;
 
     public static Category Create(string categoryName, string description, string imageUrl)
     {

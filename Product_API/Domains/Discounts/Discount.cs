@@ -8,12 +8,18 @@ public class Discount : Entity
 {
     private Discount() { }
 
-    [JsonInclude]
     [MaxLength(255)]
-    public string DiscountId
+    public Guid DiscountId
     {
         get => Id;
-        private set => Id = value;
+        private init => Id = value;
+    }
+
+    [JsonIgnore]
+    public new int ClusterId
+    {
+        get => base.ClusterId;
+        init => base.ClusterId = value;
     }
 
     [MaxLength(100)]
@@ -22,7 +28,7 @@ public class Discount : Entity
     public decimal Percent { get; private set; }
 
     [MaxLength(255)]
-    public string? CategoryId { get; private set; }
+    public Guid? CategoryId { get; private set; }
 
     [MaxLength(255)]
     public string ProductIdListJson { get; private set; } = null!;
@@ -34,7 +40,7 @@ public class Discount : Entity
     public static Discount Create(
         string name,
         decimal percent,
-        string? categoryId,
+        Guid? categoryId,
         string productIdListJson,
         DateTime startDate,
         DateTime endDate

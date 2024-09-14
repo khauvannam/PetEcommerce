@@ -18,9 +18,10 @@ public static class Extension
             nameof(BasketService),
             client =>
             {
-                client.BaseAddress = new Uri("http://localhost:8080/api/basket");
+                client.BaseAddress = new Uri("http://localhost:8080/");
             }
         );
+
         services.AddScoped<CategoryService>();
     }
 }

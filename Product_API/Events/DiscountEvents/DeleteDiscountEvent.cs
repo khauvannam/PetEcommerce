@@ -2,4 +2,4 @@
 
 namespace Product_API.Events.DiscountEvents;
 
-public record DeleteDiscountEvent(string DiscountId) : INotification;
+public record DeleteDiscountEvent(Guid DiscountId) : INotification;

@@ -9,7 +9,7 @@ namespace Product_API.Features.Products;
 
 public static class UpdateProduct
 {
-    public record Command(string ProductId, UpdateProductRequest UpdateProductRequest)
+    public record Command(Guid ProductId, UpdateProductRequest UpdateProductRequest)
         : IRequest<Result<Product>>;
 
     public class Handler(IProductRepository repository, BlobService blobService)
@@ -26,12 +26,22 @@ public static class UpdateProduct
 
             var product = result.Value;
             var updateProductRequest = request.UpdateProductRequest;
-            var fileName = await blobService.UploadFileAsync(updateProductRequest.File, "Product-");
+            var newFileName = string.Empty;
 
-            if (string.IsNullOrEmpty(fileName))
+            if (updateProductRequest.File is not null)
+            {
+                var fileName = new Uri(product.ImageUrl).Segments.Last();
+                await blobService.DeleteAsync(fileName);
+                newFileName = await blobService.UploadFileAsync(
+                    updateProductRequest.File,
+                    "Product-"
+                );
+            }
+
+            if (string.IsNullOrEmpty(newFileName))
                 return Result.Failure<Product>(BlobErrors.ErrorUploadFile());
 
-            List<ProductVariant> variants = new();
+            List<ProductVariant> variants = [];
             foreach (var variant in updateProductRequest.ProductVariants)
             {
                 var productVariant = ProductVariant.Create(variant.VariantName, variant.Quantity);
@@ -43,10 +53,11 @@ public static class UpdateProduct
                 updateProductRequest.Name,
                 updateProductRequest.Description,
                 updateProductRequest.ProductUseGuide,
-                fileName,
+                newFileName,
                 updateProductRequest.CategoryId,
                 variants
             );
+            product.ApplyDiscount(updateProductRequest.Percent);
 
             return await repository.UpdateAsync(product, cancellationToken);
         }

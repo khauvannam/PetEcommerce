@@ -12,6 +12,10 @@ service.AddCorsAllowAll();
 
 var app = builder.Build();
 
+var provider = app.Services;
+
+provider.AddDataSeeder();
+
 app.UseCors("AllowAllOrigins");
 app.MapControllers();
 app.UseSwaggerConfig();

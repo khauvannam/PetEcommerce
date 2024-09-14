@@ -14,6 +14,8 @@ public static class Configuration
         {
             builder.HasKey(p => p.ProductId);
 
+            builder.HasIndex(p => p.Name).IsUnique();
+
             builder
                 .HasMany(p => p.ProductVariants)
                 .WithOne(pv => pv.Product)
@@ -23,6 +25,10 @@ public static class Configuration
             builder
                 .Property(p => p.DiscountPercent)
                 .HasConversion(d => d.Value, arg => DiscountPercent.Create(arg));
+
+            builder.Property(p => p.ClusterId).ValueGeneratedOnAdd();
+
+            builder.HasIndex(p => p.ClusterId).IsClustered();
         }
 
         public static ProductConfigure Create()
@@ -38,6 +44,10 @@ public static class Configuration
             builder.HasKey(pv => pv.VariantId);
 
             builder.ComplexProperty(pv => pv.OriginalPrice);
+
+            builder.Property(p => p.ClusterId).ValueGeneratedOnAdd();
+
+            builder.HasIndex(p => p.ClusterId).IsClustered();
         }
 
         public static ProductVariantConfigure Create()
@@ -51,12 +61,6 @@ public static class Configuration
         public void Configure(EntityTypeBuilder<Category> builder)
         {
             builder.HasKey(c => c.CategoryId);
-
-            builder
-                .HasMany(c => c.Products)
-                .WithOne(p => p.Category)
-                .HasForeignKey(p => p.CategoryId)
-                .OnDelete(DeleteBehavior.Cascade);
         }
 
         public static CategoryConfigure Create()
@@ -70,7 +74,12 @@ public static class Configuration
         public void Configure(EntityTypeBuilder<Discount> builder)
         {
             builder.HasKey(d => d.DiscountId);
+
             builder.Property(d => d.Percent).HasColumnType("decimal(18, 2)");
+
+            builder.Property(p => p.ClusterId).ValueGeneratedOnAdd();
+
+            builder.HasIndex(p => p.ClusterId).IsClustered();
         }
 
         public static DiscountConfigure Create()

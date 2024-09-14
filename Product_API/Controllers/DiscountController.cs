@@ -19,7 +19,7 @@ public class DiscountController(ISender sender) : ControllerBase
     }
 
     [HttpDelete("{discountId}")]
-    public async Task<IActionResult> DeleteDiscount(string discountId)
+    public async Task<IActionResult> DeleteDiscount(Guid discountId)
     {
         var result = await sender.Send(new DeleteDiscount.Command(discountId));
         if (result.IsFailure)
@@ -29,7 +29,7 @@ public class DiscountController(ISender sender) : ControllerBase
 
     [HttpPut("{discountId}")]
     public async Task<IActionResult> UpdateDiscount(
-        string discountId,
+        Guid discountId,
         [FromForm] DiscountRequest request
     )
     {

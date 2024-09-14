@@ -7,7 +7,7 @@ namespace Product_API.Features.Products;
 
 public static class GetProductById
 {
-    public record Query(string ProductId) : IRequest<Result<Product>>;
+    public record Query(Guid ProductId) : IRequest<Result<Product>>;
 
     public class Handler(IProductRepository repository) : IRequestHandler<Query, Result<Product>>
     {

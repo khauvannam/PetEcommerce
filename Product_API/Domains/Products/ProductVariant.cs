@@ -10,10 +10,17 @@ public sealed class ProductVariant : Entity
 
     [JsonInclude]
     [MaxLength(255)]
-    public string VariantId
+    public Guid VariantId
     {
         get => Id;
-        private set => Id = value;
+        private init => Id = value;
+    }
+
+    [JsonIgnore]
+    public new int ClusterId
+    {
+        get => base.ClusterId;
+        init => base.ClusterId = value;
     }
 
     [MaxLength(500)]
@@ -31,6 +38,11 @@ public sealed class ProductVariant : Entity
 
     public static ProductVariant Create(string variantName, int quantity)
     {
+        if (quantity < 0)
+        {
+            throw new ArgumentOutOfRangeException("", "Quantity must be positive");
+        }
+
         return new ProductVariant { VariantName = variantName, Quantity = quantity };
     }
 

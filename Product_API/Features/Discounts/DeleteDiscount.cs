@@ -8,7 +8,7 @@ namespace Product_API.Features.Discounts;
 
 public static class DeleteDiscount
 {
-    public record Command(string DiscountId) : IRequest<Result>;
+    public record Command(Guid DiscountId) : IRequest<Result>;
 
     public class Handler(
         IDiscountRepository discountRepository,
