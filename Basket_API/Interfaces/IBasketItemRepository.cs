@@ -7,6 +7,6 @@ public interface IBasketItemRepository
 {
     Task<Result<BasketItem>> CreateAsync(BasketItem basketItem);
     Task<Result<BasketItem>> UpdateAsync(BasketItem basketItem);
-    Task<Result> DeleteAsync(string basketItemId);
-    Task<Result<BasketItem>> GetByIdAsync(string basketItemId);
+    Task<Result> DeleteAsync(Guid basketItemId);
+    Task<Result<BasketItem>> GetByIdAsync(Guid basketItemId);
 }

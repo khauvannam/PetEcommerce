@@ -9,7 +9,7 @@ public class OrderDbContext(DbContextOptions options) : DbContext(options)
 {
     public DbSet<OrderModel> Orders { get; set; }
     public DbSet<OrderLine> OrderLines { get; set; }
-    public DbSet<ShippingMethod> ShippingMethods { get; set; }
+    public DbSet<Shipping> ShippingMethods { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

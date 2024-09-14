@@ -16,9 +16,16 @@ public class ProductRepository(ProductDbContext dbContext) : IProductRepository
         var query = dbContext.Products.AsQueryable().AsNoTracking();
 
         if (command.CategoryId is not null)
+        {
             query = query.Where(p => p.CategoryId == command.CategoryId);
+        }
 
-        var products = await query.Skip(command.Offset).Take(command.Limit).ToListAsync();
+        if (command.Offset is null && command.Limit is not null)
+        {
+            query.Skip((int)command.Offset!).Take((int)command.Limit!);
+        }
+
+        var products = await query.ToListAsync();
 
         return Result.Success(products);
     }

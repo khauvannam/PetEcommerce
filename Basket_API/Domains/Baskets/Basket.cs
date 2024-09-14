@@ -11,20 +11,27 @@ public class Basket : AggregateRoot
 
     [MaxLength(255)]
     [JsonInclude]
-    public string BasketId
+    public Guid BasketId
     {
         get => Id;
-        private set => Id = value;
+        private init => Id = value;
+    }
+
+    [JsonIgnore]
+    public new int ClusterId
+    {
+        get => base.ClusterId;
+        init => base.ClusterId = value;
     }
 
     [MaxLength(255)]
     [JsonInclude]
-    public string CustomerId { get; private set; } = null!;
+    public Guid CustomerId { get; private set; }
 
     [JsonInclude]
     public HashSet<BasketItem> BasketItemsList { get; private init; } = null!;
 
-    public static Basket Create(string customerId)
+    public static Basket Create(Guid customerId)
     {
         return new Basket { CustomerId = customerId, BasketItemsList = [] };
     }

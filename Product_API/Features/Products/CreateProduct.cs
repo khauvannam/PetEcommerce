@@ -2,6 +2,7 @@
 using FluentValidation;
 using MediatR;
 using Product_API.Domains.Products;
+using Product_API.Errors;
 using Product_API.Interfaces;
 using Shared.Errors;
 using Shared.Services;
@@ -28,6 +29,15 @@ public static class CreateProduct
             CancellationToken cancellationToken
         )
         {
+            var products = (
+                await repository.ListAllAsync(new GetAllProducts.Query(null, null))
+            ).Value.Select(p => p.Name);
+
+            if (products.Contains(request.Name))
+            {
+                return Result.Failure<Product>(ProductErrors.DuplicateName);
+            }
+
             var fileName = await blobService.UploadFileAsync(request.File, "Product-");
 
             if (string.IsNullOrEmpty(fileName))

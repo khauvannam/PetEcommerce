@@ -24,7 +24,7 @@ public class OrderRepository(OrderDbContext context) : IOrderRepository
         return Result.Success();
     }
 
-    public async Task<Result<OrderModel>> GetByIdAsync(string orderId)
+    public async Task<Result<OrderModel>> GetByIdAsync(Guid orderId)
     {
         var order = await context
             .Orders.AsNoTracking()

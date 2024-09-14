@@ -10,17 +10,24 @@ public class OrderLine : Entity
     private OrderLine() { }
 
     [MaxLength(255)]
-    public string OrderLineId
+    public Guid OrderLineId
     {
         get => Id;
-        private set => Id = value;
+        private init => Id = value;
+    }
+
+    [JsonIgnore]
+    public new int ClusterId
+    {
+        get => base.ClusterId;
+        init => base.ClusterId = value;
     }
 
     [MaxLength(255)]
-    public string ProductId { get; private set; } = null!;
+    public Guid ProductId { get; private set; }
 
     [MaxLength(255)]
-    public string OrderId { get; set; } = null!;
+    public Guid OrderId { get; set; }
 
     [JsonIgnore]
     public OrderModel OrderModel { get; set; } = null!;
@@ -28,7 +35,7 @@ public class OrderLine : Entity
     public int Quantity { get; private set; }
     public decimal Price { get; private set; }
 
-    public static OrderLine Create(string productId, int quantity, decimal price)
+    public static OrderLine Create(Guid productId, int quantity, decimal price)
     {
         return new OrderLine
         {

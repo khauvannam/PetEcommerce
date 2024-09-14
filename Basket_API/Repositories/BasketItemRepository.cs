@@ -23,7 +23,7 @@ public class BasketItemRepository(BasketDbContext context) : IBasketItemReposito
         return Result.Success(basketItem);
     }
 
-    public async Task<Result> DeleteAsync(string basketItemId)
+    public async Task<Result> DeleteAsync(Guid basketItemId)
     {
         var basketItem = await context.BasketItems.FirstOrDefaultAsync(bi =>
             bi.BasketItemId == basketItemId
@@ -35,7 +35,7 @@ public class BasketItemRepository(BasketDbContext context) : IBasketItemReposito
         return Result.Success();
     }
 
-    public async Task<Result<BasketItem>> GetByIdAsync(string basketItemId)
+    public async Task<Result<BasketItem>> GetByIdAsync(Guid basketItemId)
     {
         var basketItem = await context.BasketItems.FirstOrDefaultAsync(bi =>
             bi.BasketItemId == basketItemId

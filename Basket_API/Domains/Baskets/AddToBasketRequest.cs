@@ -2,4 +2,4 @@
 
 namespace Basket_API.Domains.Baskets;
 
-public record AddToBasketRequest(string CustomerId, List<BasketItemRequest> BasketItemRequests);
+public record AddToBasketRequest(Guid CustomerId, List<BasketItemRequest> BasketItemRequests);

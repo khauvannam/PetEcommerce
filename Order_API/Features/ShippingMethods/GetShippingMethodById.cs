@@ -7,12 +7,12 @@ namespace Order.API.Features.ShippingMethods;
 
 public static class GetShippingMethodById
 {
-    public record Query(string ShippingMethodId) : IRequest<Result<ShippingMethod>>;
+    public record Query(string ShippingMethodId) : IRequest<Result<Shipping>>;
 
     internal sealed class Handler(IShippingMethodRepository shippingMethodRepository)
-        : IRequestHandler<Query, Result<ShippingMethod>>
+        : IRequestHandler<Query, Result<Shipping>>
     {
-        public async Task<Result<ShippingMethod>> Handle(
+        public async Task<Result<Shipping>> Handle(
             Query request,
             CancellationToken cancellationToken
         )

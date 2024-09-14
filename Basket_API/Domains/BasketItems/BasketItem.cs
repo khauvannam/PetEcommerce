@@ -11,10 +11,17 @@ public class BasketItem : Entity
 
     [MaxLength(255)]
     [JsonInclude]
-    public string BasketItemId
+    public Guid BasketItemId
     {
         get => Id;
-        private set => Id = value;
+        private init => Id = value;
+    }
+
+    [JsonIgnore]
+    public new int ClusterId
+    {
+        get => base.ClusterId;
+        init => base.ClusterId = value;
     }
 
     [MaxLength(255)]
@@ -27,7 +34,7 @@ public class BasketItem : Entity
     public string VariantId { get; private set; }
 
     [MaxLength(255)]
-    public string BasketId { get; init; }
+    public Guid BasketId { get; init; }
 
     [Newtonsoft.Json.JsonIgnore]
     public Basket Basket { get; init; }

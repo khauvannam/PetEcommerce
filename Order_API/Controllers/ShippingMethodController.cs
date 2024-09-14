@@ -17,7 +17,7 @@ public class ShippingMethodsController(ISender sender) : ControllerBase
         if (!result.IsFailure)
             return CreatedAtAction(
                 nameof(GetShippingMethodById),
-                new { shippingMethodId = result.Value!.ShippingMethodId },
+                new { shippingMethodId = result.Value.ShippingId },
                 result.Value
             );
         return BadRequest(result.ErrorTypes);
@@ -29,9 +29,6 @@ public class ShippingMethodsController(ISender sender) : ControllerBase
         [FromBody] UpdateShippingMethod.Command command
     )
     {
-        if (shippingMethodId != command.ShippingMethodId)
-            return BadRequest("Shipping Method ID mismatch.");
-
         var result = await sender.Send(command);
         if (!result.IsFailure)
             return Ok(result.Value);

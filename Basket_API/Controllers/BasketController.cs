@@ -9,12 +9,12 @@ namespace Basket_API.Controllers;
 [Route("api/[controller]")]
 public class BasketController(ISender sender) : ControllerBase
 {
-    [HttpPost("/api/[controller]/add/{basketId}")]
-    public async Task<IActionResult> Update([FromBody] AddToBasketRequest request, string basketId)
+    [HttpPost("/api/[controller]/{basketId}")]
+    public async Task<IActionResult> Update([FromBody] AddToBasketRequest request, Guid basketId)
     {
         var command = new AddToBasket.Command(
-            request.CustomerId,
             basketId,
+            request.CustomerId,
             request.BasketItemRequests
         );
 
@@ -25,20 +25,20 @@ public class BasketController(ISender sender) : ControllerBase
         return BadRequest(result.ErrorTypes);
     }
 
-    [HttpDelete("{id}")]
-    public async Task<IActionResult> Delete(string id)
+    [HttpDelete("{basketId}")]
+    public async Task<IActionResult> Delete(Guid basketId)
     {
-        var result = await sender.Send(new DeleteBasket.Command(id));
+        var result = await sender.Send(new DeleteBasket.Command(basketId));
         if (!result.IsFailure)
             return NoContent();
 
         return BadRequest(result.ErrorTypes);
     }
 
-    [HttpGet("{id}")]
-    public async Task<IActionResult> GetById(string id)
+    [HttpGet("{basketId}")]
+    public async Task<IActionResult> GetById(Guid basketId)
     {
-        var result = await sender.Send(new GetBasketById.Query(id));
+        var result = await sender.Send(new GetBasketById.Query(basketId));
         if (!result.IsFailure)
             return Ok(result.Value);
 

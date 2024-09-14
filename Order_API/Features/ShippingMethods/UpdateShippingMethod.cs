@@ -8,12 +8,12 @@ namespace Order.API.Features.ShippingMethods;
 public static class UpdateShippingMethod
 {
     public record Command(string ShippingMethodId, string Name, decimal Price)
-        : IRequest<Result<ShippingMethod>>;
+        : IRequest<Result<Shipping>>;
 
     internal sealed class Handler(IShippingMethodRepository shippingMethodRepository)
-        : IRequestHandler<Command, Result<ShippingMethod>>
+        : IRequestHandler<Command, Result<Shipping>>
     {
-        public async Task<Result<ShippingMethod>> Handle(
+        public async Task<Result<Shipping>> Handle(
             Command request,
             CancellationToken cancellationToken
         )

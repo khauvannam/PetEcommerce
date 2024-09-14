@@ -22,7 +22,7 @@ public class OrdersController(ISender sender) : ControllerBase
     }
 
     [HttpDelete("{orderId}")]
-    public async Task<IActionResult> DeleteOrder(string orderId)
+    public async Task<IActionResult> DeleteOrder(Guid orderId)
     {
         var command = new DeleteOrder.Command(orderId);
         var result = await sender.Send(command);
@@ -32,7 +32,7 @@ public class OrdersController(ISender sender) : ControllerBase
     }
 
     [HttpGet("{orderId}")]
-    public async Task<IActionResult> GetOrderById(string orderId)
+    public async Task<IActionResult> GetOrderById(Guid orderId)
     {
         var query = new GetOrderById.Query(orderId);
         var result = await sender.Send(query);

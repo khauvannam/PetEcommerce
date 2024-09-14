@@ -29,7 +29,7 @@ public class BasketRepository(BasketDbContext context) : IBasketRepository
         return Result.Success();
     }
 
-    public async Task<Result<Basket>> GetByIdAsync(string basketId)
+    public async Task<Result<Basket>> GetByIdAsync(Guid basketId)
     {
         var basket = await context
             .Baskets.Include(b => b.BasketItemsList)

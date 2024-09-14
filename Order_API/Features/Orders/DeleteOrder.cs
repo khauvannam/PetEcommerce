@@ -6,7 +6,7 @@ namespace Order.API.Features.Orders;
 
 public class DeleteOrder
 {
-    public record Command(string OrderId) : IRequest<Result>;
+    public record Command(Guid OrderId) : IRequest<Result>;
 
     internal sealed class Handler(IOrderRepository orderRepository)
         : IRequestHandler<Command, Result>

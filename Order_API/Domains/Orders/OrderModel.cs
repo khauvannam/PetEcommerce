@@ -2,6 +2,8 @@ using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 using BaseDomain.Bases;
 using Order.API.Domains.OrderLines;
+using Order.API.Domains.Payments;
+using Order.API.Domains.ShippingMethods;
 
 namespace Order.API.Domains.Orders;
 
@@ -10,25 +12,30 @@ public class OrderModel : AggregateRoot
     private OrderModel() { }
 
     [MaxLength(255)]
-    public string OrderId
+    public Guid OrderId
     {
         get => Id;
-        private set => Id = value;
+        private init => Id = value;
+    }
+
+    [JsonIgnore]
+    public new int ClusterId
+    {
+        get => base.ClusterId;
+        init => base.ClusterId = value;
     }
 
     [MaxLength(255)]
-    public string UserId { get; private set; } = null!;
+    public Guid UserId { get; private set; }
 
     public DateTime OrderDate { get; private init; }
     public decimal OrderTotal { get; private set; }
     public OrderStatus OrderStatus { get; private set; }
     public PaymentStatus PaymentStatus { get; private set; }
 
-    [MaxLength(100)]
-    public string PaymentMethodId { get; private set; } = null!;
+    public Payment Payment { get; private set; } = null!;
 
-    [MaxLength(100)]
-    public string ShippingMethodId { get; set; } = null!;
+    public Shipping Shipping { get; set; } = null!;
 
     [MaxLength(500)]
     public string ShippingAddress { get; private set; } = null!;
@@ -37,7 +44,7 @@ public class OrderModel : AggregateRoot
     public List<OrderLine> OrderLines { get; set; } = null!;
 
     public static OrderModel Create(
-        string userId,
+        Guid userId,
         string shippingAddress,
         OrderStatus orderStatus = OrderStatus.Pending
     )
@@ -49,6 +56,9 @@ public class OrderModel : AggregateRoot
             ShippingAddress = shippingAddress,
             OrderDate = DateTime.Now,
             OrderLines = [],
+            PaymentStatus =
+                PaymentStatus.Pending // Cash case
+            ,
         };
     }
 
@@ -68,17 +78,16 @@ public class OrderModel : AggregateRoot
         PaymentStatus = paymentStatus;
     }
 
-    public void ProcessOrder(string paymentMethodId, string shippingMethodId)
+    public void ProcessOrder(Payment payment, Shipping shipping)
     {
-        PaymentMethodId = paymentMethodId;
-        ShippingMethodId = shippingMethodId;
+        Payment = payment;
+        Shipping = shipping;
     }
 }
 
 public enum OrderStatus
 {
     Pending = 0,
-    Shipping = 1,
     Finish = 2,
 }
 

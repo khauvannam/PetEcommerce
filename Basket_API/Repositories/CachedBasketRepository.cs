@@ -42,7 +42,7 @@ public class CachedBasketRepository(IDistributedCache cache, IBasketRepository d
         return result;
     }
 
-    public async Task<Result<Basket>> GetByIdAsync(string basketId)
+    public async Task<Result<Basket>> GetByIdAsync(Guid basketId)
     {
         var key = $"basket-{basketId}";
         var cachedBasket = await cache.GetStringAsync(key);

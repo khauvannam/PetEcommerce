@@ -8,7 +8,7 @@ namespace Order.API.Features.Orders;
 
 public static class CreateOrder
 {
-    public record Command(string UserId, string ShippingAddress, List<OrderLine> OrderLines)
+    public record Command(Guid UserId, string ShippingAddress, List<OrderLine> OrderLines)
         : IRequest<Result<OrderModel>>;
 
     internal sealed class Handler(IOrderRepository orderRepository)

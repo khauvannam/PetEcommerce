@@ -5,8 +5,8 @@ namespace Order.API.Interfaces;
 
 public interface IShippingMethodRepository
 {
-    Task<Result<ShippingMethod>> CreateAsync(ShippingMethod shippingMethod);
-    Task<Result<ShippingMethod>> UpdateAsync(ShippingMethod shippingMethod);
-    Task<Result> DeleteAsync(ShippingMethod shippingMethod);
-    Task<Result<ShippingMethod>> GetByIdAsync(string shippingMethodId);
+    Task<Result<Shipping>> CreateAsync(Shipping shipping);
+    Task<Result<Shipping>> UpdateAsync(Shipping shipping);
+    Task<Result> DeleteAsync(Shipping shipping);
+    Task<Result<Shipping>> GetByIdAsync(string shippingMethodId);
 }

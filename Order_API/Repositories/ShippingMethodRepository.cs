@@ -8,32 +8,32 @@ namespace Order.API.Repositories;
 
 public class ShippingMethodRepository(OrderDbContext context) : IShippingMethodRepository
 {
-    public async Task<Result<ShippingMethod>> CreateAsync(ShippingMethod shippingMethod)
+    public async Task<Result<Shipping>> CreateAsync(Shipping shipping)
     {
-        context.ShippingMethods.Add(shippingMethod);
+        context.ShippingMethods.Add(shipping);
         await context.SaveChangesAsync();
-        return Result.Success(shippingMethod);
+        return Result.Success(shipping);
     }
 
-    public async Task<Result<ShippingMethod>> UpdateAsync(ShippingMethod shippingMethod)
+    public async Task<Result<Shipping>> UpdateAsync(Shipping shipping)
     {
-        context.ShippingMethods.Update(shippingMethod);
+        context.ShippingMethods.Update(shipping);
         await context.SaveChangesAsync();
-        return Result.Success(shippingMethod);
+        return Result.Success(shipping);
     }
 
-    public async Task<Result> DeleteAsync(ShippingMethod shippingMethod)
+    public async Task<Result> DeleteAsync(Shipping shipping)
     {
-        context.ShippingMethods.Remove(shippingMethod);
+        context.ShippingMethods.Remove(shipping);
         await context.SaveChangesAsync();
         return Result.Success();
     }
 
-    public async Task<Result<ShippingMethod>> GetByIdAsync(string shippingMethodId)
+    public async Task<Result<Shipping>> GetByIdAsync(string shippingMethodId)
     {
         var shippingMethod = await context.ShippingMethods.FindAsync(shippingMethodId);
         if (shippingMethod != null)
             return Result.Success(shippingMethod);
-        return Result.Failure<ShippingMethod>(ShippingMethodErrors.NotFound);
+        return Result.Failure<Shipping>(ShippingMethodErrors.NotFound);
     }
 }

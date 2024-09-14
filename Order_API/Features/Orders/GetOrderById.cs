@@ -7,7 +7,7 @@ namespace Order.API.Features.Orders;
 
 public class GetOrderById
 {
-    public record Query(string OrderId) : IRequest<Result<OrderModel>>;
+    public record Query(Guid OrderId) : IRequest<Result<OrderModel>>;
 
     internal sealed class Handler(IOrderRepository orderRepository)
         : IRequestHandler<Query, Result<OrderModel>>

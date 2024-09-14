@@ -10,8 +10,8 @@ namespace Basket_API.Features.Baskets;
 public static class AddToBasket
 {
     public record Command(
-        string BasketId,
-        string CustomerId,
+        Guid BasketId,
+        Guid CustomerId,
         List<BasketItemRequest> BasketItemRequests
     ) : IRequest<Result<Basket>>;
 

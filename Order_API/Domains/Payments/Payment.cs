@@ -2,37 +2,34 @@
 
 namespace Order.API.Domains.Payments;
 
-public class Payment : Entity
+public class Payment : ValueObject
 {
     private Payment() { }
 
-    public string PaymentId
-    {
-        get => Id;
-        private set => Id = value;
-    }
-    public decimal Amount { get; set; }
-    public PaymentMethod Method { get; set; }
-    public string TransactionReference { get; set; } = null!;
+    public Guid PaymentId { get; private set; }
+    public decimal Amount { get; private init; }
+    public PaymentMethod Method { get; private init; }
 
-    public static Payment Create(decimal amount)
+    public static Payment ProcessPayment(decimal amount, PaymentMethod method)
     {
-        return new() { Amount = amount };
-    }
-
-    public void ProcessPayment(PaymentMethod paymentMethod)
-    {
-        switch (paymentMethod)
+        var payment = new Payment
         {
-            case PaymentMethod.Bank:
-                break;
-            case PaymentMethod.Momo:
-                break;
-            case PaymentMethod.CreditCard:
-                break;
-            default:
-                throw new ArgumentOutOfRangeException(nameof(paymentMethod), paymentMethod, null);
-        }
+            Amount = amount,
+            Method = method switch
+            {
+                PaymentMethod.Bank => PaymentMethod.Bank,
+                PaymentMethod.CreditCard => PaymentMethod.CreditCard,
+                PaymentMethod.Momo => PaymentMethod.Momo,
+                _ => throw new ArgumentOutOfRangeException(nameof(method), method, null),
+            },
+        };
+        return payment;
+    }
+
+    protected override IEnumerable<object> GetEqualityComponents()
+    {
+        yield return Amount;
+        yield return Method;
     }
 }
 

@@ -18,6 +18,10 @@ public static class Configuration
                 .WithOne(ol => ol.OrderModel)
                 .HasForeignKey(ol => ol.OrderId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Property(o => o.ClusterId).ValueGeneratedOnAdd();
+
+            builder.HasIndex(o => o.ClusterId).IsClustered();
         }
 
         public static OrderConfigure Create()
@@ -31,6 +35,9 @@ public static class Configuration
         public void Configure(EntityTypeBuilder<OrderLine> builder)
         {
             builder.HasKey(ol => ol.OrderLineId);
+            builder.Property(ol => ol.ClusterId).ValueGeneratedOnAdd();
+
+            builder.HasIndex(ol => ol.ClusterId).IsClustered();
         }
 
         public static OrderConfigure Create()
@@ -39,11 +46,11 @@ public static class Configuration
         }
     }
 
-    public class ShippingMethodConfigure : IEntityTypeConfiguration<ShippingMethod>
+    public class ShippingMethodConfigure : IEntityTypeConfiguration<Shipping>
     {
-        public void Configure(EntityTypeBuilder<ShippingMethod> builder)
+        public void Configure(EntityTypeBuilder<Shipping> builder)
         {
-            builder.HasKey(s => s.ShippingMethodId);
+            builder.HasKey(s => s.ShippingId);
         }
 
         public static ShippingMethodConfigure Create()

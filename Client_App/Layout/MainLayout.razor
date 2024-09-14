@@ -1,5 +1,7 @@
 ﻿@using Client_App.Components.Share
 @inherits LayoutComponentBase
+@inject IJSRuntime Js
+
 <div>
     <nav>
         <TopBar/>
@@ -13,3 +15,15 @@
         <BottomBar/>
     </footer>
 </div>
+
+@code {
+
+    protected override async Task OnAfterRenderAsync(bool isFirstRender)
+    {
+        if (isFirstRender)
+        {
+            await Js.InvokeVoidAsync("window.initializeFlowbite");
+        }
+    }
+
+}

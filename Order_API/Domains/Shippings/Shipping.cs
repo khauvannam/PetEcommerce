@@ -3,15 +3,15 @@ using BaseDomain.Bases;
 
 namespace Order.API.Domains.ShippingMethods;
 
-public class ShippingMethod : AggregateRoot
+public class Shipping : AggregateRoot
 {
-    private ShippingMethod() { }
+    private Shipping() { }
 
     [MaxLength(255)]
-    public string ShippingMethodId
+    public Guid ShippingId
     {
         get => Id;
-        private set => Id = value;
+        private init => Id = value;
     }
 
     [MaxLength(100)]
@@ -19,9 +19,9 @@ public class ShippingMethod : AggregateRoot
 
     public decimal Price { get; private set; }
 
-    public static ShippingMethod Create(string name)
+    public static Shipping Create(string name)
     {
-        return new ShippingMethod { Name = name };
+        return new Shipping { Name = name };
     }
 
     public void SetPrice(decimal price)
@@ -36,4 +36,11 @@ public class ShippingMethod : AggregateRoot
     {
         Name = name;
     }
+}
+
+public enum ShippingMethod
+{
+    Grab,
+    Be,
+    Ghtk,
 }
