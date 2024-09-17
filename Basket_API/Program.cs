@@ -10,7 +10,9 @@ builder
     {
         opt.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
     });
+
 builder.Services.AddPersistence();
+builder.Services.AddCorsAllowAll();
 
 builder.Services.AddStackExchangeRedisCache(opt =>
 {
@@ -23,6 +25,7 @@ builder.Services.AddStackExchangeRedisCache(opt =>
 
 var app = builder.Build();
 
+app.UseCors("AllowAllOrigins");
 app.MapControllers();
 app.UseSwaggerConfig();
 app.Run();

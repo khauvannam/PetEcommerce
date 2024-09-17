@@ -7,7 +7,7 @@ namespace Identity.API.Features.Tokens;
 
 public static class Revoke
 {
-    public record Command(string UserId) : IRequest<Result>;
+    public record Command(Guid UserId) : IRequest<Result>;
 
     internal class Handler(ITokenRepository repository) : IRequestHandler<Command, Result>
     {

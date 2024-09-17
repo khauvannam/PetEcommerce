@@ -17,11 +17,11 @@ public static class Configuration
                 .HasForeignKey(bi => bi.BasketId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            builder.HasKey(b => b.BasketId);
+            builder.HasKey(b => b.BasketId).IsClustered(false);
 
             builder.Property(b => b.ClusterId).ValueGeneratedOnAdd();
 
-            builder.HasIndex(b => b.ClusterId).IsClustered();
+            builder.HasIndex(b => b.ClusterId).IsClustered().IsUnique();
         }
     }
 
@@ -34,10 +34,11 @@ public static class Configuration
                 .HasConversion(value => value.Value, value => Quantity.Create(value))
                 .HasColumnName("Quantity");
 
-            builder.HasKey(bi => bi.BasketItemId);
+            builder.HasKey(bi => bi.BasketItemId).IsClustered(false);
+
             builder.Property(bi => bi.ClusterId).ValueGeneratedOnAdd();
 
-            builder.HasIndex(bi => bi.ClusterId).IsClustered();
+            builder.HasIndex(bi => bi.ClusterId).IsClustered().IsUnique();
         }
     }
 }

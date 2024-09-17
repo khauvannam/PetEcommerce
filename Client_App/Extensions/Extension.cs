@@ -10,7 +10,7 @@ public static class Extension
             nameof(ProductService),
             client =>
             {
-                client.BaseAddress = new Uri("http://localhost:8082/");
+                client.BaseAddress = new Uri("http://localhost:5081");
             }
         );
 

@@ -16,17 +16,20 @@ public class TokenRepository(UserDbContext dbContext, JwtHandler jwtHandler) : I
     public async Task<Result<TokenResponse>> Refresh(Refresh.Command command)
     {
         var claimsPrincipal = jwtHandler.GetClaimsPrincipalFromExpiredToken(command.AccessToken);
-        var userId = claimsPrincipal.FindFirstValue("UserId");
-        var user = dbContext
-            .Users.Include(user => user.RefreshToken)
-            .FirstOrDefault(u => u.Id == userId);
+        var userIdString = claimsPrincipal.FindFirstValue("UserId");
+
+        if (!Guid.TryParse(userIdString, out var userId))
+            return Result.Failure<TokenResponse>(UserErrors.NotFound);
+
+        var user = dbContext.Users.Include(u => u.RefreshToken).FirstOrDefault(u => u.Id == userId);
+
         if (user is null)
             return Result.Failure<TokenResponse>(UserErrors.NotFound);
 
         if (CheckInValidToken(user, command.RefreshToken))
             return Result.Failure<TokenResponse>(TokenErrors.WrongToken("refresh token"));
 
-        if (ChecKTokenIsExpired(user))
+        if (CheckTokenIsExpired(user))
             return Result.Failure<TokenResponse>(TokenErrors.ExpiredToken());
 
         var refreshToken = jwtHandler.GenerateRefreshToken();
@@ -59,7 +62,7 @@ public class TokenRepository(UserDbContext dbContext, JwtHandler jwtHandler) : I
         return user.RefreshToken!.Token != refreshToken;
     }
 
-    private bool ChecKTokenIsExpired(User user)
+    private bool CheckTokenIsExpired(User user)
     {
         return user.RefreshToken!.ExpiredAt <= DateTime.Now;
     }

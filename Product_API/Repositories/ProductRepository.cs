@@ -20,9 +20,9 @@ public class ProductRepository(ProductDbContext dbContext) : IProductRepository
             query = query.Where(p => p.CategoryId == command.CategoryId);
         }
 
-        if (command.Offset is null && command.Limit is not null)
+        if (command.Offset is not null && command.Limit is not null)
         {
-            query.Skip((int)command.Offset!).Take((int)command.Limit!);
+            query = query.Skip((int)command.Offset!).Take((int)command.Limit!);
         }
 
         var products = await query.ToListAsync();

@@ -7,9 +7,9 @@ namespace Product_API.Features.Products;
 
 public static class DeleteProduct
 {
-    public record Command(Guid ProductId) : IRequest<Result>;
+    public sealed record Command(Guid ProductId) : IRequest<Result>;
 
-    public class Handler(IProductRepository repository, BlobService blobService)
+    public sealed class Handler(IProductRepository repository, BlobService blobService)
         : IRequestHandler<Command, Result>
     {
         public async Task<Result> Handle(Command request, CancellationToken cancellationToken)

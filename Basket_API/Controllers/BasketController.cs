@@ -6,10 +6,10 @@ using Microsoft.AspNetCore.Mvc;
 namespace Basket_API.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/[controller]/{basketId:guid}")]
 public class BasketController(ISender sender) : ControllerBase
 {
-    [HttpPost("/api/[controller]/{basketId}")]
+    [HttpPost]
     public async Task<IActionResult> Update([FromBody] AddToBasketRequest request, Guid basketId)
     {
         var command = new AddToBasket.Command(
@@ -25,7 +25,7 @@ public class BasketController(ISender sender) : ControllerBase
         return BadRequest(result.ErrorTypes);
     }
 
-    [HttpDelete("{basketId}")]
+    [HttpDelete]
     public async Task<IActionResult> Delete(Guid basketId)
     {
         var result = await sender.Send(new DeleteBasket.Command(basketId));
@@ -35,7 +35,7 @@ public class BasketController(ISender sender) : ControllerBase
         return BadRequest(result.ErrorTypes);
     }
 
-    [HttpGet("{basketId}")]
+    [HttpGet]
     public async Task<IActionResult> GetById(Guid basketId)
     {
         var result = await sender.Send(new GetBasketById.Query(basketId));

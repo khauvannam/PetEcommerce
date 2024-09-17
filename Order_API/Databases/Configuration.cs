@@ -12,7 +12,8 @@ public static class Configuration
     {
         public void Configure(EntityTypeBuilder<OrderModel> builder)
         {
-            builder.HasKey(o => o.OrderId);
+            builder.HasKey(o => o.OrderId).IsClustered(false);
+
             builder
                 .HasMany<OrderLine>()
                 .WithOne(ol => ol.OrderModel)
@@ -21,7 +22,7 @@ public static class Configuration
 
             builder.Property(o => o.ClusterId).ValueGeneratedOnAdd();
 
-            builder.HasIndex(o => o.ClusterId).IsClustered();
+            builder.HasIndex(o => o.ClusterId).IsClustered().IsUnique();
         }
 
         public static OrderConfigure Create()
@@ -34,10 +35,11 @@ public static class Configuration
     {
         public void Configure(EntityTypeBuilder<OrderLine> builder)
         {
-            builder.HasKey(ol => ol.OrderLineId);
+            builder.HasKey(ol => ol.OrderLineId).IsClustered(false);
+
             builder.Property(ol => ol.ClusterId).ValueGeneratedOnAdd();
 
-            builder.HasIndex(ol => ol.ClusterId).IsClustered();
+            builder.HasIndex(ol => ol.ClusterId).IsClustered().IsUnique();
         }
 
         public static OrderConfigure Create()

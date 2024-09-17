@@ -1,0 +1,21 @@
+@using Client_App.Domains.Categories
+<div class="pt-10 pb-8">
+    <h1 class="font-extrabold text-[32px] px-24 mb-5 text-center text-main">
+        Science-backed essentials for your pets
+    </h1>
+    <div class="flex w-full h-full justify-center">
+        @foreach (var category in CategoryList!.Take(4))
+        {
+            <NavLink href="@($"/products/{category.CategoryId}")" class="flex flex-col justify-between bg-[#f0f5ff] items-center rounded-lg w-[300px] m-3 hover:bg-[#FADC6F] transition-all ease-out group">
+                <div class="w-full flex justify-center bg-white">
+                    <img class="h-[168px] rounded-t-lg object-fill w-full" src="@category.ImageUrl" alt="">
+                </div>
+                <p class="my-4 text-main text-xl font-semibold group-hover:text-black ">@category.CategoryName</p>
+            </NavLink>
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter] public List<Category>? CategoryList { get; set; }
+}    

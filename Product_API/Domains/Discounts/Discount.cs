@@ -79,6 +79,6 @@ public class Discount : Entity
 
 public enum DiscountStatus
 {
-    Happening = 0,
-    End = 1,
+    Happening,
+    End,
 }

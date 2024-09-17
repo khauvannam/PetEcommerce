@@ -11,4 +11,3 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 builder.Services.AddHttpClientAddress();
 
 await builder.Build().RunAsync();
-await builder.Build().RunAsync();

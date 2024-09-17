@@ -24,6 +24,7 @@ public static class AddToBasket
         )
         {
             var validationResult = await validator.ValidateAsync(request, cancellationToken);
+
             if (!validationResult.IsValid)
                 return Result.Failure<Basket>(
                     new ErrorType("UpdateBasket.Command", validationResult.Errors.ToString()!)

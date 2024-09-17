@@ -45,14 +45,12 @@ public class DiscountService(ProductDbContext context, IQueue queue)
         await context.SaveChangesAsync();
     }
 
-    public bool CancelDiscountEnd(Guid discountId)
+    public void CancelDiscountEnd(Guid discountId)
     {
         if (_cancellations.TryGetValue(discountId, out var cts))
         {
             cts.Cancel();
             _cancellations.TryRemove(discountId, out _);
-            return true;
         }
-        return false;
     }
 }

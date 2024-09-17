@@ -19,7 +19,7 @@ public class ProductController(ISender sender) : ControllerBase
         return BadRequest(result.ErrorTypes);
     }
 
-    [HttpDelete("{productId}")]
+    [HttpDelete("{productId:guid}")]
     public async Task<IActionResult> Delete(Guid productId)
     {
         var result = await sender.Send(new DeleteProduct.Command(productId));
@@ -29,7 +29,7 @@ public class ProductController(ISender sender) : ControllerBase
         return BadRequest(result.ErrorTypes);
     }
 
-    [HttpGet("{productId}")]
+    [HttpGet("{productId:guid}")]
     public async Task<IActionResult> GetById(Guid productId)
     {
         var result = await sender.Send(new GetProductById.Query(productId));
@@ -39,17 +39,21 @@ public class ProductController(ISender sender) : ControllerBase
         return NotFound(result.ErrorTypes);
     }
 
-    [HttpGet("")]
-    public async Task<IActionResult> GetAll()
+    [HttpGet]
+    public async Task<IActionResult> GetAll(
+        [FromQuery] int? limit = null,
+        [FromQuery] int? offset = null,
+        [FromQuery] Guid? categoryId = null
+    )
     {
-        var result = await sender.Send(new GetAllProducts.Query());
+        var result = await sender.Send(new GetAllProducts.Query(categoryId, limit, offset));
         if (!result.IsFailure)
             return Ok(result.Value);
 
         return NotFound(result.ErrorTypes);
     }
 
-    [HttpPut("{productId}")]
+    [HttpPut("{productId:guid}")]
     public async Task<IActionResult> Update(Guid productId, [FromForm] UpdateProductRequest request)
     {
         var command = new UpdateProduct.Command(productId, request);

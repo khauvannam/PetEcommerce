@@ -8,10 +8,10 @@ namespace Product_API.Features.Categories;
 
 public static class CreateCategory
 {
-    public record Command(string CategoryName, string Description, IFormFile File)
+    public sealed record Command(string CategoryName, string Description, IFormFile File)
         : IRequest<Result>;
 
-    public class Handler(ICategoryRepository repository, BlobService blobService)
+    public sealed class Handler(ICategoryRepository repository, BlobService blobService)
         : IRequestHandler<Command, Result>
     {
         public async Task<Result> Handle(Command request, CancellationToken cancellationToken)

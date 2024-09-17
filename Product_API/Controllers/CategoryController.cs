@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Product_API.Domains.Categories;
 using Product_API.Features.Categories;
 
 namespace Product_API.Controllers;
@@ -8,7 +9,7 @@ namespace Product_API.Controllers;
 [Route("api/[controller]")]
 public class CategoryController(ISender sender) : ControllerBase
 {
-    [HttpPost("")]
+    [HttpPost]
     public async Task<IActionResult> Add([FromBody] CreateCategory.Command command)
     {
         if (await sender.Send(command) is { IsFailure: true } result)
@@ -17,7 +18,7 @@ public class CategoryController(ISender sender) : ControllerBase
         return Ok();
     }
 
-    [HttpDelete("{categoryId}")]
+    [HttpDelete("{categoryId:guid}")]
     public async Task<IActionResult> Delete(Guid categoryId)
     {
         var command = new DeleteCategory.Command(categoryId);
@@ -27,7 +28,26 @@ public class CategoryController(ISender sender) : ControllerBase
         return Ok();
     }
 
-    [HttpGet("{categoryId}")]
+    [HttpPut("{categoryId:guid}")]
+    public async Task<IActionResult> Update(
+        Guid categoryId,
+        [FromBody] UpdateCategoryRequest request
+    )
+    {
+        var command = new UpdateCategory.Command(
+            categoryId,
+            request.CategoryName,
+            request.Description,
+            request.File
+        );
+        var result = await sender.Send(command);
+        if (!result.IsFailure)
+            return Ok(result.Value);
+
+        return NotFound(result.ErrorTypes);
+    }
+
+    [HttpGet("{categoryId:guid}")]
     public async Task<IActionResult> GetById(Guid categoryId)
     {
         var result = await sender.Send(new GetCategoryById.Query(categoryId));
@@ -37,7 +57,7 @@ public class CategoryController(ISender sender) : ControllerBase
         return NotFound(result.ErrorTypes);
     }
 
-    [HttpGet("")]
+    [HttpGet]
     public async Task<IActionResult> GetAll()
     {
         var result = await sender.Send(new GetAllCategories.Query());

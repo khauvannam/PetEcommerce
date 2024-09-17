@@ -1,0 +1,8 @@
+﻿@page "/products/{CategoryId:guid}"
+<h3>Index</h3>
+<p>CategoryId : @CategoryId</p>
+
+@code {
+   [Parameter]
+   public Guid? CategoryId { get; set; }
+}

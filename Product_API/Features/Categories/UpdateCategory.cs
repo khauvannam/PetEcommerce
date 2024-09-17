@@ -8,10 +8,14 @@ namespace Product_API.Features.Categories;
 
 public static class UpdateCategory
 {
-    public record Command(Guid CategoryId, string CategoryName, string Description, IFormFile? File)
-        : IRequest<Result<Category>>;
+    public sealed record Command(
+        Guid CategoryId,
+        string CategoryName,
+        string Description,
+        IFormFile? File
+    ) : IRequest<Result<Category>>;
 
-    public class Handler(ICategoryRepository repository, BlobService blobService)
+    public sealed class Handler(ICategoryRepository repository, BlobService blobService)
         : IRequestHandler<Command, Result<Category>>
     {
         public async Task<Result<Category>> Handle(

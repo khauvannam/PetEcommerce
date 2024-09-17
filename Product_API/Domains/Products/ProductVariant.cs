@@ -31,7 +31,7 @@ public sealed class ProductVariant : Entity
 
     [JsonInclude]
     [MaxLength(255)]
-    public string ProductId { get; set; } = null!;
+    public Guid ProductId { get; set; }
 
     [Newtonsoft.Json.JsonIgnore]
     public Product Product { get; set; } = null!;
@@ -91,6 +91,6 @@ public class OriginalPrice : ValueObject
 
 public enum Currency
 {
-    Usd = 0,
-    Vnd = 1,
+    Usd,
+    Vnd,
 }

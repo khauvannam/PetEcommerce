@@ -1,7 +1,7 @@
 {
   "scripts": {
     "css:build": "pnpm dlx tailwindcss -i ./wwwroot/css/app.css -o ./wwwroot/css/styles.min.css --minify --watch",
-    "watch": "dotnet watch",
+    "watch": "dotnet watch run",
     "dev": "npm-run-all -p -r watch css:build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

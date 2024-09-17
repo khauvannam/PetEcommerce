@@ -1,5 +1,4 @@
 ﻿using Bogus;
-using Microsoft.EntityFrameworkCore;
 using Product_API.Domains.Categories;
 using Product_API.Domains.Products;
 
@@ -70,20 +69,21 @@ public static class DataSeeder
 
             var variant1 = ProductVariant.Create(
                 commerceFaker.ProductName(),
-                faker.Random.Number(1, 100)
+                faker.Random.Number(120, 1200)
             );
             variant1.SetPrice(faker.Random.Decimal(100, 10000));
 
             var variant2 = ProductVariant.Create(
                 commerceFaker.ProductName(),
-                faker.Random.Number(1, 100)
+                faker.Random.Number(120, 1200)
             );
             variant2.SetPrice(faker.Random.Decimal(100, 10000));
 
             product.AddProductVariants(variant1);
             product.AddProductVariants(variant2);
-
             product.ApplyDiscount(faker.Random.Decimal(10, 60));
+            product.UpdateSoldQuantity(faker.Random.Number(1, 10));
+            product.CalculateTotalQuantity();
 
             products.Add(product);
         }

@@ -28,12 +28,19 @@ public class Basket : AggregateRoot
     [JsonInclude]
     public Guid CustomerId { get; private set; }
 
+    public BasketStatus Status { get; private set; }
+
     [JsonInclude]
-    public HashSet<BasketItem> BasketItemsList { get; private init; } = null!;
+    public HashSet<BasketItem> BasketItemsList { get; private init; }
 
     public static Basket Create(Guid customerId)
     {
-        return new Basket { CustomerId = customerId, BasketItemsList = [] };
+        return new Basket
+        {
+            CustomerId = customerId,
+            BasketItemsList = [],
+            Status = BasketStatus.Preparing,
+        };
     }
 
     public void UpdateBasket(BasketItemRequest basketItemRequest)
@@ -73,4 +80,10 @@ public class Basket : AggregateRoot
     {
         BasketItemsList.Clear();
     }
+}
+
+public enum BasketStatus
+{
+    Preparing,
+    Fulfilled,
 }

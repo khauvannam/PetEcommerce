@@ -9,10 +9,10 @@ namespace Product_API.Features.Products;
 
 public static class UpdateProduct
 {
-    public record Command(Guid ProductId, UpdateProductRequest UpdateProductRequest)
+    public sealed record Command(Guid ProductId, UpdateProductRequest UpdateProductRequest)
         : IRequest<Result<Product>>;
 
-    public class Handler(IProductRepository repository, BlobService blobService)
+    public sealed class Handler(IProductRepository repository, BlobService blobService)
         : IRequestHandler<Command, Result<Product>>
     {
         public async Task<Result<Product>> Handle(
@@ -32,6 +32,7 @@ public static class UpdateProduct
             {
                 var fileName = new Uri(product.ImageUrl).Segments.Last();
                 await blobService.DeleteAsync(fileName);
+
                 newFileName = await blobService.UploadFileAsync(
                     updateProductRequest.File,
                     "Product-"

@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 using BaseDomain.Bases;
+using Product_API.Domains.Comments;
 
 namespace Product_API.Domains.Products;
 
@@ -34,10 +35,13 @@ public class Product : AggregateRoot
 
     [MaxLength(500)]
     public string ImageUrl { get; private set; } = null!;
+    public int SoldQuantity { get; private set; }
 
     public DiscountPercent DiscountPercent { get; set; } = null!;
     public DateTime CreatedAt { get; private set; }
     public DateTime UpdatedAt { get; private set; }
+    public decimal TotalRating { get; private set; }
+    public int TotalQuantity { get; private set; }
 
     [JsonInclude]
     [MaxLength(255)]
@@ -45,6 +49,9 @@ public class Product : AggregateRoot
 
     [JsonInclude]
     public List<ProductVariant> ProductVariants { get; } = [];
+
+    [JsonInclude]
+    public List<Comment> Comments { get; } = [];
 
     public static Product Create(
         string name,
@@ -63,6 +70,8 @@ public class Product : AggregateRoot
             ImageUrl = imageUrl,
             CreatedAt = DateTime.Now,
             UpdatedAt = DateTime.Now,
+            SoldQuantity = 0,
+            TotalRating = 0,
         };
     }
 
@@ -94,6 +103,11 @@ public class Product : AggregateRoot
         ProductVariants.Add(productVariant);
     }
 
+    public void UpdateSoldQuantity(int quantity)
+    {
+        SoldQuantity = quantity;
+    }
+
     public void ApplyDiscount(decimal percent)
     {
         DiscountPercent = DiscountPercent.Create(percent);
@@ -103,6 +117,22 @@ public class Product : AggregateRoot
     {
         ProductVariants.Clear();
         ProductVariants.AddRange(updateVariants);
+    }
+
+    public void CalculateTotalRating()
+    {
+        if (Comments.Count > 0)
+        {
+            var averageRating = (decimal)Comments.Average(c => c.Rating);
+            TotalRating = averageRating;
+        }
+
+        TotalRating = 0;
+    }
+
+    public void CalculateTotalQuantity()
+    {
+        TotalQuantity = ProductVariants.Sum(pv => pv.Quantity);
     }
 }
 

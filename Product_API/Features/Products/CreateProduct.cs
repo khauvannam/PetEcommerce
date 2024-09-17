@@ -11,7 +11,7 @@ namespace Product_API.Features.Products;
 
 public static class CreateProduct
 {
-    public record Command(
+    public sealed record Command(
         string Name,
         string Description,
         string ProductUseGuide,
@@ -21,7 +21,7 @@ public static class CreateProduct
         List<ProductVariantRequest> ProductVariants
     ) : IRequest<Result<Product>>;
 
-    public class Handler(IProductRepository repository, BlobService blobService)
+    public sealed class Handler(IProductRepository repository, BlobService blobService)
         : IRequestHandler<Command, Result<Product>>
     {
         public async Task<Result<Product>> Handle(
@@ -30,7 +30,7 @@ public static class CreateProduct
         )
         {
             var products = (
-                await repository.ListAllAsync(new GetAllProducts.Query(null, null))
+                await repository.ListAllAsync(new GetAllProducts.Query(null, null, null))
             ).Value.Select(p => p.Name);
 
             if (products.Contains(request.Name))

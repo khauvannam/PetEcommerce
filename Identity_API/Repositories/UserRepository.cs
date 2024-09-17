@@ -40,7 +40,14 @@ internal class UserRepository(
         if (!result.Succeeded)
             return Result.Failure<LoginResponse>(UserErrors.NotFound);
 
-        var claims = new List<Claim> { new("Username", user.UserName!), new("UserId", user.Id) };
+        List<Claim> claims =
+        [
+            new("Username", user.UserName!),
+            new("UserId", user.Id.ToString()),
+            new("Email", user.Email!),
+            new("Avatar", user.EmailConfirmed.ToString()),
+        ];
+
         var accessToken = jwtHandler.GenerateAccessToken(claims);
         var refreshToken = jwtHandler.GenerateRefreshToken();
         var expiredTime = DateTime.Now.AddDays(1);

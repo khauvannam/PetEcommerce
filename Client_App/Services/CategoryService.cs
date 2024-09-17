@@ -10,12 +10,12 @@ public class CategoryService(IHttpClientFactory clientFactory)
 
     public async Task<List<Category>> GetCategories()
     {
-        var result = await _client.GetAsync("api/categories");
+        var result = await _client.GetAsync("api/category");
         var content = await result.Content.ReadAsStringAsync();
         var categories = JsonSerializer.Deserialize<List<Category>>(
             content,
             new JsonSerializerOptions { PropertyNameCaseInsensitive = true }
         )!;
-        return categories;
+        return categories ?? [];
     }
 }
