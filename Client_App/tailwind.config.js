@@ -6,6 +6,10 @@ module.exports = {
             colors: {
                 main: "#00205c",
                 hover: "#FADC6F"
+            },
+            fontFamily: {
+                heading : ["Recoleta","sans-serif"],
+                sans: ['AvenirNext', 'sans-serif']
             }
         },
     },

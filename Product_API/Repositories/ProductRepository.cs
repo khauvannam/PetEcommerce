@@ -1,6 +1,5 @@
 ﻿using BaseDomain.Results;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 using Product_API.Databases;
 using Product_API.Domains.Products;
 using Product_API.Errors;
@@ -61,8 +60,27 @@ public class ProductRepository(ProductDbContext dbContext) : IProductRepository
         CancellationToken cancellationToken
     )
     {
+        var product = await dbContext.Products.FirstOrDefaultAsync(
+            p => p.ProductId == productId,
+            cancellationToken
+        );
+
+        return product == null
+            ? Result.Failure<Product>(ProductErrors.NotFound)
+            : Result.Success(product);
+    }
+
+    public async Task<Result<Product>> GetInDetailByIdAsync(
+        Guid productId,
+        CancellationToken cancellationToken
+    )
+    {
         var product = await dbContext
             .Products.Include(p => p.ProductVariants)
+            .Include(p => p.Comments)
+            .Include(p => p.ProductBuyerIds)
+            .AsSplitQuery()
+            .AsNoTracking()
             .FirstOrDefaultAsync(p => p.ProductId == productId, cancellationToken);
 
         return product == null

@@ -11,4 +11,5 @@ public interface IProductRepository
     Task<Result> DeleteAsync(Product product, CancellationToken cancellationToken);
     Task<Result<Product>> UpdateAsync(Product product, CancellationToken cancellationToken);
     Task<Result<Product>> GetByIdAsync(Guid productId, CancellationToken cancellationToken);
+    Task<Result<Product>> GetInDetailByIdAsync(Guid productId, CancellationToken cancellationToken);
 }

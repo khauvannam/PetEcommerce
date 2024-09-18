@@ -53,6 +53,8 @@ public class Product : AggregateRoot
     [JsonInclude]
     public List<Comment> Comments { get; } = [];
 
+    public HashSet<ProductBuyerId> ProductBuyerIds { get; } = [];
+
     public static Product Create(
         string name,
         string description,
@@ -95,7 +97,7 @@ public class Product : AggregateRoot
 
     public void AddProductVariants(ProductVariant productVariant)
     {
-        if (ProductVariants.Count > 5)
+        if (ProductVariants.Count >= 4)
             throw new InvalidOperationException(
                 "Product variant list cannot contain more than 5 parts"
             );
@@ -125,6 +127,7 @@ public class Product : AggregateRoot
         {
             var averageRating = (decimal)Comments.Average(c => c.Rating);
             TotalRating = averageRating;
+            return;
         }
 
         TotalRating = 0;
@@ -132,7 +135,18 @@ public class Product : AggregateRoot
 
     public void CalculateTotalQuantity()
     {
-        TotalQuantity = ProductVariants.Sum(pv => pv.Quantity);
+        TotalQuantity =
+            ProductVariants.Count == 0 ? 0 : ProductVariants.Sum(variant => variant.Quantity);
+    }
+
+    public void AddComment(Comment comment)
+    {
+        Comments.Add(comment);
+    }
+
+    public void AddBuyerId(Guid buyerId)
+    {
+        ProductBuyerIds.Add(ProductBuyerId.Create(buyerId));
     }
 }
 

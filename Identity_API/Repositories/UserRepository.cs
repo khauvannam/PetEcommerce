@@ -45,12 +45,12 @@ internal class UserRepository(
             new("Username", user.UserName!),
             new("UserId", user.Id.ToString()),
             new("Email", user.Email!),
-            new("Avatar", user.EmailConfirmed.ToString()),
+            new("Avatar", user.Avatar),
         ];
 
         var accessToken = jwtHandler.GenerateAccessToken(claims);
-        var refreshToken = jwtHandler.GenerateRefreshToken();
-        var expiredTime = DateTime.Now.AddDays(1);
+        var refreshToken = JwtHandler.GenerateRefreshToken();
+        var expiredTime = DateTime.Now.AddMonths(1);
         if (user.RefreshToken is null)
         {
             var token = RefreshToken.Create(refreshToken, expiredTime);

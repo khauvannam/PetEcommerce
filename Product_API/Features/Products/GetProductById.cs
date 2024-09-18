@@ -16,7 +16,7 @@ public static class GetProductById
             CancellationToken cancellationToken
         )
         {
-            return await repository.GetByIdAsync(request.ProductId, cancellationToken);
+            return await repository.GetInDetailByIdAsync(request.ProductId, cancellationToken);
         }
     }
 }

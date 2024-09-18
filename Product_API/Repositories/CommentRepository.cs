@@ -1,33 +1,52 @@
 ﻿using BaseDomain.Results;
+using Microsoft.EntityFrameworkCore;
+using Product_API.Databases;
 using Product_API.Domains.Comments;
+using Product_API.Errors;
 using Product_API.Interfaces;
 
 namespace Product_API.Repositories;
 
-public class CommentRepository : ICommentRepository
+public class CommentRepository(ProductDbContext dbContext) : ICommentRepository
 {
-    public Task<Result> CreateAsync(Comment comment)
+    public async Task<Result> CreateAsync(Comment comment)
     {
-        throw new NotImplementedException();
+        dbContext.Comments.Add(comment);
+        await dbContext.SaveChangesAsync();
+        return Result.Success();
     }
 
-    public Task<Result> DeleteAsync(Comment comment)
+    public async Task<Result> DeleteAsync(Comment comment)
     {
-        throw new NotImplementedException();
+        dbContext.Comments.Remove(comment);
+        await dbContext.SaveChangesAsync();
+        return Result.Success();
     }
 
-    public Task<Result> UpdateAsync(Comment comment)
+    public async Task<Result> UpdateAsync(Comment comment)
     {
-        throw new NotImplementedException();
+        await dbContext.SaveChangesAsync();
+        return Result.Success();
     }
 
-    public Task<Comment?> GetByIdAsync(Guid id)
+    public async Task<Result<Comment>> GetByIdAsync(int id)
     {
-        throw new NotImplementedException();
+        var comment = await dbContext.Comments.FirstOrDefaultAsync(c => c.CommentId == id);
+        if (comment is null)
+        {
+            return Result.Failure<Comment>(CommentErrors.NotFound);
+        }
+        return Result.Success(comment);
     }
 
-    public Task<List<Comment>> GetAllAsync(Guid? productId)
+    public async Task<Result<List<Comment>>> GetAllAsync(Guid? productId)
     {
-        throw new NotImplementedException();
+        var query = dbContext.Comments.AsQueryable().AsNoTracking();
+        if (productId is not null)
+        {
+            query = query.Where(c => c.ProductId == productId);
+        }
+        var comments = await query.ToListAsync();
+        return Result.Success(comments);
     }
 }

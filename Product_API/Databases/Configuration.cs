@@ -24,8 +24,22 @@ public static class Configuration
                 .OnDelete(DeleteBehavior.Cascade);
 
             builder
+                .HasMany(p => p.Comments)
+                .WithOne(c => c.Product)
+                .HasForeignKey(c => c.ProductId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder
+                .HasMany(p => p.ProductBuyerIds)
+                .WithOne(pbi => pbi.Product)
+                .HasForeignKey(pbi => pbi.ProductId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder
                 .Property(p => p.DiscountPercent)
                 .HasConversion(d => d.Value, arg => DiscountPercent.Create(arg));
+
+            builder.Property(p => p.TotalRating).HasPrecision(18, 2);
 
             builder.Property(p => p.ClusterId).ValueGeneratedOnAdd();
 
@@ -100,20 +114,14 @@ public static class Configuration
             builder.HasKey(c => c.CommentId).IsClustered();
 
             builder.Property(c => c.CommentId).ValueGeneratedOnAdd();
-
-            builder
-                .HasMany(c => c.BuyerIds)
-                .WithOne(c => c.Comment)
-                .HasForeignKey(c => c.CommentId)
-                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 
-    public class CommentBuyerIdConfigure : IEntityTypeConfiguration<CommentBuyerId>
+    public class ProductBuyerIdConfigure : IEntityTypeConfiguration<ProductBuyerId>
     {
-        public void Configure(EntityTypeBuilder<CommentBuyerId> builder)
+        public void Configure(EntityTypeBuilder<ProductBuyerId> builder)
         {
-            builder.HasKey(c => new { c.CommentId, c.UserId });
+            builder.HasKey(p => new { p.BuyerId, p.ProductId });
         }
     }
 }

@@ -1,3 +1,21 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  @font-face {
+      font-family: 'AvenirNext', serif ;
+      font-style: normal;
+      font-weight: 400;
+      font-display: swap;
+      src: url(./fonts/AvenirNext.otf) format('opentype');
+  }
+    @font-face {
+        font-family: 'Recoleta', serif ;
+        font-style: normal;
+        font-weight: 600;
+        font-display: swap;
+        src: url(./fonts/Recoleta.otf) format('opentype');
+    }
+    
+}

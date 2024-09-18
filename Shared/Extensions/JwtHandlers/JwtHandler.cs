@@ -24,14 +24,14 @@ public class JwtHandler
             "http://localhost:8080",
             "http://localhost:8080",
             claims,
-            expires: DateTime.Now.AddMinutes(30),
+            expires: DateTime.Now.AddDays(7),
             signingCredentials: signingCredentials
         );
         var tokenString = new JwtSecurityTokenHandler().WriteToken(tokenOption);
         return tokenString;
     }
 
-    public string GenerateRefreshToken()
+    public static string GenerateRefreshToken()
     {
         var refreshToken = Guid.NewGuid().ToString();
         return refreshToken;

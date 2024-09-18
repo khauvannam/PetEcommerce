@@ -33,6 +33,7 @@ public class BasketRepository(BasketDbContext context) : IBasketRepository
     {
         var basket = await context
             .Baskets.Include(b => b.BasketItemsList)
+            .AsSplitQuery()
             .FirstOrDefaultAsync(b => b.BasketId == basketId);
         if (basket != null)
             return Result.Success(basket);

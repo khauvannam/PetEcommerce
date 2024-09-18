@@ -60,15 +60,60 @@ namespace Product_API.Migrations
                     Description = table.Column<string>(type: "nvarchar(2000)", maxLength: 2000, nullable: false),
                     ProductUseGuide = table.Column<string>(type: "nvarchar(2000)", maxLength: 2000, nullable: false),
                     ImageUrl = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
+                    SoldQuantity = table.Column<int>(type: "int", nullable: false),
                     DiscountPercent = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    TotalRating = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
+                    TotalQuantity = table.Column<int>(type: "int", nullable: false),
                     CategoryId = table.Column<Guid>(type: "uniqueidentifier", maxLength: 255, nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Products", x => x.ProductId)
                         .Annotation("SqlServer:Clustered", false);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Comment",
+                columns: table => new
+                {
+                    CommentId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    BuyerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Rating = table.Column<int>(type: "int", nullable: false),
+                    Content = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ProductId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Comment", x => x.CommentId);
+                    table.ForeignKey(
+                        name: "FK_Comment_Products_ProductId",
+                        column: x => x.ProductId,
+                        principalTable: "Products",
+                        principalColumn: "ProductId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ProductBuyerId",
+                columns: table => new
+                {
+                    ProductId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    BuyerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProductBuyerId", x => new { x.BuyerId, x.ProductId });
+                    table.ForeignKey(
+                        name: "FK_ProductBuyerId_Products_ProductId",
+                        column: x => x.ProductId,
+                        principalTable: "Products",
+                        principalColumn: "ProductId",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -99,14 +144,26 @@ namespace Product_API.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Categories_ClusterId",
                 table: "Categories",
-                column: "ClusterId")
+                column: "ClusterId",
+                unique: true)
                 .Annotation("SqlServer:Clustered", true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Comment_ProductId",
+                table: "Comment",
+                column: "ProductId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Discounts_ClusterId",
                 table: "Discounts",
-                column: "ClusterId")
+                column: "ClusterId",
+                unique: true)
                 .Annotation("SqlServer:Clustered", true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProductBuyerId_ProductId",
+                table: "ProductBuyerId",
+                column: "ProductId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Products_ClusterId",
@@ -123,7 +180,8 @@ namespace Product_API.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_ProductVariants_ClusterId",
                 table: "ProductVariants",
-                column: "ClusterId")
+                column: "ClusterId",
+                unique: true)
                 .Annotation("SqlServer:Clustered", true);
 
             migrationBuilder.CreateIndex(
@@ -139,7 +197,13 @@ namespace Product_API.Migrations
                 name: "Categories");
 
             migrationBuilder.DropTable(
+                name: "Comment");
+
+            migrationBuilder.DropTable(
                 name: "Discounts");
+
+            migrationBuilder.DropTable(
+                name: "ProductBuyerId");
 
             migrationBuilder.DropTable(
                 name: "ProductVariants");

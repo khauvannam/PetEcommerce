@@ -34,6 +34,7 @@ public static class Extension
         services.AddQueue();
 
         // Repository
+        services.AddScoped<ICommentRepository, CommentRepository>();
         services.AddScoped<IProductRepository, ProductRepository>();
         services.AddScoped<ICategoryRepository, CategoryRepository>();
         services.AddScoped<IDiscountRepository, DiscountRepository>();
@@ -51,7 +52,6 @@ public static class Extension
     public static void AddDataSeeder(this IServiceProvider serviceProvider)
     {
         DataSeeder.SeedCategory(serviceProvider);
-
         DataSeeder.SeedProduct(serviceProvider);
     }
 }

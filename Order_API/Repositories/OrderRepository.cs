@@ -27,8 +27,8 @@ public class OrderRepository(OrderDbContext context) : IOrderRepository
     public async Task<Result<OrderModel>> GetByIdAsync(Guid orderId)
     {
         var order = await context
-            .Orders.AsNoTracking()
-            .Include(o => o.OrderLines)
+            .Orders.Include(o => o.OrderLines)
+            .AsSplitQuery()
             .FirstOrDefaultAsync(o => o.OrderId == orderId);
 
         if (order == null)

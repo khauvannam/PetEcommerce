@@ -1,5 +1,6 @@
 ﻿using Bogus;
 using Product_API.Domains.Categories;
+using Product_API.Domains.Comments;
 using Product_API.Domains.Products;
 
 namespace Product_API.Databases;
@@ -79,11 +80,33 @@ public static class DataSeeder
             );
             variant2.SetPrice(faker.Random.Decimal(100, 10000));
 
+            var comment1 = Comment.Create(
+                Guid.NewGuid(),
+                faker.Random.Number(1, 5),
+                commerceFaker.ProductDescription()
+            );
+            var comment2 = Comment.Create(
+                Guid.NewGuid(),
+                faker.Random.Number(1, 5),
+                commerceFaker.ProductDescription()
+            );
+            var comment3 = Comment.Create(
+                Guid.NewGuid(),
+                faker.Random.Number(1, 5),
+                commerceFaker.ProductDescription()
+            );
+
+            product.AddComment(comment1);
+            product.AddComment(comment2);
+            product.AddComment(comment3);
+
             product.AddProductVariants(variant1);
             product.AddProductVariants(variant2);
+
             product.ApplyDiscount(faker.Random.Decimal(10, 60));
             product.UpdateSoldQuantity(faker.Random.Number(1, 10));
             product.CalculateTotalQuantity();
+            product.CalculateTotalRating();
 
             products.Add(product);
         }

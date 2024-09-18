@@ -15,11 +15,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <_ContentIncludedByDefault Remove="wwwroot\css\bootstrap\bootstrap.min.css"/>
-        <_ContentIncludedByDefault Remove="wwwroot\css\bootstrap\bootstrap.min.css.map"/>
-    </ItemGroup>
-
-    <ItemGroup>
         <Folder Include="Components\ProductDetail\" />
         <Folder Include="Domains\Products\"/>
         <Folder Include="wwwroot\images\index\discovers\"/>

@@ -32,7 +32,7 @@ public class TokenRepository(UserDbContext dbContext, JwtHandler jwtHandler) : I
         if (CheckTokenIsExpired(user))
             return Result.Failure<TokenResponse>(TokenErrors.ExpiredToken());
 
-        var refreshToken = jwtHandler.GenerateRefreshToken();
+        var refreshToken = JwtHandler.GenerateRefreshToken();
         var accessToken = jwtHandler.GenerateAccessToken(claimsPrincipal.Claims);
         var expiredTime = DateTime.Now.AddMonths(1);
         var tokenResponseDto = new TokenResponse(refreshToken, accessToken);

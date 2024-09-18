@@ -9,6 +9,6 @@ public interface ICommentRepository
     public Task<Result> CreateAsync(Comment comment);
     public Task<Result> DeleteAsync(Comment comment);
     public Task<Result> UpdateAsync(Comment comment);
-    public Task<Comment?> GetByIdAsync(Guid id);
-    public Task<List<Comment>> GetAllAsync(Guid? productId);
+    public Task<Result<Comment>> GetByIdAsync(int id);
+    public Task<Result<List<Comment>>> GetAllAsync(Guid? productId);
 }

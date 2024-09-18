@@ -55,11 +55,47 @@ namespace Product_API.Migrations
 
                     SqlServerKeyBuilderExtensions.IsClustered(b.HasKey("CategoryId"), false);
 
-                    b.HasIndex("ClusterId");
+                    b.HasIndex("ClusterId")
+                        .IsUnique();
 
                     SqlServerIndexBuilderExtensions.IsClustered(b.HasIndex("ClusterId"));
 
                     b.ToTable("Categories");
+                });
+
+            modelBuilder.Entity("Product_API.Domains.Comments.Comment", b =>
+                {
+                    b.Property<int>("CommentId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CommentId"));
+
+                    b.Property<Guid>("BuyerId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("ProductId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Rating")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("CommentId");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("Comment");
                 });
 
             modelBuilder.Entity("Product_API.Domains.Discounts.Discount", b =>
@@ -105,7 +141,8 @@ namespace Product_API.Migrations
 
                     SqlServerKeyBuilderExtensions.IsClustered(b.HasKey("DiscountId"), false);
 
-                    b.HasIndex("ClusterId");
+                    b.HasIndex("ClusterId")
+                        .IsUnique();
 
                     SqlServerIndexBuilderExtensions.IsClustered(b.HasIndex("ClusterId"));
 
@@ -155,6 +192,16 @@ namespace Product_API.Migrations
                         .HasMaxLength(2000)
                         .HasColumnType("nvarchar(2000)");
 
+                    b.Property<int>("SoldQuantity")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TotalQuantity")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("TotalRating")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
 
@@ -170,6 +217,21 @@ namespace Product_API.Migrations
                         .IsUnique();
 
                     b.ToTable("Products");
+                });
+
+            modelBuilder.Entity("Product_API.Domains.Products.ProductBuyerId", b =>
+                {
+                    b.Property<Guid>("BuyerId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ProductId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("BuyerId", "ProductId");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("ProductBuyerId");
                 });
 
             modelBuilder.Entity("Product_API.Domains.Products.ProductVariant", b =>
@@ -212,13 +274,36 @@ namespace Product_API.Migrations
 
                     SqlServerKeyBuilderExtensions.IsClustered(b.HasKey("VariantId"), false);
 
-                    b.HasIndex("ClusterId");
+                    b.HasIndex("ClusterId")
+                        .IsUnique();
 
                     SqlServerIndexBuilderExtensions.IsClustered(b.HasIndex("ClusterId"));
 
                     b.HasIndex("ProductId");
 
                     b.ToTable("ProductVariants");
+                });
+
+            modelBuilder.Entity("Product_API.Domains.Comments.Comment", b =>
+                {
+                    b.HasOne("Product_API.Domains.Products.Product", "Product")
+                        .WithMany("Comments")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("Product_API.Domains.Products.ProductBuyerId", b =>
+                {
+                    b.HasOne("Product_API.Domains.Products.Product", "Product")
+                        .WithMany("ProductBuyerIds")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("Product_API.Domains.Products.ProductVariant", b =>
@@ -234,6 +319,10 @@ namespace Product_API.Migrations
 
             modelBuilder.Entity("Product_API.Domains.Products.Product", b =>
                 {
+                    b.Navigation("Comments");
+
+                    b.Navigation("ProductBuyerIds");
+
                     b.Navigation("ProductVariants");
                 });
 #pragma warning restore 612, 618
