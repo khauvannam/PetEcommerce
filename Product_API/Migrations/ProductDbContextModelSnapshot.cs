@@ -95,7 +95,7 @@ namespace Product_API.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("Comment");
+                    b.ToTable("Comments");
                 });
 
             modelBuilder.Entity("Product_API.Domains.Discounts.Discount", b =>
@@ -231,7 +231,7 @@ namespace Product_API.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("ProductBuyerId");
+                    b.ToTable("ProductBuyerIds");
                 });
 
             modelBuilder.Entity("Product_API.Domains.Products.ProductVariant", b =>

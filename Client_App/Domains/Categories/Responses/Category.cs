@@ -1,4 +1,4 @@
-namespace Client_App.Domains.Categories;
+namespace Client_App.Domains.Categories.Responses;
 
 public class Category
 {
@@ -6,5 +6,4 @@ public class Category
     public string CategoryName { get; set; } = null!;
     public string Description { get; set; } = null!;
     public string ImageUrl { get; set; } = null!;
-    public HashSet<string> Details { get; set; } = null!;
 }

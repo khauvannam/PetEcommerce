@@ -9,18 +9,18 @@ namespace Product_API.Features.Products;
 public static class GetAllProducts
 {
     public sealed record Query(Guid? CategoryId, int? Limit, int? Offset)
-        : IRequest<Result<List<Product>>>;
+        : IRequest<Result<List<ListProductResponse>>>;
 
     public sealed class Handler(IProductRepository repository, IValidator<Query> validator)
-        : IRequestHandler<Query, Result<List<Product>>>
+        : IRequestHandler<Query, Result<List<ListProductResponse>>>
     {
-        public async Task<Result<List<Product>>> Handle(
+        public async Task<Result<List<ListProductResponse>>> Handle(
             Query request,
             CancellationToken cancellationToken
         )
         {
             var validatorResult = await validator.ValidateAsync(request, cancellationToken);
-            var result = Result.Create<List<Product>>(false);
+            var result = Result.Create<List<ListProductResponse>>(false);
             if (validatorResult.IsValid)
                 return await repository.ListAllAsync(request);
 

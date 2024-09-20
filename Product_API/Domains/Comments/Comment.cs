@@ -19,7 +19,7 @@ public class Comment
     public DateTime CreatedAt { get; private init; } = DateTime.Now;
     public DateTime UpdatedAt { get; private set; } = DateTime.Now;
     public Product Product { get; init; } = null!;
-    public Guid ProductId { get; init; }
+    public Guid ProductId { get; private set; }
 
     public static Comment Create(Guid buyerId, int rating, string content)
     {
@@ -41,5 +41,10 @@ public class Comment
         UpdatedAt = DateTime.Now;
         Rating = rating;
         Content = content;
+    }
+
+    public void AssignProduct(Guid productId)
+    {
+        ProductId = productId;
     }
 }

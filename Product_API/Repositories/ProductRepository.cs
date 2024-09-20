@@ -10,7 +10,9 @@ namespace Product_API.Repositories;
 
 public class ProductRepository(ProductDbContext dbContext) : IProductRepository
 {
-    public async ValueTask<Result<List<Product>>> ListAllAsync(GetAllProducts.Query command)
+    public async ValueTask<Result<List<ListProductResponse>>> ListAllAsync(
+        GetAllProducts.Query command
+    )
     {
         var query = dbContext.Products.AsQueryable().AsNoTracking();
 
@@ -24,7 +26,20 @@ public class ProductRepository(ProductDbContext dbContext) : IProductRepository
             query = query.Skip((int)command.Offset!).Take((int)command.Limit!);
         }
 
-        var products = await query.ToListAsync();
+        var products = await query
+            .Select(p => new ListProductResponse
+            {
+                ProductId = p.ProductId,
+                CreatedAt = p.CreatedAt,
+                Description = p.Description,
+                DiscountPercent = p.DiscountPercent,
+                ImageUrl = p.ImageUrl,
+                Name = p.Name,
+                Price = p.ProductVariants[0].OriginalPrice.Value,
+                Quantity = p.TotalQuantity,
+                TotalRating = p.TotalRating,
+            })
+            .ToListAsync();
 
         return Result.Success(products);
     }

@@ -21,7 +21,11 @@ public static class Extension
                 client.BaseAddress = new Uri("http://localhost:8080/");
             }
         );
+    }
 
+    public static void AddFetchApiService(this IServiceCollection services)
+    {
         services.AddScoped<CategoryService>();
+        services.AddScoped<ProductService>();
     }
 }

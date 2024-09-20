@@ -49,8 +49,8 @@ public class CommentController(ISender sender) : ControllerBase
         return NotFound(result.ErrorTypes);
     }
 
-    [HttpGet("/product/{productId:guid}")]
-    public async Task<IActionResult> GetAll(Guid productId)
+    [HttpGet]
+    public async Task<IActionResult> GetAll([FromQuery] Guid productId)
     {
         var result = await sender.Send(new GetAllComment.Query(productId));
         if (!result.IsFailure)

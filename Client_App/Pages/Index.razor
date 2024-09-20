@@ -1,6 +1,6 @@
 @page "/"
 @using Client_App.Components.Home
-@using Client_App.Domains.Categories
+@using Client_App.Domains.Categories.Responses
 @using Client_App.Services
 
 
@@ -24,6 +24,6 @@
 
     protected override async Task OnInitializedAsync()
     {
-        Categories = await CategoryServiceRepo.GetCategories();
+        Categories = await CategoryServiceRepo.GetAllAsync();
     }
 }
