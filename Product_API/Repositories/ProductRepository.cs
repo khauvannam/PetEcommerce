@@ -1,4 +1,4 @@
-﻿using BaseDomain.Results;
+﻿using BasedDomain.Results;
 using Microsoft.EntityFrameworkCore;
 using Product_API.Databases;
 using Product_API.Domains.Products;
@@ -35,7 +35,7 @@ public class ProductRepository(ProductDbContext dbContext) : IProductRepository
                 DiscountPercent = p.DiscountPercent,
                 ImageUrl = p.ImageUrl,
                 Name = p.Name,
-                Price = p.ProductVariants[0].OriginalPrice.Value,
+                Price = p.Price,
                 Quantity = p.TotalQuantity,
                 TotalRating = p.TotalRating,
             })

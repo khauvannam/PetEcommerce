@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
-using BaseDomain.Bases;
+using BasedDomain.Bases;
 using Order.API.Domains.OrderLines;
 using Order.API.Domains.Payments;
 using Order.API.Domains.ShippingMethods;

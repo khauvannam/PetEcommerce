@@ -1,8 +1,9 @@
-using BaseDomain.Results;
+using BasedDomain.Results;
 using Microsoft.EntityFrameworkCore;
 using Product_API.Databases;
 using Product_API.Domains.Categories;
 using Product_API.Errors;
+using Product_API.Features.Categories;
 using Product_API.Interfaces;
 
 namespace Product_API.Repositories;
@@ -31,7 +32,7 @@ public class CategoryRepository(ProductDbContext dbContext) : ICategoryRepositor
         return Result.Success(category);
     }
 
-    public async ValueTask<Result<Category>> GetByIdAsync(Guid categoryId)
+    public async ValueTask<Result<Category>> GetByIdAsync(int categoryId)
     {
         var category = await dbContext.Categories.FirstOrDefaultAsync(c =>
             c.CategoryId == categoryId
@@ -40,6 +41,18 @@ public class CategoryRepository(ProductDbContext dbContext) : ICategoryRepositor
         return category == null
             ? Result.Failure<Category>(CategoryErrors.NotFound)
             : Result.Success(category);
+    }
+
+    public async Task<Result<Category>> GetByEndpointAsync(GetCategoryByEndpoint.Query query)
+    {
+        var category = await dbContext.Categories.FirstOrDefaultAsync(c =>
+            c.Endpoint == query.Endpoint
+        );
+        if (category is null)
+        {
+            return Result.Failure<Category>(CategoryErrors.NotFound);
+        }
+        return Result.Success(category);
     }
 
     public async ValueTask<Result<List<Category>>> GetAllAsync()

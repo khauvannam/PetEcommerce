@@ -1,4 +1,4 @@
-﻿using BaseDomain.Results;
+﻿using BasedDomain.Results;
 using Identity.API.Databases;
 using Identity.API.Interfaces;
 using Microsoft.EntityFrameworkCore;

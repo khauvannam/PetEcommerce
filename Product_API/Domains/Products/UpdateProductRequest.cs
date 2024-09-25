@@ -5,7 +5,7 @@ public record UpdateProductRequest(
     string Description,
     string ProductUseGuide,
     IFormFile? File,
-    Guid CategoryId,
+    int CategoryId,
     List<ProductVariantRequest> ProductVariants,
     decimal Percent
 );

@@ -1,4 +1,4 @@
-﻿using BaseDomain.Results;
+﻿using BasedDomain.Results;
 using Product_API.Domains.Comments;
 using Product_API.Domains.Discounts;
 

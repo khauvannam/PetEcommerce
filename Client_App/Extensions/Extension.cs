@@ -1,4 +1,9 @@
+using Client_App.Components.Home;
+using Client_App.Domains.Categories.Responses;
+using Client_App.Domains.Products.Responses;
+using Client_App.Interfaces;
 using Client_App.Services;
+using Product = Client_App.Domains.Products.Responses.Product;
 
 namespace Client_App.Extensions;
 
@@ -25,7 +30,7 @@ public static class Extension
 
     public static void AddFetchApiService(this IServiceCollection services)
     {
-        services.AddScoped<CategoryService>();
-        services.AddScoped<ProductService>();
+        services.AddScoped<ICategoryService<Category>, CategoryService>();
+        services.AddScoped<IProductService<Product>, ProductService>();
     }
 }

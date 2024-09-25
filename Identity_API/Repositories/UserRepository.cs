@@ -1,5 +1,5 @@
 ﻿using System.Security.Claims;
-using BaseDomain.Results;
+using BasedDomain.Results;
 using Identity.API.Databases;
 using Identity.API.Domains.Tokens;
 using Identity.API.Domains.Users;

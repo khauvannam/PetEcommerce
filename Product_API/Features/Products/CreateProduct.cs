@@ -1,4 +1,4 @@
-﻿using BaseDomain.Results;
+﻿using BasedDomain.Results;
 using FluentValidation;
 using MediatR;
 using Product_API.Domains.Products;
@@ -16,7 +16,7 @@ public static class CreateProduct
         string Description,
         string ProductUseGuide,
         IFormFile File,
-        Guid CategoryId,
+        int CategoryId,
         decimal Percent,
         List<ProductVariantRequest> ProductVariants
     ) : IRequest<Result<Product>>;

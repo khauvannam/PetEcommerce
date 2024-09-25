@@ -1,16 +1,16 @@
 @page "/"
 @using Client_App.Components.Home
 @using Client_App.Domains.Categories.Responses
-@using Client_App.Services
+@using Client_App.Interfaces
 
 
 <Slider/>
 
-<Discover CategoryList="Categories"/>
+<Discover Categories="Categories"/>
 
 <ScienceBaked/>
 
-<Product/>
+<BestSeller/>
 
 @* Customer Stories  (later) *@
 
@@ -20,10 +20,14 @@
 
 @code {
     public List<Category> Categories = [];
-    [Inject] public CategoryService CategoryServiceRepo { get; set; } = null!;
+    [Inject] public ICategoryService<Category> CategoryService { get; set; } = null!;
+
+    private readonly List<string> _excludedCategories = ["best-sellers", "all"];
 
     protected override async Task OnInitializedAsync()
     {
-        Categories = await CategoryServiceRepo.GetAllAsync();
+        Categories = (await CategoryService.GetAllAsync()).Where(c => !_excludedCategories.Contains(c.Endpoint)).ToList();
+        StateHasChanged();
     }
+
 }

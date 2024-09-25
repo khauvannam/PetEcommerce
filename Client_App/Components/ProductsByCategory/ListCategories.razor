@@ -1,0 +1,41 @@
+﻿@using Client_App.Domains.Categories.Responses
+
+
+<div class="w-full pt-10 px-10 flex justify-center  ">
+    <div class="w-full max-w-[1300px] flex gap-5 flex-wrap">
+        @foreach (var category in Categories)
+        {
+            <NavLink class="bg-blue-200 py-2 px-4 rounded-full border hover:border-[#00205c] text-main whitespace-nowrap min-w-[80px] text-center" href="@($"/products/{category.Endpoint}")" ActiveClass="active-category">
+                @category.CategoryName
+            </NavLink>
+        }
+    </div>
+</div>
+
+@* Features Section *@
+<div class="w-full pt-10 px-10 flex justify-center">
+    <div class="w-full max-w-[1300px] flex justify-center gap-10">
+        <div class="flex flex-col items-center">
+            <img class="max-h-[32px]" src="./images/index/icons/USA_200x.svg" alt="USA Made">
+            <span class="text-main">USA Made</span>
+        </div>
+        <div class="flex flex-col items-center">
+            <img class="max-h-[32px]" src="./images/index/icons/traceble.svg" alt="100% Traceable">
+            <span class="text-main">100% Traceable</span>
+        </div>
+        <div class="flex flex-col items-center">
+            <img class="max-h-[32px]" src="./images/index/icons/lab.svg" alt="Lab Tested">
+            <span class="text-main">Lab Tested</span>
+        </div>
+        <div class="flex flex-col items-center">
+            <img class="max-h-[32px]" src="./images/index/icons/orgainc.svg" alt="USDA Organic">
+            <span class="text-main">USDA Organic</span>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter] public List<Category> Categories { get; set; } = [];
+    [Parameter] public Category Category { get; set; } = null!;
+
+}

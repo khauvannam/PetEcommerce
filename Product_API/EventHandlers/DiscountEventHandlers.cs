@@ -10,7 +10,7 @@ public static class DiscountEventHandlers
 {
     private static async Task ApplyDiscountToProductsAsync(
         ProductDbContext context,
-        Guid? categoryId,
+        int? categoryId,
         List<Guid>? productIdList,
         decimal discountPercent
     )

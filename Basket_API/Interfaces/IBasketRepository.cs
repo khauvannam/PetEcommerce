@@ -1,4 +1,4 @@
-using BaseDomain.Results;
+using BasedDomain.Results;
 using Basket_API.Domains.Baskets;
 
 namespace Basket_API.Interfaces;

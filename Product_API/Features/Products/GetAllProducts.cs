@@ -1,4 +1,4 @@
-﻿using BaseDomain.Results;
+﻿using BasedDomain.Results;
 using FluentValidation;
 using MediatR;
 using Product_API.Domains.Products;
@@ -8,7 +8,7 @@ namespace Product_API.Features.Products;
 
 public static class GetAllProducts
 {
-    public sealed record Query(Guid? CategoryId, int? Limit, int? Offset)
+    public sealed record Query(int? CategoryId, int? Limit, int? Offset)
         : IRequest<Result<List<ListProductResponse>>>;
 
     public sealed class Handler(IProductRepository repository, IValidator<Query> validator)

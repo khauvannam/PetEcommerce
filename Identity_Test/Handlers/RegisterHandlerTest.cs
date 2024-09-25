@@ -1,4 +1,4 @@
-﻿using BaseDomain.Results;
+﻿using BasedDomain.Results;
 using FluentAssertions;
 using FluentValidation;
 using FluentValidation.Results;

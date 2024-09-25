@@ -15,7 +15,6 @@ public class ProductDbContext(DbContextOptions<ProductDbContext> options) : DbCo
 
     public DbSet<Discount> Discounts { get; set; }
     public DbSet<Comment> Comments { get; set; }
-    public DbSet<ProductBuyerId> ProductBuyerIds { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -26,7 +25,5 @@ public class ProductDbContext(DbContextOptions<ProductDbContext> options) : DbCo
         modelBuilder.ApplyConfiguration(Configuration.CategoryConfigure.Create());
 
         modelBuilder.ApplyConfiguration(Configuration.DiscountConfigure.Create());
-
-        modelBuilder.ApplyConfiguration(new Configuration.ProductBuyerIdConfigure());
     }
 }

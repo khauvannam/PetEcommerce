@@ -25,21 +25,19 @@ namespace Product_API.Migrations
 
             modelBuilder.Entity("Product_API.Domains.Categories.Category", b =>
                 {
-                    b.Property<Guid>("CategoryId")
-                        .ValueGeneratedOnAdd()
-                        .HasMaxLength(255)
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("CategoryName")
-                        .IsRequired()
+                    b.Property<string>("Endpoint")
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
-                    b.Property<int>("ClusterId")
+                    b.Property<string>("CategoryName")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<int>("CategoryId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ClusterId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CategoryId"));
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -51,14 +49,14 @@ namespace Product_API.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
-                    b.HasKey("CategoryId");
+                    b.HasKey("Endpoint", "CategoryName");
 
-                    SqlServerKeyBuilderExtensions.IsClustered(b.HasKey("CategoryId"), false);
+                    SqlServerKeyBuilderExtensions.IsClustered(b.HasKey("Endpoint", "CategoryName"), false);
 
-                    b.HasIndex("ClusterId")
+                    b.HasIndex("CategoryId")
                         .IsUnique();
 
-                    SqlServerIndexBuilderExtensions.IsClustered(b.HasIndex("ClusterId"));
+                    SqlServerIndexBuilderExtensions.IsClustered(b.HasIndex("CategoryId"));
 
                     b.ToTable("Categories");
                 });
@@ -82,7 +80,7 @@ namespace Product_API.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("ProductId")
+                    b.Property<Guid?>("ProductId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("Rating")
@@ -105,9 +103,9 @@ namespace Product_API.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("CategoryId")
+                    b.Property<int?>("CategoryId")
                         .HasMaxLength(255)
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int");
 
                     b.Property<int>("ClusterId")
                         .ValueGeneratedOnAdd()
@@ -156,9 +154,9 @@ namespace Product_API.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("CategoryId")
+                    b.Property<int>("CategoryId")
                         .HasMaxLength(255)
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int");
 
                     b.Property<int>("ClusterId")
                         .ValueGeneratedOnAdd()
@@ -186,6 +184,15 @@ namespace Product_API.Migrations
                         .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
+
+                    b.Property<decimal>("Price")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("ProductBuyerIds")
+                        .IsRequired()
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(max)");
 
                     b.Property<string>("ProductUseGuide")
                         .IsRequired()
@@ -217,21 +224,6 @@ namespace Product_API.Migrations
                         .IsUnique();
 
                     b.ToTable("Products");
-                });
-
-            modelBuilder.Entity("Product_API.Domains.Products.ProductBuyerId", b =>
-                {
-                    b.Property<Guid>("BuyerId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("ProductId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("BuyerId", "ProductId");
-
-                    b.HasIndex("ProductId");
-
-                    b.ToTable("ProductBuyerIds");
                 });
 
             modelBuilder.Entity("Product_API.Domains.Products.ProductVariant", b =>
@@ -289,19 +281,7 @@ namespace Product_API.Migrations
                     b.HasOne("Product_API.Domains.Products.Product", "Product")
                         .WithMany("Comments")
                         .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Product");
-                });
-
-            modelBuilder.Entity("Product_API.Domains.Products.ProductBuyerId", b =>
-                {
-                    b.HasOne("Product_API.Domains.Products.Product", "Product")
-                        .WithMany("ProductBuyerIds")
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("Product");
                 });
@@ -320,8 +300,6 @@ namespace Product_API.Migrations
             modelBuilder.Entity("Product_API.Domains.Products.Product", b =>
                 {
                     b.Navigation("Comments");
-
-                    b.Navigation("ProductBuyerIds");
 
                     b.Navigation("ProductVariants");
                 });

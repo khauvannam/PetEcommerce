@@ -1,4 +1,4 @@
-﻿namespace BaseDomain.Results;
+﻿namespace BasedDomain.Results;
 
 public class Result
 {

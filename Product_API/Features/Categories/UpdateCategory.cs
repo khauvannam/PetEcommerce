@@ -1,4 +1,4 @@
-using BaseDomain.Results;
+using BasedDomain.Results;
 using MediatR;
 using Product_API.Domains.Categories;
 using Product_API.Interfaces;
@@ -9,7 +9,7 @@ namespace Product_API.Features.Categories;
 public static class UpdateCategory
 {
     public sealed record Command(
-        Guid CategoryId,
+        int CategoryId,
         string CategoryName,
         string Description,
         IFormFile? File

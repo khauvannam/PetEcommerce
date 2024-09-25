@@ -31,16 +31,19 @@ public static class DataSeeder
             "Pet Health",
             "Pet Clothing",
             "Pet Beds",
+            "All",
+            "Best Sellers",
         ];
-        for (var i = 0; i < 10; i++)
+        foreach (var t in categoryNames)
         {
             var category = Category.Create(
-                faker.PickRandom(categoryNames),
+                t,
                 faker.Commerce.ProductDescription(),
                 faker.Image.PicsumUrl()
             );
             categories.Add(category);
         }
+
         dbContext.AddRange(categories);
         dbContext.SaveChanges();
     }
@@ -109,7 +112,10 @@ public static class DataSeeder
             product.CalculateTotalRating();
 
             products.Add(product);
+
+            product.UpdatePrice();
         }
+
         dbContext.AddRange(products);
         dbContext.SaveChanges();
     }

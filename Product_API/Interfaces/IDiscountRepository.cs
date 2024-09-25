@@ -1,4 +1,4 @@
-using BaseDomain.Results;
+using BasedDomain.Results;
 using Product_API.Domains.Discounts;
 
 namespace Product_API.Interfaces;

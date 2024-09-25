@@ -1,31 +1,21 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
-using BaseDomain.Bases;
+using BasedDomain.Bases;
 using Product_API.Domains.Products;
 
 namespace Product_API.Domains.Categories;
 
-public class Category : AggregateRoot
+public class Category
 {
     private Category() { }
 
-    [JsonInclude]
-    [MaxLength(255)]
-    public Guid CategoryId
-    {
-        get => Id;
-        private init => Id = value;
-    }
-
-    [JsonIgnore]
-    public new int ClusterId
-    {
-        get => base.ClusterId;
-        init => base.ClusterId = value;
-    }
+    public int CategoryId { get; init; }
 
     [MaxLength(255)]
     public string CategoryName { get; private set; } = null!;
+
+    [MaxLength(255)]
+    public string Endpoint { get; private set; } = null!;
 
     [MaxLength(2000)]
     public string Description { get; private set; } = null!;
@@ -40,6 +30,7 @@ public class Category : AggregateRoot
             CategoryName = categoryName,
             Description = description,
             ImageUrl = imageUrl,
+            Endpoint = CreateEndpoint(categoryName),
         };
     }
 
@@ -48,5 +39,12 @@ public class Category : AggregateRoot
         CategoryName = categoryName;
         Description = description;
         ImageUrl = imageUrl;
+        Endpoint = CreateEndpoint(categoryName);
+    }
+
+    private static string CreateEndpoint(string categoryName)
+    {
+        var array = categoryName.ToLower().Split(" ");
+        return string.Join('-', array);
     }
 }

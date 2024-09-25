@@ -1,4 +1,4 @@
-using BaseDomain.Results;
+using BasedDomain.Results;
 using Order.API.Domains.Orders;
 
 namespace Order.API.Interfaces;

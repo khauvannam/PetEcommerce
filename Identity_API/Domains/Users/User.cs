@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using BaseDomain.Bases;
+using BasedDomain.Bases;
 using Identity.API.Domains.Tokens;
 using Microsoft.AspNetCore.Identity;
 

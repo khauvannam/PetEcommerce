@@ -1,10 +1,11 @@
 ﻿using System.Text.Json;
-using BaseDomain.Results;
+using BasedDomain.Results;
+using Client_App.Interfaces;
 using Exception = System.Exception;
 
 namespace Client_App.Abstraction;
 
-public abstract class ApiService<TResponse>
+public abstract class ApiService<TResponse> : IApiService<TResponse>
     where TResponse : class
 {
     protected HttpClient Client { get; }

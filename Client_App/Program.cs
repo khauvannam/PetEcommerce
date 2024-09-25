@@ -9,5 +9,6 @@ builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
 builder.Services.AddHttpClientAddress();
+builder.Services.AddFetchApiService();
 
 await builder.Build().RunAsync();

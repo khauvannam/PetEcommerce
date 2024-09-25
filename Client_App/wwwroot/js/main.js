@@ -1,5 +1,8 @@
-import {initFlowbite} from 'flowbite'
+'use strict';
 
-window.initializeFlowbite = () => {
-    initFlowbite();
-}
+window.scrollToElement = function (element) {
+    if (element) {
+        element.scrollIntoView({behavior: 'smooth', block: 'start'});
+    }
+};
+

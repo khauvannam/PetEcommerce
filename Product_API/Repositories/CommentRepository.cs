@@ -1,4 +1,4 @@
-﻿using BaseDomain.Results;
+﻿using BasedDomain.Results;
 using Microsoft.EntityFrameworkCore;
 using Product_API.Databases;
 using Product_API.Domains.Comments;

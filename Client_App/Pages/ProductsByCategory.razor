@@ -1,0 +1,71 @@
+﻿@page "/products/{CategoryEndpoint}"
+
+@using Client_App.Domains.Categories.Responses
+@using Client_App.Domains.Products.Responses
+@using Client_App.Interfaces
+@using Client_App.Components.ProductsByCategory
+
+@inject NavigationManager NavigationManager 
+
+
+<Introduce Category="Category"/>
+
+<ListCategories Categories="@Categories"/>
+
+<ListProducts Products="@Products"/>
+
+@code {
+    [Parameter] public string CategoryEndpoint { get; set; } = null!;
+
+    public Category Category { get; set; } = null!;
+    public List<Product> Products = [];
+    public List<Category> Categories = [];
+
+    private int Limit { get; set; } = 10;
+    private int Offset { get; set; } = 0;
+
+    [Inject] IProductService<Product> ProductService { get; set; } = null!;
+    [Inject] ICategoryService<Category> CategoryService { get; set; } = null!;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadDataAsync();
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        await LoadDataAsync();
+    }
+
+    private async Task LoadDataAsync()
+    {
+        if (string.IsNullOrEmpty(CategoryEndpoint))
+        {
+            NavigationManager.NavigateTo("/products/all", true); // Force reload
+            return;
+        }
+
+        // Load products based on the category
+        try
+        {
+            Categories = await CategoryService.GetAllAsync();
+
+            Category = Categories.FirstOrDefault(c => c.Endpoint == CategoryEndpoint)!;
+
+            Products = CategoryEndpoint switch
+            {
+                "all" => await ProductService.GetAllAsync(Limit, Offset),
+                "best-seller" => (await ProductService.GetAllAsync(Limit, Offset))
+                    .Where(p => p.SoldQuantity > 1000).ToList(),
+                _ => await ProductService.GetProductsByCategoryIdAsync(Offset, Category.CategoryId, Limit)
+            };
+            StateHasChanged();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+}

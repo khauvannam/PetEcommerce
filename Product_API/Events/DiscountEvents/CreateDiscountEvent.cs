@@ -8,12 +8,12 @@ public class CreateDiscountEvent : INotification
 
     public decimal Percent { get; private set; }
     public List<Guid> ProductIdList { get; private set; } = [];
-    public Guid? CategoryId { get; private set; }
+    public int? CategoryId { get; private set; }
     public int Priority { get; private set; }
 
     public static CreateDiscountEvent Create(
         decimal percent,
-        Guid? categoryId,
+        int? categoryId,
         List<Guid> productIdList,
         int priority
     )

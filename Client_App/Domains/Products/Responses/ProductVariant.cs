@@ -3,8 +3,8 @@
 public class ProductVariant
 {
     public Guid VariantId { get; set; }
-    public string VariantName { get; private set; } = null!;
-    public int Quantity { get; private set; }
+    public string VariantName { get; set; } = null!;
+    public int Quantity { get; set; }
     public OriginalPrice OriginalPrice { get; set; } = null!;
     public Guid ProductId { get; set; }
 }

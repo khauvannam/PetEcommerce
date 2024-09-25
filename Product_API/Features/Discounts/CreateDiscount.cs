@@ -1,4 +1,4 @@
-using BaseDomain.Results;
+using BasedDomain.Results;
 using MediatR;
 using Newtonsoft.Json;
 using Product_API.Domains.Discounts;
@@ -16,7 +16,7 @@ public static class CreateDiscount
         public string Name { get; set; } = null!;
         public decimal Percent { get; set; } = 0;
         public List<Guid> ProductIdList { get; } = [];
-        public Guid? CategoryId { get; } = null;
+        public int? CategoryId { get; } = null;
         public DateTime StartDate { get; } = DateTime.Now;
         public DateTime EndDate { get; } = default;
         public int Priority { get; } = 0;

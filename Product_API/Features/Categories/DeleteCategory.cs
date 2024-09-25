@@ -1,4 +1,4 @@
-﻿using BaseDomain.Results;
+﻿using BasedDomain.Results;
 using MediatR;
 using Product_API.Interfaces;
 using Shared.Services;
@@ -7,7 +7,7 @@ namespace Product_API.Features.Categories;
 
 public static class DeleteCategory
 {
-    public record Command(Guid CategoryId) : IRequest<Result>;
+    public record Command(int CategoryId) : IRequest<Result>;
 
     public class Handler(ICategoryRepository repository, BlobService blobService)
         : IRequestHandler<Command, Result>

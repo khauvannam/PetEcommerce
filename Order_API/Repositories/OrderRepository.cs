@@ -1,4 +1,4 @@
-using BaseDomain.Results;
+using BasedDomain.Results;
 using Microsoft.EntityFrameworkCore;
 using Order.API.Databases;
 using Order.API.Domains.Orders;

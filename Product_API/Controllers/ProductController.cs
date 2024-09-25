@@ -43,7 +43,7 @@ public class ProductController(ISender sender) : ControllerBase
     public async Task<IActionResult> GetAll(
         [FromQuery] int? limit = null,
         [FromQuery] int? offset = null,
-        [FromQuery] Guid? categoryId = null
+        [FromQuery] int? categoryId = null
     )
     {
         var result = await sender.Send(new GetAllProducts.Query(categoryId, limit, offset));

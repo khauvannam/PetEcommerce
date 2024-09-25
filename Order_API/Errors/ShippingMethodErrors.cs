@@ -1,4 +1,4 @@
-using BaseDomain.Results;
+using BasedDomain.Results;
 
 namespace Order.API.Errors;
 

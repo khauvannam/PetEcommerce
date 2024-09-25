@@ -18,8 +18,8 @@ public class CategoryController(ISender sender) : ControllerBase
         return Ok();
     }
 
-    [HttpDelete("{categoryId:guid}")]
-    public async Task<IActionResult> Delete(Guid categoryId)
+    [HttpDelete("{categoryId:int}")]
+    public async Task<IActionResult> Delete(int categoryId)
     {
         var command = new DeleteCategory.Command(categoryId);
         if (await sender.Send(command) is { IsFailure: true } result)
@@ -28,9 +28,9 @@ public class CategoryController(ISender sender) : ControllerBase
         return Ok();
     }
 
-    [HttpPut("{categoryId:guid}")]
+    [HttpPut("{categoryId:int}")]
     public async Task<IActionResult> Update(
-        Guid categoryId,
+        int categoryId,
         [FromBody] UpdateCategoryRequest request
     )
     {
@@ -47,10 +47,20 @@ public class CategoryController(ISender sender) : ControllerBase
         return NotFound(result.ErrorTypes);
     }
 
-    [HttpGet("{categoryId:guid}")]
-    public async Task<IActionResult> GetById(Guid categoryId)
+    [HttpGet("{categoryId:int}")]
+    public async Task<IActionResult> GetById(int categoryId)
     {
         var result = await sender.Send(new GetCategoryById.Query(categoryId));
+        if (!result.IsFailure)
+            return Ok(result.Value);
+
+        return NotFound(result.ErrorTypes);
+    }
+
+    [HttpGet("{categoryEndpoint}")]
+    public async Task<IActionResult> GetByEndpoint(string categoryEndpoint)
+    {
+        var result = await sender.Send(new GetCategoryByEndpoint.Query(categoryEndpoint));
         if (!result.IsFailure)
             return Ok(result.Value);
 

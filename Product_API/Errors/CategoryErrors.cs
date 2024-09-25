@@ -1,4 +1,4 @@
-using BaseDomain.Results;
+using BasedDomain.Results;
 
 namespace Product_API.Errors;
 

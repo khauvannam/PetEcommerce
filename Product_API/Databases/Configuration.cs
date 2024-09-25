@@ -30,20 +30,18 @@ public static class Configuration
                 .OnDelete(DeleteBehavior.Cascade);
 
             builder
-                .HasMany(p => p.ProductBuyerIds)
-                .WithOne(pbi => pbi.Product)
-                .HasForeignKey(pbi => pbi.ProductId)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            builder
                 .Property(p => p.DiscountPercent)
                 .HasConversion(d => d.Value, arg => DiscountPercent.Create(arg));
 
             builder.Property(p => p.TotalRating).HasPrecision(18, 2);
 
+            builder.Property(p => p.Price).HasPrecision(18, 2);
+
             builder.Property(p => p.ClusterId).ValueGeneratedOnAdd();
 
             builder.HasIndex(p => p.ClusterId).IsClustered();
+
+            builder.Property(e => e.ProductBuyerIds).IsUnicode(false);
         }
 
         public static ProductConfigure Create()
@@ -75,11 +73,11 @@ public static class Configuration
     {
         public void Configure(EntityTypeBuilder<Category> builder)
         {
-            builder.HasKey(c => c.CategoryId).IsClustered(false);
+            builder.HasIndex(c => c.CategoryId).IsClustered().IsUnique();
 
-            builder.Property(p => p.ClusterId).ValueGeneratedOnAdd();
+            builder.Property(p => p.CategoryId).ValueGeneratedOnAdd();
 
-            builder.HasIndex(p => p.ClusterId).IsClustered().IsUnique();
+            builder.HasKey(p => new { p.Endpoint, p.CategoryName }).IsClustered(false);
         }
 
         public static CategoryConfigure Create()
@@ -114,14 +112,6 @@ public static class Configuration
             builder.HasKey(c => c.CommentId).IsClustered();
 
             builder.Property(c => c.CommentId).ValueGeneratedOnAdd();
-        }
-    }
-
-    public class ProductBuyerIdConfigure : IEntityTypeConfiguration<ProductBuyerId>
-    {
-        public void Configure(EntityTypeBuilder<ProductBuyerId> builder)
-        {
-            builder.HasKey(p => new { p.BuyerId, p.ProductId });
         }
     }
 }

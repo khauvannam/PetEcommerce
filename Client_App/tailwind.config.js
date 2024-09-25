@@ -8,8 +8,9 @@ module.exports = {
                 hover: "#FADC6F"
             },
             fontFamily: {
-                heading : ["Recoleta","sans-serif"],
-                sans: ['AvenirNext', 'sans-serif']
+                heading : ["Recoleta"],
+                sans: ['AvenirNext'],
+                heading_bold: ['Recoleta-Bold']
             }
         },
     },

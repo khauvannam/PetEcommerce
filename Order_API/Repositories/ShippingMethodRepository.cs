@@ -1,4 +1,4 @@
-using BaseDomain.Results;
+using BasedDomain.Results;
 using Order.API.Databases;
 using Order.API.Domains.ShippingMethods;
 using Order.API.Errors;

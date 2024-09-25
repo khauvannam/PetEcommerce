@@ -1,4 +1,4 @@
-using BaseDomain.Results;
+using BasedDomain.Results;
 
 namespace Basket_API.Errors;
 

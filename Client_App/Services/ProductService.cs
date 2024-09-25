@@ -1,5 +1,6 @@
 using Client_App.Abstraction;
-using Client_App.Components.Home;
+using Client_App.Domains.Products.Responses;
+using Client_App.Interfaces;
 
 namespace Client_App.Services;
 
@@ -7,13 +8,13 @@ public sealed class ProductService(
     IHttpClientFactory factory,
     string baseUrl = nameof(ProductService),
     string endpoint = "api/product"
-) : ApiService<Product>(factory, baseUrl, endpoint)
+) : ApiService<Product>(factory, baseUrl, endpoint), IProductService<Product>
 {
     private readonly string _endpoint = endpoint;
 
     public async Task<List<Product>> GetProductsByCategoryIdAsync(
         int offset,
-        Guid categoryId,
+        int categoryId,
         int limit = 10
     )
     {

@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
-using BaseDomain.Bases;
+using BasedDomain.Bases;
 
 namespace Product_API.Domains.Discounts;
 
@@ -28,7 +28,7 @@ public class Discount : Entity
     public decimal Percent { get; private set; }
 
     [MaxLength(255)]
-    public Guid? CategoryId { get; private set; }
+    public int? CategoryId { get; private set; }
 
     [MaxLength(255)]
     public string ProductIdListJson { get; private set; } = null!;
@@ -40,7 +40,7 @@ public class Discount : Entity
     public static Discount Create(
         string name,
         decimal percent,
-        Guid? categoryId,
+        int? categoryId,
         string productIdListJson,
         DateTime startDate,
         DateTime endDate

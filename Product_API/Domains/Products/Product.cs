@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
-using BaseDomain.Bases;
+using BasedDomain.Bases;
 using Product_API.Domains.Comments;
 
 namespace Product_API.Domains.Products;
@@ -41,11 +41,12 @@ public class Product : AggregateRoot
     public DateTime CreatedAt { get; private set; }
     public DateTime UpdatedAt { get; private set; }
     public decimal TotalRating { get; private set; }
+    public decimal Price { get; private set; }
     public int TotalQuantity { get; private set; }
 
     [JsonInclude]
     [MaxLength(255)]
-    public Guid CategoryId { get; set; }
+    public int CategoryId { get; set; }
 
     [JsonInclude]
     public List<ProductVariant> ProductVariants { get; } = [];
@@ -53,14 +54,14 @@ public class Product : AggregateRoot
     [JsonInclude]
     public List<Comment> Comments { get; } = [];
 
-    public HashSet<ProductBuyerId> ProductBuyerIds { get; } = [];
+    public List<Guid> ProductBuyerIds { get; } = [];
 
     public static Product Create(
         string name,
         string description,
         string productUseGuide,
         string imageUrl,
-        Guid categoryId
+        int categoryId
     )
     {
         return new Product
@@ -82,7 +83,7 @@ public class Product : AggregateRoot
         string description,
         string productUseGuide,
         string imageUrl,
-        Guid categoryId,
+        int categoryId,
         List<ProductVariant> productVariants
     )
     {
@@ -146,7 +147,26 @@ public class Product : AggregateRoot
 
     public void AddBuyerId(Guid buyerId)
     {
-        ProductBuyerIds.Add(ProductBuyerId.Create(buyerId));
+        if (ProductBuyerIds.Contains(buyerId))
+        {
+            return;
+        }
+
+        ProductBuyerIds.Add(buyerId);
+    }
+
+    public void UpdatePrice()
+    {
+        if (ProductVariants.Count < 0)
+        {
+            throw new Exception("Product variant list cannot contain less than 0 parts");
+        }
+
+        var productVariantsOrderByPrice = ProductVariants
+            .OrderBy(pv => pv.OriginalPrice.Value)
+            .ToList();
+
+        Price = productVariantsOrderByPrice[0].OriginalPrice.Value;
     }
 }
 
