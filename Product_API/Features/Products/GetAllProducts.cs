@@ -1,17 +1,17 @@
 ﻿using BasedDomain.Results;
-using FluentValidation;
 using MediatR;
 using Product_API.Domains.Products;
+using Product_API.DTOs.Products;
 using Product_API.Interfaces;
 
 namespace Product_API.Features.Products;
 
 public static class GetAllProducts
 {
-    public sealed record Query(int? CategoryId, int? Limit, int? Offset)
+    public sealed record Query(int? CategoryId, int Limit, int Offset, bool IsBestSeller)
         : IRequest<Result<List<ListProductResponse>>>;
 
-    public sealed class Handler(IProductRepository repository, IValidator<Query> validator)
+    public sealed class Handler(IProductRepository repository)
         : IRequestHandler<Query, Result<List<ListProductResponse>>>
     {
         public async Task<Result<List<ListProductResponse>>> Handle(
@@ -19,17 +19,7 @@ public static class GetAllProducts
             CancellationToken cancellationToken
         )
         {
-            var validatorResult = await validator.ValidateAsync(request, cancellationToken);
-            var result = Result.Create<List<ListProductResponse>>(false);
-            if (validatorResult.IsValid)
-                return await repository.ListAllAsync(request);
-
-            foreach (var error in validatorResult.Errors)
-                result.AddResultList(new ErrorType("ListAllProduct.Query", error.ToString()));
-
-            return result;
+            return await repository.ListAllAsync(request);
         }
     }
-
-    public class Validator : AbstractValidator<Query>;
 }

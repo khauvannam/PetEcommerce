@@ -59,7 +59,6 @@ namespace Product_API.Migrations
                     Name = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
                     Description = table.Column<string>(type: "nvarchar(2000)", maxLength: 2000, nullable: false),
                     ProductUseGuide = table.Column<string>(type: "nvarchar(2000)", maxLength: 2000, nullable: false),
-                    ImageUrl = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
                     SoldQuantity = table.Column<int>(type: "int", nullable: false),
                     DiscountPercent = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -68,6 +67,7 @@ namespace Product_API.Migrations
                     Price = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
                     TotalQuantity = table.Column<int>(type: "int", nullable: false),
                     CategoryId = table.Column<int>(type: "int", maxLength: 255, nullable: false),
+                    ImageUrlList = table.Column<string>(type: "nvarchar(2000)", maxLength: 2000, nullable: false),
                     ProductBuyerIds = table.Column<string>(type: "varchar(max)", unicode: false, nullable: false)
                 },
                 constraints: table =>

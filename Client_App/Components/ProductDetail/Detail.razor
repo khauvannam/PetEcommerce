@@ -1,0 +1,52 @@
+﻿@using Client_App.Domains.Products.Responses
+
+<div class="w-full pt-5 px-10 flex justify-center">
+    <div class="w-full max-w-[1300px] justify-between flex">
+        <div class="w-6/12">
+            <div class="w-full animation-fadeIn">
+                <img class="object-fill rounded-lg" src="@MainImageUrl" alt="">
+            </div>
+            <div class="mt-5 flex w-full justify-between">
+                @foreach (var (url, index) in ProductModel.ImageUrlList.Select((url, index) => (url, index)))
+                {
+                    const string activeImageClass = "border-2 border-blue-500";
+
+                    <div @onclick="() => OnChangeImage(index)" class="w-full max-w-[150px] cursor-pointer">
+                        <img src="@url" class=" @(UrlIndex == index ? activeImageClass : "") w-full rounded-lg" alt="@url"/>
+                    </div>
+                }
+            </div>
+        </div>
+        <div class="w-6/12 ml-10">
+            @if (ProductModel.SoldQuantity > 100)
+            {
+                <div class="text-main bg-[#FADC6F] h-6 rounded-md max-w-[150px] flex items-center p-5 font-semibold uppercase mb-5 ">
+                    <p>
+                        Best Seller
+                    </p>
+                </div>
+            }
+            <div class="text-6xl text-main font-heading_bold">@ProductModel.Name</div>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter] public required ProductModel ProductModel { get; set; }
+    private int UrlIndex { get; set; } = 0;
+    private string MainImageUrl { get; set; } = null!;
+
+    protected override Task OnParametersSetAsync()
+    {
+        MainImageUrl = ProductModel.ImageUrlList[UrlIndex];
+        return Task.CompletedTask;
+    }
+
+    private void OnChangeImage(int urlIndex)
+    {
+        UrlIndex = urlIndex;
+        MainImageUrl = ProductModel.ImageUrlList[UrlIndex];
+        StateHasChanged();
+    }
+
+}

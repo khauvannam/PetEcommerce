@@ -1,5 +1,6 @@
 ﻿using Basket_API.Domains.BasketItems;
 using Basket_API.Domains.Baskets;
+using Basket_API.DTOs.Baskets;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

@@ -13,7 +13,7 @@ using Product_API.Databases;
 namespace Product_API.Migrations
 {
     [DbContext(typeof(ProductDbContext))]
-    [Migration("20240925122536_Initial")]
+    [Migration("20240929150517_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -178,10 +178,10 @@ namespace Product_API.Migrations
                     b.Property<decimal>("DiscountPercent")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<string>("ImageUrl")
+                    b.Property<string>("ImageUrlList")
                         .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
 
                     b.Property<string>("Name")
                         .IsRequired()

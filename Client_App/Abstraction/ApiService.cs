@@ -29,7 +29,7 @@ public abstract class ApiService<TResponse> : IApiService<TResponse>
         return await HandleResponse<List<TResponse>>(result) ?? [];
     }
 
-    public virtual async Task<TResponse> GetByIdAsync(string id)
+    public virtual async Task<TResponse> GetByIdAsync(Guid id)
     {
         var result = await Client.GetAsync($"{Endpoint}/{id}");
         return (await HandleResponse<TResponse>(result))!;

@@ -33,8 +33,6 @@ public class Product : AggregateRoot
     [MaxLength(2000)]
     public string ProductUseGuide { get; private set; } = null!;
 
-    [MaxLength(500)]
-    public string ImageUrl { get; private set; } = null!;
     public int SoldQuantity { get; private set; }
 
     public DiscountPercent DiscountPercent { get; set; } = null!;
@@ -54,13 +52,15 @@ public class Product : AggregateRoot
     [JsonInclude]
     public List<Comment> Comments { get; } = [];
 
+    [MaxLength(2000)]
+    public List<string> ImageUrlList { get; private set; } = [];
+
     public List<Guid> ProductBuyerIds { get; } = [];
 
     public static Product Create(
         string name,
         string description,
         string productUseGuide,
-        string imageUrl,
         int categoryId
     )
     {
@@ -70,7 +70,6 @@ public class Product : AggregateRoot
             Description = description,
             CategoryId = categoryId,
             ProductUseGuide = productUseGuide,
-            ImageUrl = imageUrl,
             CreatedAt = DateTime.Now,
             UpdatedAt = DateTime.Now,
             SoldQuantity = 0,
@@ -82,7 +81,6 @@ public class Product : AggregateRoot
         string name,
         string description,
         string productUseGuide,
-        string imageUrl,
         int categoryId,
         List<ProductVariant> productVariants
     )
@@ -90,20 +88,21 @@ public class Product : AggregateRoot
         Name = name;
         Description = description;
         ProductUseGuide = productUseGuide;
-        ImageUrl = imageUrl;
         UpdatedAt = DateTime.Now;
         CategoryId = categoryId;
         UpdateVariantList(productVariants);
     }
 
-    public void AddProductVariants(ProductVariant productVariant)
+    public void AddProductVariants(List<ProductVariant> productVariants)
     {
-        if (ProductVariants.Count >= 4)
+        if (productVariants.Count >= 4)
+        {
             throw new InvalidOperationException(
-                "Product variant list cannot contain more than 5 parts"
+                "Products variant list cannot contain more than 4 parts"
             );
+        }
 
-        ProductVariants.Add(productVariant);
+        ProductVariants.AddRange(productVariants);
     }
 
     public void UpdateSoldQuantity(int quantity)
@@ -155,11 +154,20 @@ public class Product : AggregateRoot
         ProductBuyerIds.Add(buyerId);
     }
 
+    public void AddImageUrl(List<string> imageUrlList)
+    {
+        if (imageUrlList.Count > 4)
+        {
+            throw new ArgumentException("Cannot add more than 4 parts");
+        }
+        ImageUrlList.AddRange(imageUrlList);
+    }
+
     public void UpdatePrice()
     {
         if (ProductVariants.Count < 0)
         {
-            throw new Exception("Product variant list cannot contain less than 0 parts");
+            throw new Exception("Products variant list cannot contain less than 0 parts");
         }
 
         var productVariantsOrderByPrice = ProductVariants

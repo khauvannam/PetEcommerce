@@ -1,5 +1,6 @@
 ﻿using BasedDomain.Results;
 using Identity.API.Domains.Tokens;
+using Identity.API.DTOs.Tokens;
 using Identity.API.Features.Tokens;
 
 namespace Identity.API.Interfaces;

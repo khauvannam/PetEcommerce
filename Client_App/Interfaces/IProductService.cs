@@ -2,9 +2,10 @@
 
 public interface IProductService<TResponse> : IApiService<TResponse>
 {
-    public Task<List<TResponse>> GetProductsByCategoryIdAsync(
+    public Task<List<TResponse>> GetProductsByConditionAsync(
         int offset,
-        int categoryId,
+        int? categoryId,
+        bool isBestSeller,
         int limit = 10
     );
 }

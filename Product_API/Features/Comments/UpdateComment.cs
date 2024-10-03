@@ -1,6 +1,7 @@
 ﻿using BasedDomain.Results;
 using MediatR;
 using Product_API.Domains.Comments;
+using Product_API.DTOs.Comments;
 using Product_API.Interfaces;
 
 namespace Product_API.Features.Comments;

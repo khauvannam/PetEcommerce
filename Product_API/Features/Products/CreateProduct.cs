@@ -2,8 +2,10 @@
 using FluentValidation;
 using MediatR;
 using Product_API.Domains.Products;
+using Product_API.DTOs.Products;
 using Product_API.Errors;
 using Product_API.Interfaces;
+using Product_API.Services;
 using Shared.Errors;
 using Shared.Services;
 
@@ -15,39 +17,41 @@ public static class CreateProduct
         string Name,
         string Description,
         string ProductUseGuide,
-        IFormFile File,
+        List<IFormFile> Images,
         int CategoryId,
         decimal Percent,
         List<ProductVariantRequest> ProductVariants
     ) : IRequest<Result<Product>>;
 
-    public sealed class Handler(IProductRepository repository, BlobService blobService)
-        : IRequestHandler<Command, Result<Product>>
+    public sealed class Handler(
+        IProductRepository repository,
+        BlobService blobService,
+        ProductService service
+    ) : IRequestHandler<Command, Result<Product>>
     {
         public async Task<Result<Product>> Handle(
             Command request,
             CancellationToken cancellationToken
         )
         {
-            var products = (
-                await repository.ListAllAsync(new GetAllProducts.Query(null, null, null))
-            ).Value.Select(p => p.Name);
-
-            if (products.Contains(request.Name))
+            if (service.CheckDuplicateProductName(request.Name))
             {
                 return Result.Failure<Product>(ProductErrors.DuplicateName);
             }
 
-            var fileName = await blobService.UploadFileAsync(request.File, "Product-");
+            List<ProductVariant> productVariants = [];
+            List<string> imageUrlList = [];
 
-            if (string.IsNullOrEmpty(fileName))
-                return Result.Failure<Product>(BlobErrors.ErrorUploadFile());
+            foreach (var image in request.Images)
+            {
+                var fileName = await blobService.UploadFileAsync(image, "Products-");
+                imageUrlList.Add(fileName);
+            }
 
             var product = Product.Create(
                 request.Name,
                 request.Description,
                 request.ProductUseGuide,
-                fileName,
                 request.CategoryId
             );
 
@@ -55,9 +59,13 @@ public static class CreateProduct
             {
                 var productVariant = ProductVariant.Create(variant.VariantName, variant.Quantity);
                 productVariant.SetPrice(variant.OriginalPrice);
-                product.AddProductVariants(productVariant);
+                productVariants.Add(productVariant);
             }
 
+            product.AddProductVariants(productVariants);
+            product.AddImageUrl(imageUrlList);
+            product.CalculateTotalQuantity();
+            product.UpdatePrice();
             product.ApplyDiscount(request.Percent);
 
             return await repository.CreateAsync(product);

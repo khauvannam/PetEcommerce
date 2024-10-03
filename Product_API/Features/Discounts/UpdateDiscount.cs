@@ -1,6 +1,7 @@
 ﻿using BasedDomain.Results;
 using MediatR;
 using Product_API.Domains.Discounts;
+using Product_API.DTOs.Discounts;
 using Product_API.Errors;
 using Product_API.Events.DiscountEvents;
 using Product_API.Interfaces;

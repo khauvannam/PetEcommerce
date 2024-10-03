@@ -1,0 +1,24 @@
+﻿@page "/product/{ProductId:guid}"
+@using Client_App.Domains.Products.Responses
+@using Client_App.Interfaces
+@using Client_App.Components.Share
+@using Client_App.Components.ProductDetail
+
+
+<Breadcump Name="@ProductModel.Name" Endpoint="@($"/product/{ProductModel.ProductId}")"/>
+
+<Detail ProductModel="ProductModel"/>
+
+
+
+@code {
+    [Parameter] public Guid ProductId { get; set; }
+    [Inject] public required IProductService<ProductModel> ProductService { get; set; }
+    public required ProductModel ProductModel { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        ProductModel = await ProductService.GetByIdAsync(ProductId);
+    }
+
+}

@@ -26,7 +26,7 @@ public static class Extension
         services.AddHttpContextAccessor();
         services.AddBlobService();
 
-        services.AddValidatorsFromAssemblyContaining<GetAllProducts.Validator>();
+        services.AddValidatorsFromAssemblyContaining<CreateProduct.Validator>();
         services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Program).Assembly));
 
         // Coravel
@@ -38,6 +38,7 @@ public static class Extension
         services.AddScoped<IProductRepository, ProductRepository>();
         services.AddScoped<ICategoryRepository, CategoryRepository>();
         services.AddScoped<IDiscountRepository, DiscountRepository>();
+        services.AddTransient<ProductService>();
 
         // Service
         services.AddTransient(typeof(DiscountService));

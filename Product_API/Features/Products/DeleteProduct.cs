@@ -16,11 +16,17 @@ public static class DeleteProduct
         {
             var result = await repository.GetByIdAsync(request.ProductId, cancellationToken);
             if (result.IsFailure)
+            {
                 return result;
+            }
 
             var product = result.Value;
-            var fileName = new Uri(product.ImageUrl).Segments[^1];
-            await blobService.DeleteAsync(fileName);
+            foreach (
+                var fileName in product.ImageUrlList.Select(img => new Uri(img).Segments.Last())
+            )
+            {
+                await blobService.DeleteAsync(fileName);
+            }
             return await repository.DeleteAsync(product, cancellationToken);
         }
     }

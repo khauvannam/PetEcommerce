@@ -1,6 +1,7 @@
 ﻿using BasedDomain.Results;
 using FluentValidation;
 using Identity.API.Domains.Tokens;
+using Identity.API.DTOs.Tokens;
 using Identity.API.Interfaces;
 using MediatR;
 

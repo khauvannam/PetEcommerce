@@ -147,7 +147,7 @@ namespace Product_API.Migrations
                     b.ToTable("Discounts");
                 });
 
-            modelBuilder.Entity("Product_API.Domains.Products.Product", b =>
+            modelBuilder.Entity("Product_API.Domains.Products.Products", b =>
                 {
                     b.Property<Guid>("ProductId")
                         .ValueGeneratedOnAdd()
@@ -175,10 +175,10 @@ namespace Product_API.Migrations
                     b.Property<decimal>("DiscountPercent")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<string>("ImageUrl")
+                    b.Property<string>("ImageUrlList")
                         .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -278,26 +278,26 @@ namespace Product_API.Migrations
 
             modelBuilder.Entity("Product_API.Domains.Comments.Comment", b =>
                 {
-                    b.HasOne("Product_API.Domains.Products.Product", "Product")
+                    b.HasOne("Product_API.Domains.Products.Products", "Products")
                         .WithMany("Comments")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.Navigation("Product");
+                    b.Navigation("Products");
                 });
 
             modelBuilder.Entity("Product_API.Domains.Products.ProductVariant", b =>
                 {
-                    b.HasOne("Product_API.Domains.Products.Product", "Product")
+                    b.HasOne("Product_API.Domains.Products.Products", "Products")
                         .WithMany("ProductVariants")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Product");
+                    b.Navigation("Products");
                 });
 
-            modelBuilder.Entity("Product_API.Domains.Products.Product", b =>
+            modelBuilder.Entity("Product_API.Domains.Products.Products", b =>
                 {
                     b.Navigation("Comments");
 

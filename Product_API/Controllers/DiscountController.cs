@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Product_API.Domains.Discounts;
+using Product_API.DTOs.Discounts;
 using Product_API.Features.Discounts;
 
 namespace Product_API.Controllers;

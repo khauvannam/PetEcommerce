@@ -1,5 +1,6 @@
 ﻿using BasedDomain.Results;
 using Product_API.Domains.Products;
+using Product_API.DTOs.Products;
 using Product_API.Features.Products;
 
 namespace Product_API.Interfaces;

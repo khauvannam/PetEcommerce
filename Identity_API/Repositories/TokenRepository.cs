@@ -3,6 +3,7 @@ using BasedDomain.Results;
 using Identity.API.Databases;
 using Identity.API.Domains.Tokens;
 using Identity.API.Domains.Users;
+using Identity.API.DTOs.Tokens;
 using Identity.API.Errors;
 using Identity.API.Features.Tokens;
 using Identity.API.Interfaces;

@@ -19,6 +19,7 @@ public static class DataSeeder
 
         var faker = new Faker();
         List<Category> categories = [];
+
         List<string> categoryNames =
         [
             "Dog Food",
@@ -34,15 +35,11 @@ public static class DataSeeder
             "All",
             "Best Sellers",
         ];
-        foreach (var t in categoryNames)
-        {
-            var category = Category.Create(
-                t,
-                faker.Commerce.ProductDescription(),
-                faker.Image.PicsumUrl()
-            );
-            categories.Add(category);
-        }
+        categories.AddRange(
+            categoryNames.Select(t =>
+                Category.Create(t, faker.Commerce.ProductDescription(), faker.Image.PicsumUrl())
+            )
+        );
 
         dbContext.AddRange(categories);
         dbContext.SaveChanges();
@@ -58,30 +55,37 @@ public static class DataSeeder
 
         var faker = new Faker();
         List<Product> products = [];
+
         var commerceFaker = faker.Commerce;
         var categoryIdList = dbContext.Categories.Select(c => c.CategoryId).ToList();
 
         for (var i = 0; i < 15; i++)
         {
+            List<ProductVariant> productVariants = [];
+
+            List<string> imageUrls = [];
+
+            for (var j = 0; j < 4; j++)
+            {
+                imageUrls.Add(faker.Image.PicsumUrl());
+            }
+
             var product = Product.Create(
                 commerceFaker.ProductName(),
                 commerceFaker.ProductDescription(),
-                commerceFaker.ProductMaterial(),
-                faker.Image.PicsumUrl(),
+                commerceFaker.ProductDescription(),
                 faker.PickRandom(categoryIdList)
             );
 
-            var variant1 = ProductVariant.Create(
-                commerceFaker.ProductName(),
-                faker.Random.Number(120, 1200)
-            );
-            variant1.SetPrice(faker.Random.Decimal(100, 10000));
-
-            var variant2 = ProductVariant.Create(
-                commerceFaker.ProductName(),
-                faker.Random.Number(120, 1200)
-            );
-            variant2.SetPrice(faker.Random.Decimal(100, 10000));
+            for (var j = 0; j < 3; j++)
+            {
+                var variant = ProductVariant.Create(
+                    commerceFaker.ProductName(),
+                    faker.Random.Number(120, 1200)
+                );
+                variant.SetPrice(faker.Random.Decimal(100, 10000));
+                productVariants.Add(variant);
+            }
 
             var comment1 = Comment.Create(
                 Guid.NewGuid(),
@@ -103,17 +107,16 @@ public static class DataSeeder
             product.AddComment(comment2);
             product.AddComment(comment3);
 
-            product.AddProductVariants(variant1);
-            product.AddProductVariants(variant2);
+            product.AddProductVariants(productVariants);
 
             product.ApplyDiscount(faker.Random.Decimal(10, 60));
-            product.UpdateSoldQuantity(faker.Random.Number(1, 10));
+            product.UpdateSoldQuantity(faker.Random.Number(50, 150));
             product.CalculateTotalQuantity();
             product.CalculateTotalRating();
+            product.AddImageUrl(imageUrls);
+            product.UpdatePrice();
 
             products.Add(product);
-
-            product.UpdatePrice();
         }
 
         dbContext.AddRange(products);

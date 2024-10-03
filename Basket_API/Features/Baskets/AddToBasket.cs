@@ -1,6 +1,8 @@
 using BasedDomain.Results;
 using Basket_API.Domains.BasketItems;
 using Basket_API.Domains.Baskets;
+using Basket_API.DTOs.BasketItems;
+using Basket_API.DTOs.Baskets;
 using Basket_API.Interfaces;
 using FluentValidation;
 using MediatR;

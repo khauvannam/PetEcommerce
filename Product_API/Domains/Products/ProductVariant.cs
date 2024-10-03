@@ -46,13 +46,6 @@ public sealed class ProductVariant : Entity
         return new ProductVariant { VariantName = variantName, Quantity = quantity };
     }
 
-    public void Update(string variantName, OriginalPrice originalPrice, int quantity)
-    {
-        VariantName = variantName;
-        OriginalPrice = originalPrice;
-        Quantity = quantity;
-    }
-
     public void SetPrice(decimal value)
     {
         OriginalPrice = OriginalPrice.Create(value);

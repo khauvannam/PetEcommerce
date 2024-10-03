@@ -1,4 +1,4 @@
-namespace Product_API.Domains.Discounts;
+namespace Product_API.DTOs.Discounts;
 
 public record DiscountRequest
 {

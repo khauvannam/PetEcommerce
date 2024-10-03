@@ -15,11 +15,10 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Folder Include="Components\ProductDetail\" />
         <Folder Include="Domains\Categories\Requests\" />
         <Folder Include="Domains\Products\Requests\" />
+        <Folder Include="wwwroot\images\identity\" />
         <Folder Include="wwwroot\images\index\discovers\"/>
-        <Folder Include="wwwroot\images\index\products\"/>
     </ItemGroup>
 
     <ItemGroup>

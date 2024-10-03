@@ -1,10 +1,10 @@
-namespace Product_API.Domains.Products;
+namespace Product_API.DTOs.Products;
 
 public record UpdateProductRequest(
     string Name,
     string Description,
     string ProductUseGuide,
-    IFormFile? File,
+    List<IFormFile> Images,
     int CategoryId,
     List<ProductVariantRequest> ProductVariants,
     decimal Percent

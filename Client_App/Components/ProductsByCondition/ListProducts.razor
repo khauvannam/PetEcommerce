@@ -1,0 +1,82 @@
+﻿@using Client_App.Domains.Products.Responses
+@using Client_App.Components.Share
+
+@* Productss Section *@
+
+<div class="flex justify-center w-full pt-12 text-main pb-5">
+    <div class=" w-full max-w-[1300px] grid grid-cols-4 gap-x-8 gap-y-16">
+        @if (Products.Count > 0)
+        {
+            @foreach (var product in Products)
+            {
+                <div class="flex flex-col justify-between items-center rounded-lg max-w-[300px] mt-12 pb-4 shadow-sm-light">
+                    <NavLink class="w-full" href="@($"/product/{product.ProductId}")">
+                        <div class="flex justify-center bg-white rounded-lg relative">
+                            <img class="h-[350px] object-center w-full rounded-lg"
+                                 src="@product.ImageUrl"
+                                 alt="@product.Name">
+                            @if (product.SoldQuantity > 100)
+                            {
+                                <span class="text-main bg-[#FADC6F] absolute h-6 rounded-full flex items-center px-2.5 text-sm font-medium left-2.5 top-2.5">Best Seller</span>
+                            }
+                        </div>
+                    </NavLink>
+                    <div class="w-full flex flex-col items-center">
+                        <div class="flex items-center w-full">
+                            <p class="my-4 text-xl font-semibold w-full font-heading_bold">@product.Name</p>
+                        </div>
+                        <p class="pb-4 font-light italic w-full">@(product.Description![..30])...</p>
+                        <div class="flex items-center my-5 w-full">
+                            <div class="text-2xl font-bold text-main ">
+                                $@CalculateDiscountPrice(product)
+                            </div>
+                            <div class="text-gray-500 line-through mx-3">$@product.Price.ToString("F2")</div>
+                            <div class=" whitespace-nowrap bg-red-100 text-red-600 px-2 py-1 rounded ">
+                                SAVE @product.DiscountPercent.Value%
+                            </div>
+                        </div>
+                        <CustomButton Value="Add To Cart"/>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            for (var i = 0; i < 4; i++)
+            {
+                <div role="status" class="max-w-sm p-4 rounded animate-pulse md:p-6 min-w-[300px]">
+                    <div class="flex items-center justify-center h-48 mb-4 bg-gray-300 rounded dark:bg-gray-700">
+                        <svg class="w-10 h-10 text-gray-200 dark:text-gray-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 20">
+                            <path d="M14.066 0H7v5a2 2 0 0 1-2 2H0v11a1.97 1.97 0 0 0 1.934 2h12.132A1.97 1.97 0 0 0 16 18V2a1.97 1.97 0 0 0-1.934-2ZM10.5 6a1.5 1.5 0 1 1 0 2.999A1.5 1.5 0 0 1 10.5 6Zm2.221 10.515a1 1 0 0 1-.858.485h-8a1 1 0 0 1-.9-1.43L5.6 10.039a.978.978 0 0 1 .936-.57 1 1 0 0 1 .9.632l1.181 2.981.541-1a.945.945 0 0 1 .883-.522 1 1 0 0 1 .879.529l1.832 3.438a1 1 0 0 1-.031.988Z"/>
+                            <path d="M5 5V.13a2.96 2.96 0 0 0-1.293.749L.879 3.707A2.98 2.98 0 0 0 .13 5H5Z"/>
+                        </svg>
+                    </div>
+                    <div class="h-2.5 bg-gray-200 rounded-full dark:bg-gray-700 w-48 mb-4"></div>
+                    <div class="h-2 bg-gray-200 rounded-full dark:bg-gray-700 mb-2.5"></div>
+                    <div class="h-2 bg-gray-200 rounded-full dark:bg-gray-700 mb-2.5"></div>
+                    <div class="h-2 bg-gray-200 rounded-full dark:bg-gray-700"></div>
+                    <span class="sr-only">Loading...</span>
+                </div>
+            }
+        }
+
+    </div >
+</div >
+
+@if (Products.Count > 0)
+{
+    <div class="flex w-full justify-center mt-4 max-w-[300px] mx-auto">
+        <CustomButton Value="Load More" OnClickCallback="@EventCallback.Factory.Create(this, LoadMoreProductAsync)"/>
+    </div>
+}
+
+@code {
+    [Parameter] public List<ProductModel> Products { get; set; } = null!;
+    [Parameter] public EventCallback LoadMoreProductAsync { get; set; }
+
+    private string CalculateDiscountPrice(ProductModel productModel)
+    {
+        return (productModel.Price * productModel.DiscountPercent.Value / 100).ToString("F2");
+    }
+
+}

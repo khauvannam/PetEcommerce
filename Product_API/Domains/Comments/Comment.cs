@@ -48,6 +48,6 @@ public class Comment
             ProductId = productId;
             return;
         }
-        throw new InvalidOperationException("Product can only be assign one time.");
+        throw new InvalidOperationException("Products can only be assign one time.");
     }
 }

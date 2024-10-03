@@ -1,3 +1,3 @@
-﻿namespace Identity.API.Domains.Tokens;
+﻿namespace Identity.API.DTOs.Tokens;
 
 public record TokenResponse(string RefreshToken, string AccessToken);

@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Product_API.Databases;
 using Product_API.Domains.Products;
+using Product_API.DTOs.Products;
 using Product_API.Errors;
 using Product_API.Features.Products;
 using Product_API.Interfaces;
@@ -11,34 +12,39 @@ namespace Product_API.Repositories;
 public class ProductRepository(ProductDbContext dbContext) : IProductRepository
 {
     public async ValueTask<Result<List<ListProductResponse>>> ListAllAsync(
-        GetAllProducts.Query command
+        GetAllProducts.Query query
     )
     {
-        var query = dbContext.Products.AsQueryable().AsNoTracking();
+        var queryable = dbContext.Products.AsQueryable().AsNoTracking();
 
-        if (command.CategoryId is not null)
+        if (query.CategoryId is not null)
         {
-            query = query.Where(p => p.CategoryId == command.CategoryId);
+            queryable = queryable.Where(p => p.CategoryId == query.CategoryId);
         }
 
-        if (command.Offset is not null && command.Limit is not null)
+        if (query.IsBestSeller)
         {
-            query = query.Skip((int)command.Offset!).Take((int)command.Limit!);
+            queryable = queryable
+                .Where(p => p.SoldQuantity > 100)
+                .OrderByDescending(p => p.SoldQuantity);
         }
 
-        var products = await query
+        var products = await queryable
             .Select(p => new ListProductResponse
             {
                 ProductId = p.ProductId,
                 CreatedAt = p.CreatedAt,
                 Description = p.Description,
                 DiscountPercent = p.DiscountPercent,
-                ImageUrl = p.ImageUrl,
+                ImageUrl = p.ImageUrlList[0],
                 Name = p.Name,
                 Price = p.Price,
                 Quantity = p.TotalQuantity,
                 TotalRating = p.TotalRating,
+                SoldQuantity = p.SoldQuantity,
             })
+            .Skip(query.Offset)
+            .Take(query.Limit)
             .ToListAsync();
 
         return Result.Success(products);
@@ -93,7 +99,6 @@ public class ProductRepository(ProductDbContext dbContext) : IProductRepository
         var product = await dbContext
             .Products.Include(p => p.ProductVariants)
             .Include(p => p.Comments)
-            .Include(p => p.ProductBuyerIds)
             .AsSplitQuery()
             .AsNoTracking()
             .FirstOrDefaultAsync(p => p.ProductId == productId, cancellationToken);

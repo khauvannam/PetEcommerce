@@ -2,8 +2,9 @@ using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 using BasedDomain.Bases;
 using Basket_API.Domains.BasketItems;
+using Basket_API.DTOs.BasketItems;
 
-namespace Basket_API.Domains.Baskets;
+namespace Basket_API.DTOs.Baskets;
 
 public class Basket : AggregateRoot
 {

@@ -13,7 +13,7 @@ public class User : IdentityUser<Guid>
     public string Avatar { get; set; } =
         "https://th.bing.com/th/id/OIP.MaDrjtmPQGzKiLHrHEPfFAHaHa?rs=1&pid=ImgDetMain";
     public RefreshToken? RefreshToken { get; private set; }
-    public Address Address { get; private set; } = null!;
+    public Address? Address { get; private set; }
 
     public void AddToken(RefreshToken refreshToken)
     {

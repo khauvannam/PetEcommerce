@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Product_API.Domains.Comments;
+using Product_API.DTOs.Comments;
 using Product_API.Features.Comments;
 
 namespace Product_API.Controllers;

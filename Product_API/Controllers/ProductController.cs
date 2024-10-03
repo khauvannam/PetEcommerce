@@ -1,6 +1,8 @@
-﻿using MediatR;
+﻿using System.Diagnostics.CodeAnalysis;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Product_API.Domains.Products;
+using Product_API.DTOs.Products;
 using Product_API.Features.Products;
 
 namespace Product_API.Controllers;
@@ -41,12 +43,15 @@ public class ProductController(ISender sender) : ControllerBase
 
     [HttpGet]
     public async Task<IActionResult> GetAll(
-        [FromQuery] int? limit = null,
-        [FromQuery] int? offset = null,
+        [FromQuery] int limit,
+        [FromQuery] int offset,
+        [FromQuery] bool isBestSeller = false,
         [FromQuery] int? categoryId = null
     )
     {
-        var result = await sender.Send(new GetAllProducts.Query(categoryId, limit, offset));
+        var result = await sender.Send(
+            new GetAllProducts.Query(categoryId, limit, offset, isBestSeller)
+        );
         if (!result.IsFailure)
             return Ok(result.Value);
 

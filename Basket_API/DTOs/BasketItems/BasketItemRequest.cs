@@ -1,4 +1,4 @@
-namespace Basket_API.Domains.BasketItems;
+namespace Basket_API.DTOs.BasketItems;
 
 public record BasketItemRequest(
     Guid? BasketItemId,
