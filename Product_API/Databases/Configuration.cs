@@ -35,8 +35,6 @@ public static class Configuration
 
             builder.Property(p => p.TotalRating).HasPrecision(18, 2);
 
-            builder.Property(p => p.Price).HasPrecision(18, 2);
-
             builder.Property(p => p.ClusterId).ValueGeneratedOnAdd();
 
             builder.HasIndex(p => p.ClusterId).IsClustered();

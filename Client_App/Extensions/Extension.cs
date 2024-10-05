@@ -29,7 +29,7 @@ public static class Extension
 
     public static void AddFetchApiService(this IServiceCollection services)
     {
-        services.AddScoped<ICategoryService<Category>, CategoryService>();
-        services.AddScoped<IProductService<ProductModel>, ProductService>();
+        services.AddScoped<ICategoryService<CategoriesInList, CategoryById>, CategoryService>();
+        services.AddScoped<IProductService<ProductsInList, ProductById>, ProductService>();
     }
 }

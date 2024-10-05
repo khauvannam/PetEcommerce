@@ -1,8 +1,6 @@
-﻿using Product_API.Domains.Products;
+﻿namespace Client_App.Domains.Products.Responses;
 
-namespace Product_API.DTOs.Products;
-
-public record ListProductResponse
+public class ProductsInList
 {
     public Guid ProductId { get; init; }
     public DiscountPercent DiscountPercent { get; init; } = null!;

@@ -20,17 +20,17 @@
 <Collection Categories="Categories"/>
 
 @code {
-    public List<ProductModel> Products = [];
-    public List<Category> Categories = [];
-    [Inject] public ICategoryService<Category> CategoryService { get; set; } = null!;
-    [Inject] public IProductService<ProductModel> ProductService { get; set; } = null!;
+    public List<ProductsInList> Products = [];
+    public List<CategoriesInList> Categories = [];
+    [Inject] public ICategoryService<CategoriesInList, CategoryById> CategoryService { get; set; } = null!;
+    [Inject] public IProductService<ProductsInList, ProductById> ProductService { get; set; } = null!;
 
     private readonly List<string> _excludedCategories = ["best-sellers", "all"];
 
     protected override async Task OnInitializedAsync()
     {
-        Products = await ProductService.GetProductsByConditionAsync(0, null,true,4);
-        
+        Products = await ProductService.GetProductsByConditionAsync(0, null, true, 4);
+
         Categories = (await CategoryService.GetAllAsync()).Where(c => !_excludedCategories.Contains(c.Endpoint)).ToList();
         StateHasChanged();
     }

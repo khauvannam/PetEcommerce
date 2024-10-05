@@ -2,51 +2,177 @@
 
 <div class="w-full pt-5 px-10 flex justify-center">
     <div class="w-full max-w-[1300px] justify-between flex">
-        <div class="w-6/12">
-            <div class="w-full animation-fadeIn">
-                <img class="object-fill rounded-lg" src="@MainImageUrl" alt="">
+        <div class="w-6/12 overflow-hidden">
+            <div class="flex transition-transform duration-500 ease-out" style="transform:translateX(@(-UrlIndex * 100)%);">
+                @foreach (var url in ProductById.ImageUrlList)
+                {
+                    <div class="w-full flex-shrink-0">
+                        <img class="object-fill rounded-lg w-full h-full" src="@url" alt="">
+                    </div>
+                }
             </div>
+
             <div class="mt-5 flex w-full justify-between">
-                @foreach (var (url, index) in ProductModel.ImageUrlList.Select((url, index) => (url, index)))
+                @foreach (var (url, index) in ProductById.ImageUrlList.Select((url, index) => (url, index)))
                 {
                     const string activeImageClass = "border-2 border-blue-500";
 
                     <div @onclick="() => OnChangeImage(index)" class="w-full max-w-[150px] cursor-pointer">
-                        <img src="@url" class=" @(UrlIndex == index ? activeImageClass : "") w-full rounded-lg" alt="@url"/>
+                        <img src="@url" class="@(UrlIndex == index ? activeImageClass : "") w-full rounded-lg" alt="@url"/>
                     </div>
                 }
             </div>
         </div>
-        <div class="w-6/12 ml-10">
-            @if (ProductModel.SoldQuantity > 100)
+        <div class="w-6/12 ml-10 pr-5">
+            @if (ProductById.SoldQuantity > 100)
             {
-                <div class="text-main bg-[#FADC6F] h-6 rounded-md max-w-[150px] flex items-center p-5 font-semibold uppercase mb-5 ">
-                    <p>
-                        Best Seller
-                    </p>
+                <div class="text-main bg-[#FADC6F] h-6 rounded-md max-w-[150px] flex items-center p-5 font-semibold uppercase mb-5">
+                    <p>Best Seller</p>
                 </div>
             }
-            <div class="text-6xl text-main font-heading_bold">@ProductModel.Name</div>
+            <div class="mb-5">
+                <div class="text-6xl text-main font-heading_bold ">@ProductById.Name</div>
+                <div class="my-2 text-gray-500">
+                    <span>@ProductById.Description</span>
+                </div>
+            </div>
+
+            <div class="flex">
+                <div>
+                    <div class="flex items-center">
+                        @for (var i = 1; i <= 5; i++)
+                        {
+                            if (ProductById.TotalRating >= i)
+                            {
+                                // Full star
+                                <svg class="w-6 h-6 text-yellow-300 me-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 20">
+                                    <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"/>
+                                </svg>
+                            }
+                            else
+                            {
+                                // Empty star
+                                <svg class="w-6 h-6 text-gray-300 me-1 dark:text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 20">
+                                    <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"/>
+                                </svg>
+                            }
+                        }
+                        <p class="ms-1 font-medium text-gray-500 dark:text-gray-400">(@ProductById.TotalRating)</p>
+                    </div>
+                </div>
+                <div class="ml-3">
+                    <p class="font-medium text-green-600 text-xl">@ProductById.Comments.Count reviews</p>
+                </div>
+                <div class="ml-3">
+                    <p class="font-medium text-xl">@ProductById.SoldQuantity Sold</p>
+                </div>
+            </div>
+
+            <div class="flex items-center my-5 w-full">
+                <div class="text-2xl font-bold text-main ">
+                    $@CalculateDiscountPrice(ProductById, Price)
+                </div>
+                <div class="text-gray-500 line-through mx-3">$@Price.ToString("F2")</div>
+                <div class=" whitespace-nowrap bg-red-100 text-red-600 px-2 py-1 rounded ">
+                    SAVE @ProductById.DiscountPercent.Value%
+                </div>
+            </div>
+            <div class="w-full pt-2">
+                <div class="mb-2">
+                    <p class="font-semibold font-heading text-xl text-gray-600">Variants</p>
+                </div>
+                <select name="variants" class="outline-none hover:border-[#FADC6F] w-full border-[#00205c] border-2 border-solid py-3 px-8 rounded-sm text-main" @bind="Price">
+                    @foreach (var variant in ProductById.ProductVariants)
+                    {
+                        <option value="@variant.OriginalPrice.Value">@variant.VariantName</option>
+                    }
+                </select>
+            </div>
+            <div class="flex gap-x-10 my-8">
+                <div class="flex items-center mb-8">
+                    <div class="flex items-center border border-black justify-between max-w-[120px] px-0.5 rounded-md hover:border-[#fadc6f]">
+                        <button type="button"
+                                @onclick="() => AdjustQuantity('-')"
+                                class="size-10 leading-10 text-gray-600 transition hover:opacity-75">
+                            &minus;
+                        </button>
+                        <input
+                            id="quantityInput"
+                            type="number"
+                            @bind="Quantity"
+                            min="1"
+                            max="20"
+                            class=" h-12 w-16 border-transparent text-center [-moz-appearance:_textfield] sm:text-sm [&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:m-0 [&::-webkit-outer-spin-button]:appearance-none "/>
+                        <button type="button"
+                                @onclick="() => AdjustQuantity('+')"
+                                class="size-10 leading-10 text-gray-600 transition hover:opacity-75">
+                            &plus;
+                        </button>
+                    </div>
+
+                </div>
+                <div class="flex w-full items-center mb-8">
+                    <div class="w-full">
+                        <button type="submit"
+                                class="h-[54px] w-full flex justify-center items-center bg-[#00205c] hover:border-[#00205c] hover:border-2 hover:bg-[#FADC6F] group transition-all duration-200 rounded-md">
+                            <p class="text-white group-hover:text-main">
+                                Add To Cart
+                            </p>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="w-full pt-2">
+                <div class="mb-2">
+                    <p class="font-semibold font-heading text-xl text-gray-600">Description</p>
+                </div>
+                <div class="">
+                    <p>@ProductById.Description</p>
+                </div>
+            </div>
+            <div class="w-full pt-2">
+                <div class="mb-2">
+                    <p class="font-semibold font-heading text-xl text-gray-600">Product Use Guide</p>
+                </div>
+                <div class="">
+                    <p>@ProductById.ProductUseGuide</p>
+                </div>
+            </div>
         </div>
     </div>
 </div>
 
 @code {
-    [Parameter] public required ProductModel ProductModel { get; set; }
+    [Parameter] public ProductById ProductById { get; set; } = null!;
+    private decimal Price { get; set; }
+    private int Quantity { get; set; } = 1;
     private int UrlIndex { get; set; } = 0;
-    private string MainImageUrl { get; set; } = null!;
-
-    protected override Task OnParametersSetAsync()
-    {
-        MainImageUrl = ProductModel.ImageUrlList[UrlIndex];
-        return Task.CompletedTask;
-    }
 
     private void OnChangeImage(int urlIndex)
     {
         UrlIndex = urlIndex;
-        MainImageUrl = ProductModel.ImageUrlList[UrlIndex];
         StateHasChanged();
+    }
+
+    protected override Task OnParametersSetAsync()
+    {
+        Price = ProductById.ProductVariants.First().OriginalPrice.Value;
+        return Task.CompletedTask;
+    }
+
+    private string CalculateDiscountPrice(ProductById productById, decimal price)
+    {
+        return (price * productById.DiscountPercent.Value / 100).ToString("F2");
+    }
+
+    private void AdjustQuantity(char behavior)
+    {
+        Quantity = behavior switch
+        {
+            '+' => Math.Min(Quantity + 1, 20), // Increment up to max 20
+            '-' => Math.Max(Quantity - 1, 1), // Decrement down to min 1
+            _ => Quantity // Fallback case
+        };
     }
 
 }

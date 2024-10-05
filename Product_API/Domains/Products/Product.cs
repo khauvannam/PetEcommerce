@@ -39,7 +39,6 @@ public class Product : AggregateRoot
     public DateTime CreatedAt { get; private set; }
     public DateTime UpdatedAt { get; private set; }
     public decimal TotalRating { get; private set; }
-    public decimal Price { get; private set; }
     public int TotalQuantity { get; private set; }
 
     [JsonInclude]
@@ -160,10 +159,11 @@ public class Product : AggregateRoot
         {
             throw new ArgumentException("Cannot add more than 4 parts");
         }
+
         ImageUrlList.AddRange(imageUrlList);
     }
 
-    public void UpdatePrice()
+    public decimal GetCheapestPrice()
     {
         if (ProductVariants.Count < 0)
         {
@@ -174,7 +174,7 @@ public class Product : AggregateRoot
             .OrderBy(pv => pv.OriginalPrice.Value)
             .ToList();
 
-        Price = productVariantsOrderByPrice[0].OriginalPrice.Value;
+        return productVariantsOrderByPrice[0].OriginalPrice.Value;
     }
 }
 

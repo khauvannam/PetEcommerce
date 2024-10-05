@@ -8,14 +8,16 @@ public class CategoryService(
     IHttpClientFactory clientFactory,
     string baseUrl = nameof(ProductService),
     string endpoint = "api/category"
-) : ApiService<Category>(clientFactory, baseUrl, endpoint), ICategoryService<Category>
+)
+    : ApiService<CategoriesInList, CategoryById>(clientFactory, baseUrl, endpoint),
+        ICategoryService<CategoriesInList, CategoryById>
 {
     private readonly string _uri = endpoint;
 
-    public async Task<Category> GetByEndpointAsync(string endpoint)
+    public async Task<CategoryById> GetByEndpointAsync(string endpoint)
     {
         var baseEndpoint = $"{_uri}/{endpoint}";
         var result = await Client.GetAsync(baseEndpoint);
-        return (await HandleResponse<Category>(result))!;
+        return (await HandleResponse<CategoryById>(result))!;
     }
 }

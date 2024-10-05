@@ -2,7 +2,7 @@
 
 namespace Client_App.Domains.Products.Responses;
 
-public sealed class ProductModel
+public sealed class ProductById
 {
     public Guid ProductId { get; set; }
 

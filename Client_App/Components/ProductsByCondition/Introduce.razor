@@ -9,18 +9,18 @@
             <p class="text-sm text-main mt-2.5 font-light italic">
                 Trusted, Effective Solutions
             </p>
-            <h3 class="text-main text-[48px] font-bold mb-5 font-heading_bold">@Category.CategoryName</h3>
+            <h3 class="text-main text-[48px] font-bold mb-5 font-heading_bold">@CategoryById.CategoryName</h3>
             <p class="my-4 text-main font-light text-sm">
-                @Category.Description
+                @CategoryById.Description
             </p>
         </div>
         <div class="w-5/12">
-            <img src="@(Category.ImageUrl ?? "./images/productsbycategory/default.avif")" class="object-cover w-full h-full rounded-lg" alt="">
+            <img src="@(CategoryById.ImageUrl ?? "./images/productsbycategory/default.avif")" class="object-cover w-full h-full rounded-lg" alt="">
         </div>
     </div>
 </div>
 
 
 @code {
-    [Parameter] public Category Category { get; set; } = null!;
+    [Parameter] public CategoryById CategoryById { get; set; } = null!;
 }

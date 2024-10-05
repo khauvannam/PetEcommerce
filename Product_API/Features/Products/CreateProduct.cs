@@ -65,7 +65,6 @@ public static class CreateProduct
             product.AddProductVariants(productVariants);
             product.AddImageUrl(imageUrlList);
             product.CalculateTotalQuantity();
-            product.UpdatePrice();
             product.ApplyDiscount(request.Percent);
 
             return await repository.CreateAsync(product);

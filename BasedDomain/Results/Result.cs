@@ -4,16 +4,11 @@ public class Result
 {
     private protected Result(bool isSuccess, ErrorType errorType)
     {
-        ErrorTypes.Add(errorType);
+        ErrorTypes = errorType;
         IsSuccess = isSuccess;
     }
 
-    private protected Result(bool isSuccess)
-    {
-        IsSuccess = isSuccess;
-    }
-
-    public List<ErrorType> ErrorTypes { get; } = [];
+    public ErrorType ErrorTypes { get; }
     private bool IsSuccess { get; }
     public bool IsFailure => !IsSuccess;
 
@@ -36,21 +31,6 @@ public class Result
     {
         return new Result(false, errorType);
     }
-
-    public static Result Create(bool isSuccess = false)
-    {
-        return new Result(isSuccess);
-    }
-
-    public static Result<T> Create<T>(bool isSuccess)
-    {
-        return new Result<T>(isSuccess);
-    }
-
-    public void AddResultList(ErrorType errorType)
-    {
-        ErrorTypes.Add(errorType);
-    }
 }
 
 public class Result<T> : Result
@@ -62,9 +42,6 @@ public class Result<T> : Result
     {
         _value = value;
     }
-
-    internal Result(bool isSuccess)
-        : base(isSuccess) { }
 
     public T Value => _value!;
 }

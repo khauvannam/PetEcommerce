@@ -71,12 +71,12 @@
 }
 
 @code {
-    [Parameter] public List<ProductModel> Products { get; set; } = null!;
+    [Parameter] public List<ProductsInList> Products { get; set; } = null!;
     [Parameter] public EventCallback LoadMoreProductAsync { get; set; }
 
-    private string CalculateDiscountPrice(ProductModel productModel)
+    private string CalculateDiscountPrice(ProductsInList productsInList)
     {
-        return (productModel.Price * productModel.DiscountPercent.Value / 100).ToString("F2");
+        return (productsInList.Price * productsInList.DiscountPercent.Value / 100).ToString("F2");
     }
 
 }

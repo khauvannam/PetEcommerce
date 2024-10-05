@@ -1,6 +1,7 @@
 ﻿namespace Client_App.Interfaces;
 
-public interface IProductService<TResponse> : IApiService<TResponse>
+public interface IProductService<TResponse, TGetByIdResponse>
+    : IApiService<TResponse, TGetByIdResponse>
 {
     public Task<List<TResponse>> GetProductsByConditionAsync(
         int offset,

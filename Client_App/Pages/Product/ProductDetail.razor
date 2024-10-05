@@ -5,20 +5,20 @@
 @using Client_App.Components.ProductDetail
 
 
-<Breadcump Name="@ProductModel.Name" Endpoint="@($"/product/{ProductModel.ProductId}")"/>
+<Breadcump Name="@ProductById.Name" Endpoint="@($"/product/{ProductById.ProductId}")"/>
 
-<Detail ProductModel="ProductModel"/>
+<Detail ProductById="ProductById"/>
 
 
 
 @code {
     [Parameter] public Guid ProductId { get; set; }
-    [Inject] public required IProductService<ProductModel> ProductService { get; set; }
-    public required ProductModel ProductModel { get; set; }
+    [Inject] public required IProductService<ProductsInList,ProductById> ProductService { get; set; }
+    public required ProductById ProductById { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        ProductModel = await ProductService.GetByIdAsync(ProductId);
+        ProductById = await ProductService.GetByIdAsync(ProductId);
     }
 
 }

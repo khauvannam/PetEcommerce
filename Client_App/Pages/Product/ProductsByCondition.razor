@@ -7,9 +7,9 @@
 @using Client_App.Components.Share
 @inject NavigationManager NavigationManager 
 
-<Breadcump Name="@Category.CategoryName" Endpoint="@($"/products/{Category.Endpoint}")"/>
+<Breadcump Name="@CategoryById.CategoryName" Endpoint="@($"/products/{CategoryById.Endpoint}")"/>
 
-<Introduce Category="Category"/>
+<Introduce CategoryById="CategoryById"/>
 
 <ListCategories Categories="Categories"/>
 
@@ -19,15 +19,15 @@
 @code {
     [Parameter] public string? CategoryEndpoint { get; set; } = string.Empty;
 
-    public Category Category { get; set; } = null!;
-    public List<ProductModel> Products { get; set; } = [];
-    public List<Category> Categories = [];
+    public CategoryById CategoryById { get; set; } = null!;
+    public List<ProductsInList> Products { get; set; } = [];
+    public List<CategoriesInList> Categories = [];
 
     private int Limit { get; set; } = 10;
     private int Offset { get; set; }
 
-    [Inject] IProductService<ProductModel> ProductService { get; set; } = null!;
-    [Inject] ICategoryService<Category> CategoryService { get; set; } = null!;
+    [Inject] IProductService<ProductsInList, ProductById> ProductService { get; set; } = null!;
+    [Inject] ICategoryService<CategoriesInList, CategoryById> CategoryService { get; set; } = null!;
 
     protected override async Task OnInitializedAsync()
     {
@@ -56,7 +56,7 @@
         {
             Categories = await CategoryService.GetAllAsync();
 
-            Category = Categories.FirstOrDefault(c => c.Endpoint == CategoryEndpoint)!;
+            CategoryById = await CategoryService.GetByEndpointAsync(CategoryEndpoint!);
 
             await FetchProductAsync();
 
@@ -75,7 +75,7 @@
         {
             "all" => await ProductService.GetProductsByConditionAsync(Offset * Limit, null, false, Limit),
             "best-sellers" => await ProductService.GetProductsByConditionAsync(Offset * Limit, null, true, Limit),
-            _ => await ProductService.GetProductsByConditionAsync(Offset * Limit, Category.CategoryId, false, Limit)
+            _ => await ProductService.GetProductsByConditionAsync(Offset * Limit, CategoryById.CategoryId, false, Limit)
         };
 
         Products.AddRange(products);

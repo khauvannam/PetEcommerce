@@ -81,7 +81,6 @@ public static class UpdateProduct
             );
 
             product.ApplyDiscount(updateProductRequest.Percent);
-            product.UpdatePrice();
             product.CalculateTotalQuantity();
             product.AddImageUrl(updatedImageUrls);
 

@@ -11,11 +11,10 @@ public static class Register
 {
     public sealed class Command : IRequest<Result>
     {
-        public string? Email { get; init; }
-        public string? Username { get; init; }
-        public string Password { get; init; } = null!;
-        public string? PhoneNumber { get; init; }
-        public string SecurityStamp { get; } = Guid.NewGuid().ToString();
+        public required string Email { get; init; }
+        public required string Username { get; init; }
+        public required string Password { get; init; }
+        public required string PhoneNumber { get; init; }
         public Address? Address { get; init; }
     }
 
@@ -26,11 +25,17 @@ public static class Register
         {
             var validateResult = await validator.ValidateAsync(request, cancellationToken);
 
+            if (!validateResult.IsValid)
+            {
+                var errors = validateResult.Errors.Select(x => x.ErrorMessage).ToString();
+                return Result.Failure(new(nameof(Command), $"Invalid request : {errors}"));
+            }
+
             var user = new User
             {
                 Email = request.Email,
                 UserName = request.Username,
-                SecurityStamp = request.SecurityStamp,
+                SecurityStamp = Guid.NewGuid().ToString(),
                 PhoneNumber = request.PhoneNumber,
             };
 
@@ -44,15 +49,7 @@ public static class Register
                 user.UpdateAddress(address);
             }
 
-            if (validateResult.IsValid)
-                return await repository.Register(user, request.Password);
-
-            var result = Result.Create();
-
-            foreach (var error in validateResult.Errors)
-                result.AddResultList(new ErrorType("Register.Command", error.ToString()));
-
-            return result;
+            return await repository.Register(user, request.Password);
         }
     }
 

@@ -38,7 +38,7 @@ public class ProductRepository(ProductDbContext dbContext) : IProductRepository
                 DiscountPercent = p.DiscountPercent,
                 ImageUrl = p.ImageUrlList[0],
                 Name = p.Name,
-                Price = p.Price,
+                Price = p.ProductVariants[0].OriginalPrice.Value,
                 Quantity = p.TotalQuantity,
                 TotalRating = p.TotalRating,
                 SoldQuantity = p.SoldQuantity,

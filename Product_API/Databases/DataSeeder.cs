@@ -22,6 +22,8 @@ public static class DataSeeder
 
         List<string> categoryNames =
         [
+            "All",
+            "Best Sellers",
             "Dog Food",
             "Cat Food",
             "Pet Toys",
@@ -32,8 +34,6 @@ public static class DataSeeder
             "Pet Health",
             "Pet Clothing",
             "Pet Beds",
-            "All",
-            "Best Sellers",
         ];
         categories.AddRange(
             categoryNames.Select(t =>
@@ -50,16 +50,21 @@ public static class DataSeeder
         using var scope = provider.CreateScope();
         var dbContext = scope.ServiceProvider.GetRequiredService<ProductDbContext>();
 
-        if (dbContext.Products.Count() >= 15)
+        if (dbContext.Products.Count() >= 50)
             return;
 
         var faker = new Faker();
         List<Product> products = [];
 
         var commerceFaker = faker.Commerce;
-        var categoryIdList = dbContext.Categories.Select(c => c.CategoryId).ToList();
 
-        for (var i = 0; i < 15; i++)
+        List<string> excludedCategories = ["best-sellers", "all"];
+        var categoryIdList = dbContext
+            .Categories.Where(c => !excludedCategories.Contains(c.Endpoint))
+            .Select(c => c.CategoryId)
+            .ToList();
+
+        for (var i = 0; i < 50; i++)
         {
             List<ProductVariant> productVariants = [];
 
@@ -114,7 +119,6 @@ public static class DataSeeder
             product.CalculateTotalQuantity();
             product.CalculateTotalRating();
             product.AddImageUrl(imageUrls);
-            product.UpdatePrice();
 
             products.Add(product);
         }

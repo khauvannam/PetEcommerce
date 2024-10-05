@@ -5,21 +5,14 @@ using Exception = System.Exception;
 
 namespace Client_App.Abstraction;
 
-public abstract class ApiService<TResponse> : IApiService<TResponse>
+public abstract class ApiService<TResponse, TGetByIdResponse>(
+    IHttpClientFactory factory,
+    string baseUrl,
+    string endpoint
+) : ApiService(factory, baseUrl, endpoint), IApiService<TResponse, TGetByIdResponse>
     where TResponse : class
+    where TGetByIdResponse : class
 {
-    protected HttpClient Client { get; }
-    private IHttpClientFactory Factory { get; }
-    private string Endpoint { get; }
-    private JsonSerializerOptions Options { get; } = new() { PropertyNameCaseInsensitive = true };
-
-    protected ApiService(IHttpClientFactory factory, string baseUrl, string endpoint)
-    {
-        Factory = factory;
-        Endpoint = endpoint;
-        Client = Factory.CreateClient(baseUrl);
-    }
-
     public virtual async Task<List<TResponse>> GetAllAsync(int? limit = null, int? offset = null)
     {
         var query =
@@ -29,10 +22,10 @@ public abstract class ApiService<TResponse> : IApiService<TResponse>
         return await HandleResponse<List<TResponse>>(result) ?? [];
     }
 
-    public virtual async Task<TResponse> GetByIdAsync(Guid id)
+    public virtual async Task<TGetByIdResponse> GetByIdAsync(Guid id)
     {
         var result = await Client.GetAsync($"{Endpoint}/{id}");
-        return (await HandleResponse<TResponse>(result))!;
+        return (await HandleResponse<TGetByIdResponse>(result))!;
     }
 
     public virtual async Task CreateAsync(object item)
@@ -81,5 +74,20 @@ public abstract class ApiService<TResponse> : IApiService<TResponse>
             throw new Exception($"Error: {type}");
 
         return item;
+    }
+}
+
+public abstract class ApiService
+{
+    protected HttpClient Client { get; }
+    private IHttpClientFactory Factory { get; }
+    protected string Endpoint { get; }
+    protected JsonSerializerOptions Options { get; } = new() { PropertyNameCaseInsensitive = true };
+
+    protected ApiService(IHttpClientFactory factory, string baseUrl, string endpoint)
+    {
+        Factory = factory;
+        Endpoint = endpoint;
+        Client = Factory.CreateClient(baseUrl);
     }
 }

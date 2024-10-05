@@ -8,11 +8,13 @@ public sealed class ProductService(
     IHttpClientFactory factory,
     string baseUrl = nameof(ProductService),
     string endpoint = "api/product"
-) : ApiService<ProductModel>(factory, baseUrl, endpoint), IProductService<ProductModel>
+)
+    : ApiService<ProductsInList, ProductById>(factory, baseUrl, endpoint),
+        IProductService<ProductsInList, ProductById>
 {
     private readonly string _endpoint = endpoint;
 
-    public async Task<List<ProductModel>> GetProductsByConditionAsync(
+    public async Task<List<ProductsInList>> GetProductsByConditionAsync(
         int offset,
         int? categoryId,
         bool isBestSeller,
@@ -40,6 +42,6 @@ public sealed class ProductService(
 
         var result = await Client.GetAsync(baseEndpoint);
 
-        return await HandleResponse<List<ProductModel>>(result) ?? [];
+        return await HandleResponse<List<ProductsInList>>(result) ?? [];
     }
 };
