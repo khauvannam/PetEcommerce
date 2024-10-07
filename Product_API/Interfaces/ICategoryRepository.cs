@@ -1,4 +1,5 @@
-﻿using BasedDomain.Results;
+﻿using BasedDomain;
+using BasedDomain.Results;
 using Product_API.Domains.Categories;
 using Product_API.Features.Categories;
 
@@ -11,5 +12,5 @@ public interface ICategoryRepository
     Task<Result<Category>> UpdateAsync(Category category);
     ValueTask<Result<Category>> GetByIdAsync(int categoryId);
     Task<Result<Category>> GetByEndpointAsync(GetCategoryByEndpoint.Query query);
-    ValueTask<Result<List<Category>>> GetAllAsync();
+    ValueTask<Result<Pagination<Category>>> GetAllAsync();
 }

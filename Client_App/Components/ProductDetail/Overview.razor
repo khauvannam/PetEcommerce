@@ -1,0 +1,36 @@
+﻿<div class="w-full flex justify-center lg:px-20 px-10">
+    <div class="w-full max-w-[1300px]">
+        <div class="flex w-full justify-between py-6">
+            <div class="w-[48%]">
+                <img class="rounded-3xl max-h-[350px] object-fill w-full" src="./images/detail_product/overview1.jpg" alt="">
+            </div>
+            <div class="w-[48%] flex justify-center flex-col">
+                <h1 class="text-4xl font-heading_bold font-bold">
+                    The Problem
+                </h1>
+                <p class="my-5 text-gray-600 font-light">
+                    As our pets age, they often encounter mobility issues and joint discomfort that can limit their ability to move around and enjoy life as they once did. Senior pets may experience these issues due to arthritis, hip dysplasia, or other age-related conditions. Seeing your beloved pet struggle can be heart-wrenching, but there are ways to help.
+                </p>
+            </div>
+        </div>
+        <div class="flex w-full justify-between py-6">
+            <div class="w-[48%] flex justify-center flex-col">
+                <h1 class="text-4xl font-heading_bold font-bold">
+                    Our Solution
+                </h1>
+                <p class="my-5 text-gray-600 font-light">
+                    <span class="font-semibold text-black">
+                        @ProductName
+                    </span> can help your pet that is experiencing discomfort or limited mobility. This amazing CBD oil is made with organic full-spectrum hemp and turmeric, which work together to provide soothing relief for your furry friend. Whether your pet is struggling with joint pain or stiffness, this oil can help to restore their mobility and improve their overall quality of life. With Honest Paws Mobility Oil, you can take care of your senior pet and show them how much you care.
+                </p>
+            </div>
+            <div class="w-[48%]">
+                <img class="rounded-3xl max-h-[350px] object-fill w-full" src="./images/detail_product/overview2.jpg" alt="">
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter] public required string ProductName { get; set; }
+}

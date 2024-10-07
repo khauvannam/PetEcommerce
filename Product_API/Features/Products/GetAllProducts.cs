@@ -1,4 +1,5 @@
-﻿using BasedDomain.Results;
+﻿using BasedDomain;
+using BasedDomain.Results;
 using MediatR;
 using Product_API.Domains.Products;
 using Product_API.DTOs.Products;
@@ -9,12 +10,12 @@ namespace Product_API.Features.Products;
 public static class GetAllProducts
 {
     public sealed record Query(int? CategoryId, int Limit, int Offset, bool IsBestSeller)
-        : IRequest<Result<List<ListProductResponse>>>;
+        : IRequest<Result<Pagination<ListProductResponse>>>;
 
     public sealed class Handler(IProductRepository repository)
-        : IRequestHandler<Query, Result<List<ListProductResponse>>>
+        : IRequestHandler<Query, Result<Pagination<ListProductResponse>>>
     {
-        public async Task<Result<List<ListProductResponse>>> Handle(
+        public async Task<Result<Pagination<ListProductResponse>>> Handle(
             Query request,
             CancellationToken cancellationToken
         )

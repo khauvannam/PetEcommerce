@@ -1,0 +1,15 @@
+﻿@using Client_App.Domains.Products.Responses
+
+<div class="w-full pt-5 px-10 flex justify-center">
+    <div class="w-full max-w-[1300px] justify-between flex">
+        <ImageSlider ImageUrlList="ProductById.ImageUrlList"/>
+        <Detail ProductById="ProductById"/>
+    </div>
+</div>
+
+
+
+@code {
+    [Parameter] public ProductById ProductById { get; set; } = null!;
+
+}

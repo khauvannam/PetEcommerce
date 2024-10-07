@@ -9,7 +9,14 @@ public class Comment
 
     public int CommentId { get; init; }
     public Guid BuyerId { get; private set; }
+
+    [MaxLength(50)]
+    public string BuyerEmail { get; private set; } = null!;
+
     public int Rating { get; private set; }
+
+    [MaxLength(255)]
+    public string Title { get; private set; } = null!;
 
     [MaxLength(255)]
     public string Content { get; private set; } = null!;
@@ -19,7 +26,13 @@ public class Comment
     public Product Product { get; init; } = null!;
     public Guid? ProductId { get; private set; }
 
-    public static Comment Create(Guid buyerId, int rating, string content)
+    public static Comment Create(
+        Guid buyerId,
+        string buyerEmail,
+        int rating,
+        string title,
+        string content
+    )
     {
         if (rating is < 1 or > 5)
         {
@@ -29,14 +42,17 @@ public class Comment
         return new Comment
         {
             BuyerId = buyerId,
+            BuyerEmail = buyerEmail,
+            Title = title,
             Rating = rating,
             Content = content,
         };
     }
 
-    public void Update(int rating, string content)
+    public void Update(int rating, string title, string content)
     {
         UpdatedAt = DateTime.Now;
+        Title = title;
         Rating = rating;
         Content = content;
     }

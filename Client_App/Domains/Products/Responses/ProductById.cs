@@ -13,7 +13,6 @@ public sealed class ProductById
     public string? ProductUseGuide { get; set; }
 
     public List<string> ImageUrlList { get; set; } = null!;
-    public string ImageUrl { get; set; } = null!;
 
     public int SoldQuantity { get; set; }
 
@@ -35,7 +34,7 @@ public sealed class ProductById
 
     public List<Comment> Comments { get; set; } = null!;
 
-    public HashSet<ProductBuyerId> ProductBuyerIds { get; set; } = null!;
+    public HashSet<ProductBuyerId> ProductBuyerIds { get; set; } = [];
 }
 
 public record DiscountPercent(decimal Value);

@@ -1,0 +1,49 @@
+﻿@using Client_App.Domains.Products.Responses
+@using Client_App.Components.Share
+
+<div class="flex flex-col justify-between items-center rounded-lg max-w-[300px] mt-12 pb-4 shadow-sm-light">
+    <NavLink class="w-full" href="@($"/product/{ProductsInList.ProductId}")">
+        <div class="flex justify-center bg-white rounded-lg relative">
+            <img class="h-[350px] object-center w-full rounded-lg"
+                 src="@ProductsInList.ImageUrl"
+                 alt="@ProductsInList.Name">
+            @if (ProductsInList.SoldQuantity > 100)
+            {
+                <span class="text-main bg-[#FADC6F] absolute h-6 rounded-full flex items-center px-2.5 text-sm font-medium left-2.5 top-2.5">Best Seller</span>
+            }
+        </div>
+    </NavLink>
+    <div class="w-full flex flex-col items-center">
+        <div class="flex items-center w-full">
+            <p class="my-4 text-xl font-semibold w-full font-heading_bold">@ProductsInList.Name</p>
+        </div>
+        <p class="pb-4 font-light italic w-full">@(ProductsInList.Description![..30])...</p>
+
+        <div class="w-full flex">
+            <Rating TotalRating="ProductsInList.TotalRating"/>
+            <p class="ms-1 font-medium text-gray-500 dark:text-gray-400">@ProductsInList.TotalRating</p>
+        </div>
+
+
+        <div class="flex items-center my-5 w-full">
+            <div class="text-2xl font-bold text-main ">
+                $@CalculateDiscountPrice(ProductsInList)
+            </div>
+            <div class="text-gray-500 line-through mx-3">$@ProductsInList.Price.ToString("F2")</div>
+            <div class=" whitespace-nowrap bg-red-100 text-red-600 px-2 py-1 rounded ">
+                SAVE @ProductsInList.DiscountPercent.Value%
+            </div>
+        </div>
+        <CustomButton Value="Add To Cart"/>
+    </div>
+</div>
+
+@code {
+    [Parameter] public required ProductsInList ProductsInList { get; set; }
+
+    private static string CalculateDiscountPrice(ProductsInList productsInList)
+    {
+        return (productsInList.Price * productsInList.DiscountPercent.Value / 100).ToString("F2");
+    }
+
+}

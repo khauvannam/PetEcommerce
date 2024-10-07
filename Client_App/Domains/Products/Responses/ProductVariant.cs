@@ -3,15 +3,15 @@
 public class ProductVariant
 {
     public Guid VariantId { get; set; }
-    public string VariantName { get; set; } = null!;
+    public required string VariantName { get; set; }
     public int Quantity { get; set; }
-    public OriginalPrice OriginalPrice { get; set; } = null!;
+    public required OriginalPrice OriginalPrice { get; set; }
     public Guid ProductId { get; set; }
 }
 
 public class OriginalPrice
 {
-    public decimal Value { get; set; }
+    public required decimal Value { get; set; }
     public Currency Currency { get; set; }
 }
 

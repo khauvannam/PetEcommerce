@@ -1,6 +1,6 @@
 ﻿namespace Client_App.Domains.Products.Responses;
 
-public class ProductsInList
+public record ProductsInList
 {
     public Guid ProductId { get; init; }
     public DiscountPercent DiscountPercent { get; init; } = null!;

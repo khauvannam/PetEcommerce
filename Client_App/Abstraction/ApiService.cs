@@ -1,4 +1,5 @@
 ﻿using System.Text.Json;
+using BasedDomain;
 using BasedDomain.Results;
 using Client_App.Interfaces;
 using Exception = System.Exception;
@@ -13,19 +14,23 @@ public abstract class ApiService<TResponse, TGetByIdResponse>(
     where TResponse : class
     where TGetByIdResponse : class
 {
-    public virtual async Task<List<TResponse>> GetAllAsync(int? limit = null, int? offset = null)
+    public virtual async Task<Pagination<TResponse>> GetAllAsync(
+        int? limit = null,
+        int? offset = null
+    )
     {
         var query =
             limit.HasValue && offset.HasValue ? $"?limit={limit}&offset={offset}" : string.Empty;
 
         var result = await Client.GetAsync($"{Endpoint}{query}");
-        return await HandleResponse<List<TResponse>>(result) ?? [];
+        return await HandleResponse<Pagination<TResponse>>(result);
     }
 
     public virtual async Task<TGetByIdResponse> GetByIdAsync(Guid id)
     {
         var result = await Client.GetAsync($"{Endpoint}/{id}");
-        return (await HandleResponse<TGetByIdResponse>(result))!;
+        var response = await HandleResponse<TGetByIdResponse>(result);
+        return response;
     }
 
     public virtual async Task CreateAsync(object item)
@@ -60,15 +65,16 @@ public abstract class ApiService<TResponse, TGetByIdResponse>(
         CheckErrors(content);
     }
 
-    protected async Task<T?> HandleResponse<T>(HttpResponseMessage response)
+    protected async Task<T> HandleResponse<T>(HttpResponseMessage response)
         where T : class
     {
         var content = await response.Content.ReadAsStringAsync();
-        var deserialized = JsonSerializer.Deserialize<T>(content, Options);
+        var deserialized = JsonSerializer.Deserialize<T>(content, Options)!;
         return CheckErrors(deserialized);
     }
 
     private static T CheckErrors<T>(T item)
+        where T : class
     {
         if (item is ErrorType type)
             throw new Exception($"Error: {type}");

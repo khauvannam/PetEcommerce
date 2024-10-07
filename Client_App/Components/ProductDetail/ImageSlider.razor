@@ -1,0 +1,32 @@
+﻿<div class="w-6/12 overflow-hidden">
+    <div class="flex transition-transform duration-500 ease-out" style="transform:translateX(@(-UrlIndex * 100)%);">
+        @foreach (var url in ImageUrlList)
+        {
+            <div class="w-full flex-shrink-0">
+                <img class="object-fill rounded-lg w-full transition-all ease-in-out duration-100 h-full" src="@url" alt="">
+            </div>
+        }
+    </div>
+
+    <div class="mt-5 flex w-full justify-between">
+        @foreach (var (url, index) in ImageUrlList.Select((url, index) => (url, index)))
+        {
+            const string activeImageClass = "border-2 border-blue-500";
+
+            <div @onclick="() => OnChangeImage(index)" class="w-full max-w-[150px] cursor-pointer">
+                <img src="@url" class="@(UrlIndex == index ? activeImageClass : "") w-full h-full rounded-lg" alt="@url"/>
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter] public List<string> ImageUrlList { get; set; } = null!;
+    private int UrlIndex { get; set; } = 0;
+
+    private void OnChangeImage(int urlIndex)
+    {
+        UrlIndex = urlIndex;
+    }
+
+}

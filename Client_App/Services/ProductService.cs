@@ -1,3 +1,4 @@
+using BasedDomain;
 using Client_App.Abstraction;
 using Client_App.Domains.Products.Responses;
 using Client_App.Interfaces;
@@ -14,7 +15,7 @@ public sealed class ProductService(
 {
     private readonly string _endpoint = endpoint;
 
-    public async Task<List<ProductsInList>> GetProductsByConditionAsync(
+    public async Task<Pagination<ProductsInList>> GetProductsByConditionAsync(
         int offset,
         int? categoryId,
         bool isBestSeller,
@@ -42,6 +43,6 @@ public sealed class ProductService(
 
         var result = await Client.GetAsync(baseEndpoint);
 
-        return await HandleResponse<List<ProductsInList>>(result) ?? [];
+        return await HandleResponse<Pagination<ProductsInList>>(result);
     }
 };

@@ -25,7 +25,11 @@ public static class UpdateComment
 
             var comment = result.Value;
 
-            comment.Update(updateCommentRequest.Rating, updateCommentRequest.Content);
+            comment.Update(
+                updateCommentRequest.Rating,
+                updateCommentRequest.Ttitle,
+                updateCommentRequest.Content
+            );
 
             return await repository.UpdateAsync(comment);
         }

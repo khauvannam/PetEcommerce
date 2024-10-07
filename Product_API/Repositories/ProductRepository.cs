@@ -1,4 +1,5 @@
-﻿using BasedDomain.Results;
+﻿using BasedDomain;
+using BasedDomain.Results;
 using Microsoft.EntityFrameworkCore;
 using Product_API.Databases;
 using Product_API.Domains.Products;
@@ -11,7 +12,7 @@ namespace Product_API.Repositories;
 
 public class ProductRepository(ProductDbContext dbContext) : IProductRepository
 {
-    public async ValueTask<Result<List<ListProductResponse>>> ListAllAsync(
+    public async ValueTask<Result<Pagination<ListProductResponse>>> ListAllAsync(
         GetAllProducts.Query query
     )
     {
@@ -47,7 +48,9 @@ public class ProductRepository(ProductDbContext dbContext) : IProductRepository
             .Take(query.Limit)
             .ToListAsync();
 
-        return Result.Success(products);
+        var pagination = new Pagination<ListProductResponse>(products, queryable.Count());
+
+        return Result.Success(pagination);
     }
 
     public async Task<Result<Product>> CreateAsync(Product product)

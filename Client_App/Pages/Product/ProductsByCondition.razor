@@ -1,5 +1,6 @@
 ﻿@page "/products/{CategoryEndpoint?}"
 
+@using BasedDomain
 @using Client_App.Domains.Categories.Responses
 @using Client_App.Domains.Products.Responses
 @using Client_App.Interfaces
@@ -7,23 +8,39 @@
 @using Client_App.Components.Share
 @inject NavigationManager NavigationManager 
 
-<Breadcump Name="@CategoryById.CategoryName" Endpoint="@($"/products/{CategoryById.Endpoint}")"/>
+@if (CategoryById is not null)
+{
+    <Breadcump Name="@CategoryById!.CategoryName" Endpoint="@($"/products/{CategoryById.Endpoint}")"/>
+    <Introduce CategoryById="CategoryById"/>
+}
+else
+{
+    <Loading/>
+}
 
-<Introduce CategoryById="CategoryById"/>
+@if (CategoriesPagination is not null)
+{
+    <ListCategories Categories="CategoriesPagination"/>
+}
+else
+{
+    <Loading/>
+}
 
-<ListCategories Categories="Categories"/>
-
-<ListProducts Products="Products" LoadMoreProductAsync="LoadMoreProductAsync"/>
+@if (ProductsPagination is not null)
+{
+    <ListProducts ProductsPagination="ProductsPagination" Limit="Limit"/>
+}
 
 
 @code {
     [Parameter] public string? CategoryEndpoint { get; set; } = string.Empty;
 
-    public CategoryById CategoryById { get; set; } = null!;
-    public List<ProductsInList> Products { get; set; } = [];
-    public List<CategoriesInList> Categories = [];
+    public CategoryById? CategoryById { get; set; }
+    public Pagination<ProductsInList>? ProductsPagination { get; set; }
+    public Pagination<CategoriesInList>? CategoriesPagination { get; set; }
 
-    private int Limit { get; set; } = 10;
+    private int Limit { get; } = 10;
     private int Offset { get; set; }
 
     [Inject] IProductService<ProductsInList, ProductById> ProductService { get; set; } = null!;
@@ -37,7 +54,6 @@
             return;
         }
 
-        Products = [];
         Offset = 0;
 
         await LoadDataAsync();
@@ -45,7 +61,6 @@
 
     protected override async Task OnParametersSetAsync()
     {
-        Products = [];
         Offset = 0;
         await LoadDataAsync();
     }
@@ -54,11 +69,11 @@
     {
         try
         {
-            Categories = await CategoryService.GetAllAsync();
+            CategoriesPagination = await CategoryService.GetAllAsync();
 
             CategoryById = await CategoryService.GetByEndpointAsync(CategoryEndpoint!);
 
-            await FetchProductAsync();
+            await FetchProductAsync(default);
 
             StateHasChanged();
         }
@@ -69,24 +84,16 @@
         }
     }
 
-    private async Task FetchProductAsync()
+    private async Task FetchProductAsync(int offset)
     {
+        Offset = offset;
         var products = CategoryEndpoint switch
         {
             "all" => await ProductService.GetProductsByConditionAsync(Offset * Limit, null, false, Limit),
             "best-sellers" => await ProductService.GetProductsByConditionAsync(Offset * Limit, null, true, Limit),
-            _ => await ProductService.GetProductsByConditionAsync(Offset * Limit, CategoryById.CategoryId, false, Limit)
+            _ => await ProductService.GetProductsByConditionAsync(Offset * Limit, CategoryById!.CategoryId, false, Limit)
         };
-
-        Products.AddRange(products);
+        ProductsPagination = products;
     }
-
-    private async Task LoadMoreProductAsync()
-    {
-        Offset++;
-        await FetchProductAsync();
-        StateHasChanged();
-    }
-
 
 }

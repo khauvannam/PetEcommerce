@@ -1,3 +1,4 @@
+using BasedDomain;
 using BasedDomain.Results;
 using Microsoft.EntityFrameworkCore;
 using Product_API.Databases;
@@ -55,9 +56,10 @@ public class CategoryRepository(ProductDbContext dbContext) : ICategoryRepositor
         return Result.Success(category);
     }
 
-    public async ValueTask<Result<List<Category>>> GetAllAsync()
+    public async ValueTask<Result<Pagination<Category>>> GetAllAsync()
     {
         var categories = await dbContext.Categories.AsNoTracking().ToListAsync();
-        return Result.Success(categories);
+        var pagination = new Pagination<Category>(categories, categories.Count);
+        return Result.Success(pagination);
     }
 }

@@ -1,43 +1,16 @@
-﻿@using Client_App.Domains.Products.Responses
-@using Client_App.Components.Share
+﻿@using BasedDomain
+@using Client_App.Domains.Products.Responses
+@using Client_App.Components.Model
 
 @* Productss Section *@
 
 <div class="flex justify-center w-full pt-12 text-main pb-5">
     <div class=" w-full max-w-[1300px] grid grid-cols-4 gap-x-8 gap-y-16">
-        @if (Products.Count > 0)
+        @if (ProductsPagination.Data.Count > 0)
         {
-            @foreach (var product in Products)
+            @foreach (var product in ProductsPagination.Data)
             {
-                <div class="flex flex-col justify-between items-center rounded-lg max-w-[300px] mt-12 pb-4 shadow-sm-light">
-                    <NavLink class="w-full" href="@($"/product/{product.ProductId}")">
-                        <div class="flex justify-center bg-white rounded-lg relative">
-                            <img class="h-[350px] object-center w-full rounded-lg"
-                                 src="@product.ImageUrl"
-                                 alt="@product.Name">
-                            @if (product.SoldQuantity > 100)
-                            {
-                                <span class="text-main bg-[#FADC6F] absolute h-6 rounded-full flex items-center px-2.5 text-sm font-medium left-2.5 top-2.5">Best Seller</span>
-                            }
-                        </div>
-                    </NavLink>
-                    <div class="w-full flex flex-col items-center">
-                        <div class="flex items-center w-full">
-                            <p class="my-4 text-xl font-semibold w-full font-heading_bold">@product.Name</p>
-                        </div>
-                        <p class="pb-4 font-light italic w-full">@(product.Description![..30])...</p>
-                        <div class="flex items-center my-5 w-full">
-                            <div class="text-2xl font-bold text-main ">
-                                $@CalculateDiscountPrice(product)
-                            </div>
-                            <div class="text-gray-500 line-through mx-3">$@product.Price.ToString("F2")</div>
-                            <div class=" whitespace-nowrap bg-red-100 text-red-600 px-2 py-1 rounded ">
-                                SAVE @product.DiscountPercent.Value%
-                            </div>
-                        </div>
-                        <CustomButton Value="Add To Cart"/>
-                    </div>
-                </div>
+                <Product ProductsInList="product"/>
             }
         }
         else
@@ -62,17 +35,23 @@
 
     </div >
 </div >
-
-@if (Products.Count > 0)
+@for (var i = 0; i < TotalPages; i++)
 {
-    <div class="flex w-full justify-center mt-4 max-w-[300px] mx-auto">
-        <CustomButton Value="Load More" OnClickCallback="@EventCallback.Factory.Create(this, LoadMoreProductAsync)"/>
+    <div class="flex ml-2">
+        <p>@TotalPages</p>
     </div>
 }
 
 @code {
-    [Parameter] public List<ProductsInList> Products { get; set; } = null!;
-    [Parameter] public EventCallback LoadMoreProductAsync { get; set; }
+    [Parameter] public Pagination<ProductsInList> ProductsPagination { get; set; } = null!;
+    [Parameter] public int Limit { get; set; }
+    private int TotalPages { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        TotalPages = (int)Math.Ceiling((double)ProductsPagination.TotalItems / Limit);
+    }
+
 
     private string CalculateDiscountPrice(ProductsInList productsInList)
     {

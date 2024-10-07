@@ -24,5 +24,14 @@
     <ItemGroup>
         <ProjectReference Include="..\BasedDomain\BasedDomain.csproj" />
     </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="Domains\Products\Responses\ProductVariant.cs">
+        <DependentUpon>ProductById.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Domains\Products\Responses\ProductBuyerId.cs">
+        <DependentUpon>ProductById.cs</DependentUpon>
+      </Compile>
+    </ItemGroup>
     
 </Project>

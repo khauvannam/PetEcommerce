@@ -18,11 +18,11 @@
         src: url(./fonts/Recoleta.otf) format('opentype');
     }
     @font-face {
-        font-family: 'Recoleta-Bold' ;
+        font-family: 'Recoleta-Bold', serif ;
         font-style: normal;
         font-weight: 700;
         font-display: swap;
-        src: url(./fonts/Recoleta-Bold.ttf) ;
+        src: url(./fonts/Recoleta-Bold.ttf) format("truetype") ;
     }
 }
 

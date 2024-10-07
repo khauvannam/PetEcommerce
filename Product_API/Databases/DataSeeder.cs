@@ -5,7 +5,7 @@ using Product_API.Domains.Products;
 
 namespace Product_API.Databases;
 
-public static class DataSeeder
+public class DataSeeder
 {
     public static void SeedCategory(IServiceProvider provider)
     {
@@ -48,9 +48,10 @@ public static class DataSeeder
     public static void SeedProduct(IServiceProvider provider)
     {
         using var scope = provider.CreateScope();
+        var random = new Random();
         var dbContext = scope.ServiceProvider.GetRequiredService<ProductDbContext>();
 
-        if (dbContext.Products.Count() >= 50)
+        if (dbContext.Products.Count() >= 100)
             return;
 
         var faker = new Faker();
@@ -64,7 +65,7 @@ public static class DataSeeder
             .Select(c => c.CategoryId)
             .ToList();
 
-        for (var i = 0; i < 50; i++)
+        for (var i = 0; i < 100; i++)
         {
             List<ProductVariant> productVariants = [];
 
@@ -76,7 +77,7 @@ public static class DataSeeder
             }
 
             var product = Product.Create(
-                commerceFaker.ProductName(),
+                $"{commerceFaker.ProductName()}-{random.Next(1, 101)}",
                 commerceFaker.ProductDescription(),
                 commerceFaker.ProductDescription(),
                 faker.PickRandom(categoryIdList)
@@ -94,17 +95,23 @@ public static class DataSeeder
 
             var comment1 = Comment.Create(
                 Guid.NewGuid(),
+                faker.Person.Email,
                 faker.Random.Number(1, 5),
+                commerceFaker.ProductDescription(),
                 commerceFaker.ProductDescription()
             );
             var comment2 = Comment.Create(
                 Guid.NewGuid(),
+                faker.Person.Email,
                 faker.Random.Number(1, 5),
+                commerceFaker.ProductDescription(),
                 commerceFaker.ProductDescription()
             );
             var comment3 = Comment.Create(
                 Guid.NewGuid(),
+                faker.Person.Email,
                 faker.Random.Number(1, 5),
+                commerceFaker.ProductDescription(),
                 commerceFaker.ProductDescription()
             );
 
