@@ -1,5 +1,5 @@
 using System.ComponentModel.DataAnnotations;
-using BasedDomain.Bases;
+using Base.Bases;
 
 namespace Order.API.Domains.ShippingMethods;
 

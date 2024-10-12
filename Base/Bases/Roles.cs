@@ -1,3 +1,3 @@
-﻿namespace BasedDomain.Bases;
+﻿namespace Base.Bases;
 
 internal static class Roles { }

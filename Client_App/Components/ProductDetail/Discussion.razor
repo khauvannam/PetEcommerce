@@ -1,0 +1,72 @@
+﻿@using Client_App.Components.Share
+@using Client_App.Domains.Comments.Responses
+
+<section class="bg-white dark:bg-gray-900 py-8 antialiased">
+    <div class="max-w-[1300px] mx-auto px-4">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-lg lg:text-2xl font-bold text-gray-900 dark:text-white">Discussion (@TotalItems)</h2>
+        </div>
+        <form class="mb-6">
+            <div class="py-2 px-4 mb-4 bg-white rounded-lg rounded-t-lg border border-gray-200 dark:bg-gray-800 dark:border-gray-700">
+                <label for="comment" class="sr-only">Your comment</label>
+                <textarea id="comment" rows="6"
+                class="px-0 w-full text-sm text-gray-900 border-0 focus:ring-0 focus:outline-none dark:text-white dark:placeholder-gray-400 dark:bg-gray-800"
+                placeholder="Write a comment..." required></textarea>
+            </div>
+            <button type="submit"
+                    class="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-primary-700 rounded-lg focus:ring-4 focus:ring-primary-200 dark:focus:ring-primary-900 hover:bg-primary-800">
+                Post comment
+            </button>
+        </form>
+        @foreach (var comment in Comments)
+        {
+            <article class="p-6 text-base bg-white rounded-lg dark:bg-gray-900">
+                <footer class="flex justify-between items-center mb-2">
+                    <div class="flex items-center">
+                        <p class="inline-flex items-center mr-3 text-sm text-gray-900 dark:text-white font-semibold">
+                            <img
+                                class="mr-2 w-6 h-6 rounded-full"
+                                src="https://flowbite.com/docs/images/people/profile-picture-2.jpg"
+                                alt="@comment.BuyerEmail">@comment.BuyerEmail
+                        </p>
+                        <p class="text-sm text-gray-600 dark:text-gray-400">
+                            <time pubdate datetime="2022-02-08"
+                                  title="February 8th, 2022">
+                                @comment.UpdatedAt
+                            </time>
+                        </p>
+                    </div>
+                </footer>
+                <div class="my-2">
+                    <Rating TotalRating="@comment.Rating"/>
+                </div>
+                <h3 class="my-2 text-2xl font-heading_bold font-medium">@comment.Title</h3>
+                <p class="text-gray-500 dark:text-gray-400">
+                    @comment.Content
+                </p>
+                <div class="flex items-center mt-4 space-x-4 justify-between">
+                    <button type="button"
+                            class="flex items-center text-sm text-gray-500 hover:underline dark:text-gray-400 font-medium">
+                        <svg class="mr-1.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="rgba(107,114,128,1)">
+                            <path d="M12.001 4.52853C14.35 2.42 17.98 2.49 20.2426 4.75736C22.5053 7.02472 22.583 10.637 20.4786 12.993L11.9999 21.485L3.52138 12.993C1.41705 10.637 1.49571 7.01901 3.75736 4.75736C6.02157 2.49315 9.64519 2.41687 12.001 4.52853ZM18.827 6.1701C17.3279 4.66794 14.9076 4.60701 13.337 6.01687L12.0019 7.21524L10.6661 6.01781C9.09098 4.60597 6.67506 4.66808 5.17157 6.17157C3.68183 7.66131 3.60704 10.0473 4.97993 11.6232L11.9999 18.6543L19.0201 11.6232C20.3935 10.0467 20.319 7.66525 18.827 6.1701Z"></path>
+                        </svg>
+                        Like
+                    </button>
+                    <div class="text-gray-500 flex">
+                        <p class="mr-2.5 hover:underline cursor-pointer">Edit</p>
+                        <p class="mr-2.5 hover:underline cursor-pointer">Delete</p>
+                        <p class="mr-2.5 hover:underline cursor-pointer">Report</p>
+                    </div>
+                </div>
+
+            </article>
+        }
+    </div>
+</section>
+
+@code {
+    [Parameter] public required List<Comment> Comments { get; set; }
+    [Parameter] public required int TotalItems { get; set; }
+    
+    
+}

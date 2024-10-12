@@ -9,15 +9,15 @@ public class RefreshToken
 
     [Key]
     [MaxLength(255)]
-    public string TokenId { get; private set; }
+    public string TokenId { get; private set; } = null!;
 
     [MaxLength(255)]
-    public string Token { get; private set; }
+    public string Token { get; private set; } = null!;
 
     public DateTime ExpiredAt { get; private set; }
 
     [MaxLength(450)]
-    public string UserId { get; init; } = null!;
+    public Guid UserId { get; init; }
 
     public User User { get; init; } = null!;
 

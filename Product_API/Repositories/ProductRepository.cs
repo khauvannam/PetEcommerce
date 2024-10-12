@@ -1,5 +1,5 @@
-﻿using BasedDomain;
-using BasedDomain.Results;
+﻿using Base;
+using Base.Results;
 using Microsoft.EntityFrameworkCore;
 using Product_API.Databases;
 using Product_API.Domains.Products;
@@ -36,7 +36,7 @@ public class ProductRepository(ProductDbContext dbContext) : IProductRepository
                 ProductId = p.ProductId,
                 CreatedAt = p.CreatedAt,
                 Description = p.Description,
-                DiscountPercent = p.DiscountPercent,
+                DiscountPercent = p.DiscountPercent.Value,
                 ImageUrl = p.ImageUrlList[0],
                 Name = p.Name,
                 Price = p.ProductVariants[0].OriginalPrice.Value,
@@ -94,7 +94,7 @@ public class ProductRepository(ProductDbContext dbContext) : IProductRepository
             : Result.Success(product);
     }
 
-    public async Task<Result<Product>> GetInDetailByIdAsync(
+    public async Task<Result<ProductByIdResponse>> GetInDetailByIdAsync(
         Guid productId,
         CancellationToken cancellationToken
     )
@@ -106,8 +106,10 @@ public class ProductRepository(ProductDbContext dbContext) : IProductRepository
             .AsNoTracking()
             .FirstOrDefaultAsync(p => p.ProductId == productId, cancellationToken);
 
+        var productResponse = Product.ToProductByIdResponse(product!);
+
         return product == null
-            ? Result.Failure<Product>(ProductErrors.NotFound)
-            : Result.Success(product);
+            ? Result.Failure<ProductByIdResponse>(ProductErrors.NotFound)
+            : Result.Success(productResponse);
     }
 }

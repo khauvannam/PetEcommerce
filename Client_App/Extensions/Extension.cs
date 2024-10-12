@@ -1,5 +1,6 @@
 using Client_App.Components.Home;
 using Client_App.Domains.Categories.Responses;
+using Client_App.Domains.Comments.Responses;
 using Client_App.Domains.Products.Responses;
 using Client_App.Interfaces;
 using Client_App.Services;
@@ -29,7 +30,8 @@ public static class Extension
 
     public static void AddFetchApiService(this IServiceCollection services)
     {
-        services.AddScoped<ICategoryService<CategoriesInList, CategoryById>, CategoryService>();
-        services.AddScoped<IProductService<ProductsInList, ProductById>, ProductService>();
+        services.AddScoped<ICategoryService, CategoryService>();
+        services.AddScoped<IProductService, ProductService>();
+        services.AddScoped<ICommentService, CommentService>();
     }
 }

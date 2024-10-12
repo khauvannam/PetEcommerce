@@ -1,5 +1,6 @@
 ﻿@using Client_App.Domains.Products.Responses
 @using Client_App.Components.Share
+
 <div class="w-6/12 ml-10 pr-5">
     @if (ProductById.SoldQuantity > 100)
     {
@@ -20,10 +21,7 @@
             <p class="ms-1 font-medium text-gray-500 dark:text-gray-400">@ProductById.TotalRating</p>
         </div>
         <div class="ml-3">
-            <p class="font-medium text-green-600 text-xl">@ProductById.Comments.Count reviews</p>
-        </div>
-        <div class="ml-3">
-            <p class="font-medium text-xl">@ProductById.SoldQuantity Sold</p>
+            <p class="font-light text-emerald-600 text-xl">@ProductById.SoldQuantity Sold</p>
         </div>
     </div>
 
@@ -33,12 +31,12 @@
         </div>
         <div class="text-gray-500 line-through mx-3">$@Price.ToString("F2")</div>
         <div class=" whitespace-nowrap bg-red-100 text-red-600 px-2 py-1 rounded ">
-            SAVE @ProductById.DiscountPercent.Value%
+            SAVE @(ProductById.DiscountPercent)%
         </div>
     </div>
     <div class="w-full pt-2">
         <div class="mb-2">
-            <p class="font-semibold font-heading text-xl text-gray-600">Variants</p>
+            <p class="font-semibold font-heading text-xl text-gray-600">Size</p>
         </div>
         <select name="variants" class="outline-none hover:border-[#FADC6F] w-full border-[#00205c] border-2 border-solid py-3 px-8 rounded-sm text-main" @bind="Price">
             @foreach (var variant in ProductById.ProductVariants)
@@ -111,7 +109,7 @@
         <div class="py-1">
             <div class=" flex w-full px-2">
                 <div class="flex justify-between items-center w-full cursor-pointer" @onclick="() => ToggleSection(nameof(ProductById.ProductUseGuide))">
-                         <div class="font-medium text-xl text-gray-600 flex">
+                    <div class="font-medium text-xl text-gray-600 flex">
                         <span class="pr-2">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="rgba(75,85,99,1)">
                                 <path d="M5.99805 3C9.48787 3 12.3812 5.55379 12.9112 8.8945C14.0863 7.72389 15.7076 7 17.498 7H21.998V9.5C21.998 13.0899 19.0879 16 15.498 16H12.998V21H10.998V13H8.99805C5.13205 13 1.99805 9.86599 1.99805 6V3H5.99805ZM19.998 9H17.498C15.0128 9 12.998 11.0147 12.998 13.5V14H15.498C17.9833 14 19.998 11.9853 19.998 9.5V9ZM5.99805 5H3.99805V6C3.99805 8.76142 6.23662 11 8.99805 11H10.998V10C10.998 7.23858 8.75947 5 5.99805 5Z"></path>
@@ -155,7 +153,7 @@
 
     private string CalculateDiscountPrice(ProductById productById, decimal price)
     {
-        return (price * productById.DiscountPercent.Value / 100).ToString("F2");
+        return (price * productById.DiscountPercent / 100).ToString("F2");
     }
 
     private void AdjustQuantity(char behavior)

@@ -16,7 +16,7 @@ public static class Extension
 {
     public static void AddDatabase(this WebApplicationBuilder builder)
     {
-        var conn = ConnString.SqlServer();
+        var conn = ConnString.SqlServer(database: "UserDatabase");
         builder.Services.AddDbContext<UserDbContext>(opt => opt.UseSqlServer(conn));
     }
 

@@ -1,5 +1,5 @@
-﻿using BasedDomain;
-using BasedDomain.Results;
+﻿using Base;
+using Base.Results;
 using Product_API.Domains.Products;
 using Product_API.DTOs.Products;
 using Product_API.Features.Products;
@@ -13,5 +13,8 @@ public interface IProductRepository
     Task<Result> DeleteAsync(Product product, CancellationToken cancellationToken);
     Task<Result<Product>> UpdateAsync(Product product, CancellationToken cancellationToken);
     Task<Result<Product>> GetByIdAsync(Guid productId, CancellationToken cancellationToken);
-    Task<Result<Product>> GetInDetailByIdAsync(Guid productId, CancellationToken cancellationToken);
+    Task<Result<ProductByIdResponse>> GetInDetailByIdAsync(
+        Guid productId,
+        CancellationToken cancellationToken
+    );
 }

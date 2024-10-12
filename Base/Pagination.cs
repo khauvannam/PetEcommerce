@@ -1,4 +1,4 @@
-﻿namespace BasedDomain;
+﻿namespace Base;
 
 public record Pagination<T>(List<T> Data, int TotalItems)
 {

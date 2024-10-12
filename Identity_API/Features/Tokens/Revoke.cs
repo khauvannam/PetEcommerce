@@ -1,4 +1,4 @@
-﻿using BasedDomain.Results;
+﻿using Base.Results;
 using FluentValidation;
 using Identity.API.Interfaces;
 using MediatR;

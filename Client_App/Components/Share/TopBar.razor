@@ -1,48 +1,102 @@
-<div class="w-full flex justify-center items-center border-b-2">
-    <div class="w-full max-w-[1300px] flex justify-between">
+@using Client_App.Domains.Categories.Responses
+<div class="w-full flex justify-center items-center border-b-2 bg-white">
+    <div class="w-full max-w-[1300px] flex justify-between items-center">
+        <!-- Logo -->
         <div class="flex items-center">
-           <a href="/" class="text-4xl text-main font-heading font-extrabold uppercase">PETSHOP</a> 
+            <a href="/" class="text-3xl md:text-4xl text-main font-heading font-extrabold uppercase">PET SHOP</a>
         </div>
-        <div class="flex">
+
+        <!-- Navigation Links -->
+        <div class="hidden md:flex tracking-wider">
             <div class="p-5 font-thin flex justify-center items-center text-main">
-                <NavLink class="group" href="products/all">
+                <NavLink class="group" href="/products/all">
                     SHOP ALL
-                    <span class="block max-w-0 group-hover:max-w-full transition-all duration-300 h-0.5 bg-[#2d4d6c]"></span>
+                    <span
+                        class="block max-w-0 group-hover:max-w-full transition-all duration-300 h-0.5 bg-[#2d4d6c]">
+                    </span>
                 </NavLink>
             </div>
             <div class="p-5 font-thin flex justify-center items-center text-main">
-                <a class="group" href="">
-                    EXPLORE PRODUCTS
-                    <span class="block max-w-0 group-hover:max-w-full transition-all duration-300 h-0.5 bg-[#2d4d6c]"></span>
-                </a>
+                <div class="relative group" @onmouseout="OnMouseOut" @onmouseover="OnMouseOver">
+                    <div class="flex">
+                        <p class="">
+                            EXPLORE SOLUTIONS
+                            <span
+                                class="block max-w-0 group-hover:max-w-full transition-all duration-300 h-0.5 bg-[#2d4d6c]">
+                            </span>
+                        </p>
+                        <span class="ml-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"
+                                 fill="rgba(45,77,108,1)">
+                                <path
+                                    d="M11.9999 13.1714L16.9497 8.22168L18.3639 9.63589L11.9999 15.9999L5.63599 9.63589L7.0502 8.22168L11.9999 13.1714Z">
+                                </path>
+                            </svg>
+                        </span>
+                    </div>
+                    <div
+                        class="border-2 bg-white border-solid border-[#f2f2f2] pt-2.5 px-4 pb-5 absolute text-main top-full w-full border-t-0 duration-300 ease-in flex-col flex items-center  @(IsVisible ? "opacity-100" : "opacity-0")">
+                        @foreach (var category in Categories!)
+                        {
+                            const string classes = "py-1.5 text-sm text-main font-thin uppercase opacity-100 whitespace-nowrap text-start w-full hover:underline duration-300 transition-all ease-in tracking-wider";
+
+                            <NavLink href=@($"/products/{category.Endpoint}")
+                                     class="@classes">
+                                @category.CategoryName
+                            </NavLink>
+                        }
+                    </div>
+                </div>
             </div>
-            <NavLink class="p-5 font-thin flex justify-center items-center text-main">
-                <a class="group" href="/products/best-sellers">
+            <div class="p-5 font-thin flex justify-center items-center text-main">
+                <NavLink class="group" href="/products/best-sellers">
                     BEST SELLERS
-                    <span class="block max-w-0 group-hover:max-w-full transition-all duration-300 h-0.5 bg-[#2d4d6c]"></span>
-                </a>
-            </NavLink>
+                    <span
+                        class="block max-w-0 group-hover:max-w-full transition-all duration-300 h-0.5 bg-[#2d4d6c]">
+                    </span>
+                </NavLink>
+            </div>
         </div>
-        <div class="flex">
-            <NavLink href="login" class="p-2.5 justify-center items-center flex">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="rgba(45,77,108,1)">
-                    <path d="M4 22C4 17.5817 7.58172 14 12 14C16.4183 14 20 17.5817 20 22H18C18 18.6863 15.3137 16 12 16C8.68629 16 6 18.6863 6 22H4ZM12 13C8.685 13 6 10.315 6 7C6 3.685 8.685 1 12 1C15.315 1 18 3.685 18 7C18 10.315 15.315 13 12 13ZM12 11C14.21 11 16 9.21 16 7C16 4.79 14.21 3 12 3C9.79 3 8 4.79 8 7C8 9.21 9.79 11 12 11Z"></path>
+
+        <!-- Icons for Login, Search, Cart -->
+        <div class="flex items-center space-x-4">
+            <NavLink href="/login" class="p-2.5 flex justify-center items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"
+                     fill="rgba(45,77,108,1)">
+                    <path
+                        d="M4 22C4 17.5817 7.58172 14 12 14C16.4183 14 20 17.5817 20 22H18C18 18.6863 15.3137 16 12 16C8.68629 16 6 18.6863 6 22H4ZM12 13C8.685 13 6 10.315 6 7C6 3.685 8.685 1 12 1C15.315 1 18 3.685 18 7C18 10.315 15.315 13 12 13ZM12 11C14.21 11 16 9.21 16 7C16 4.79 14.21 3 12 3C9.79 3 8 4.79 8 7C8 9.21 9.79 11 12 11Z"/>
                 </svg>
             </NavLink>
-            <a class="p-2.5 justify-center items-center flex">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="rgba(45,77,108,1)">
-                    <path d="M18.031 16.6168L22.3137 20.8995L20.8995 22.3137L16.6168 18.031C15.0769 19.263 13.124 20 11 20C6.032 20 2 15.968 2 11C2 6.032 6.032 2 11 2C15.968 2 20 6.032 20 11C20 13.124 19.263 15.0769 18.031 16.6168ZM16.0247 15.8748C17.2475 14.6146 18 12.8956 18 11C18 7.1325 14.8675 4 11 4C7.1325 4 4 7.1325 4 11C4 14.8675 7.1325 18 11 18C12.8956 18 14.6146 17.2475 15.8748 16.0247L16.0247 15.8748Z"></path>
+            <NavLink href="/search" class="p-2.5 flex justify-center items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"
+                     fill="rgba(45,77,108,1)">
+                    <path
+                        d="M18.031 16.6168L22.3137 20.8995L20.8995 22.3137L16.6168 18.031C15.0769 19.263 13.124 20 11 20C6.032 20 2 15.968 2 11C2 6.032 6.032 2 11 2C15.968 2 20 6.032 20 11C20 13.124 19.263 15.0769 18.031 16.6168ZM16.0247 15.8748C17.2475 14.6146 18 12.8956 18 11C18 7.1325 14.8675 4 11 4C7.1325 4 4 7.1325 4 11C4 14.8675 7.1325 18 11 18C12.8956 18 14.6146 17.2475 15.8748 16.0247L16.0247 15.8748Z"/>
                 </svg>
-            </a>
-            <a class="p-2.5 justify-center items-center flex">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="rgba(45,77,108,1)">
-                    <path d="M12.0049 2C15.3186 2 18.0049 4.68629 18.0049 8V9H22.0049V11H20.8379L20.0813 20.083C20.0381 20.6013 19.6048 21 19.0847 21H4.92502C4.40493 21 3.97166 20.6013 3.92847 20.083L3.17088 11H2.00488V9H6.00488V8C6.00488 4.68629 8.69117 2 12.0049 2ZM18.8309 11H5.17788L5.84488 19H18.1639L18.8309 11ZM13.0049 13V17H11.0049V13H13.0049ZM9.00488 13V17H7.00488V13H9.00488ZM17.0049 13V17H15.0049V13H17.0049ZM12.0049 4C9.86269 4 8.1138 5.68397 8.00978 7.80036L8.00488 8V9H16.0049V8C16.0049 5.8578 14.3209 4.10892 12.2045 4.0049L12.0049 4Z"></path>
+            </NavLink>
+            <NavLink href="/cart" class="p-2.5 flex justify-center items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"
+                     fill="rgba(45,77,108,1)">
+                    <path
+                        d="M12.0049 2C15.3186 2 18.0049 4.68629 18.0049 8V9H22.0049V11H20.8379L20.0813 20.083C20.0381 20.6013 19.6048 21 19.0847 21H4.92502C4.40493 21 3.97166 20.6013 3.92847 20.083L3.17088 11H2.00488V9H6.00488V8C6.00488 4.68629 8.69117 2 12.0049 2ZM18.8309 11H5.17788L5.84488 19H18.1639L18.8309 11ZM13.0049 13V17H11.0049V13H13.0049ZM9.00488 13V17H7.00488V13H9.00488ZM17.0049 13V17H15.0049V13H17.0049ZM12.0049 4C9.86269 4 8.1138 5.68397 8.00978 7.80036L8.00488 8V9H16.0049V8C16.0049 5.8578 14.3209 4.10892 12.2045 4.0049L12.0049 4Z"/>
                 </svg>
-            </a>
+            </NavLink>
         </div>
     </div>
 </div>
 
 @code {
+    [Parameter] public List<Category>? Categories { get; set; }
+    private bool IsVisible { get; set; } = false;
+
+    private void OnMouseOver()
+    {
+        IsVisible = true;
+    }
+
+    private void OnMouseOut()
+    {
+        IsVisible = false;
+    }
 
 }

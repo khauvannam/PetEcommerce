@@ -1,4 +1,4 @@
-using BasedDomain.Results;
+using Base.Results;
 using MediatR;
 using Newtonsoft.Json;
 using Product_API.Domains.Discounts;

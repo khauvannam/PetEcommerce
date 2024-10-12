@@ -1,22 +1,30 @@
 @using Client_App.Components.Share
+
+
 <div class="pb-20 w-full flex justify-center items-center">
     <div class="w-full max-w-[1300px] flex-col flex items-center">
         <h3 class="pb-6 text-center">
-            <span class="text-2xl text-main font-bold">Honest Paws essentials</span><span class="text-4xl text-main">-</span><span class="italic text-2xl text-main font-bold">Daily Routines. Long Term Benefits.</span>
-            <p class="text-main pt-2">Their products are science-backed and formulated by a team of scientists, veterinarians, and PhDs.</p>
+            <span class="text-xl sm:text-2xl text-main font-bold">Honest Paws essentials</span>
+            <span class="text-2xl sm:text-4xl text-main">-</span>
+            <span class="italic text-xl sm:text-2xl text-main font-bold">Daily Routines. Long Term Benefits.</span>
+            <p class="text-main pt-2 text-sm sm:text-base">
+                Their products are science-backed and formulated by a team of scientists, veterinarians, and PhDs.
+            </p>
         </h3>
-        <div class="flex justify-between w-full">
-            <div class="w-6/12 pt-10">
-                <img src="./images/index/science-backed.webp" alt="">
+        <div class="flex flex-col lg:flex-row justify-between w-full px-5 md:px-10">
+            <div class="w-full lg:w-6/12 pt-10">
+                <img src="./images/home/science-backed.webp" alt="">
             </div>
-            <div class="w-5/12 flex flex-col justify-center ">
+            <div class="w-full lg:w-5/12 flex flex-col justify-center md:items-start items-center lg:pt-0 lg-- pt-4 ">
                 <div class="pb-6">
-                    <p class="font-bold text-2xl text-main">
+                    <p class="font-bold text-xl sm:text-2xl text-main">
                         Science-backed
                     </p>
                 </div>
                 <div class="text-main">
-                    <p>We're committed to revolutionizing pet health with premium, scientifically formulated products. Made in the USA, by a team of scientists, veterinarians, and PhDs, we prioritize effective and organic ingredients for clean-crafted health solutions. We're transparent every step of the way, empowering pet parents with trust and confidence. With Honest Paws, pets receive the care they deserve for a vibrant, fulfilling life.</p>
+                    <p class="text-sm sm:text-base">
+                        We're committed to revolutionizing pet health with premium, scientifically formulated products. Made in the USA, by a team of scientists, veterinarians, and PhDs, we prioritize effective and organic ingredients for clean-crafted health solutions. We're transparent every step of the way, empowering pet parents with trust and confidence. With Honest Paws, pets receive the care they deserve for a vibrant, fulfilling life.
+                    </p>
                 </div>
                 <div class="pt-10 max-w-[335px] w-full">
                     <CustomButton Value="Learn More"/>
@@ -25,6 +33,7 @@
         </div>
     </div>
 </div>
+
 
 @code {
 

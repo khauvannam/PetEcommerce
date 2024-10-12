@@ -5,7 +5,7 @@ using Product_API.Domains.Products;
 
 namespace Product_API.Databases;
 
-public class DataSeeder
+public static class DataSeeder
 {
     public static void SeedCategory(IServiceProvider provider)
     {
@@ -65,7 +65,7 @@ public class DataSeeder
             .Select(c => c.CategoryId)
             .ToList();
 
-        for (var i = 0; i < 100; i++)
+        for (var i = 0; i < 200; i++)
         {
             List<ProductVariant> productVariants = [];
 
@@ -93,26 +93,29 @@ public class DataSeeder
                 productVariants.Add(variant);
             }
 
+            var commentDescription =
+                $"{commerceFaker.ProductDescription()} {commerceFaker.ProductName()} {commerceFaker.ProductDescription()}";
+
             var comment1 = Comment.Create(
                 Guid.NewGuid(),
                 faker.Person.Email,
                 faker.Random.Number(1, 5),
                 commerceFaker.ProductDescription(),
-                commerceFaker.ProductDescription()
+                commentDescription
             );
             var comment2 = Comment.Create(
                 Guid.NewGuid(),
                 faker.Person.Email,
                 faker.Random.Number(1, 5),
                 commerceFaker.ProductDescription(),
-                commerceFaker.ProductDescription()
+                commentDescription
             );
             var comment3 = Comment.Create(
                 Guid.NewGuid(),
                 faker.Person.Email,
                 faker.Random.Number(1, 5),
                 commerceFaker.ProductDescription(),
-                commerceFaker.ProductDescription()
+                commentDescription
             );
 
             product.AddComment(comment1);

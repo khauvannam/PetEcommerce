@@ -1,4 +1,4 @@
-﻿using BasedDomain.Results;
+﻿using Base.Results;
 using FluentValidation;
 using Identity.API.Domains.Users;
 using Identity.API.Helpers;
@@ -15,7 +15,7 @@ public static class Register
         public required string Username { get; init; }
         public required string Password { get; init; }
         public required string PhoneNumber { get; init; }
-        public Address? Address { get; init; }
+        public required Address Address { get; init; }
     }
 
     public sealed class Handler(IUserRepository repository, IValidator<Command> validator)
@@ -27,7 +27,7 @@ public static class Register
 
             if (!validateResult.IsValid)
             {
-                var errors = validateResult.Errors.Select(x => x.ErrorMessage).ToString();
+                var errors = string.Join(", ", validateResult.Errors.Select(x => x.ErrorMessage));
                 return Result.Failure(new(nameof(Command), $"Invalid request : {errors}"));
             }
 
@@ -39,15 +39,12 @@ public static class Register
                 PhoneNumber = request.PhoneNumber,
             };
 
-            var city = request.Address?.City;
-            var street = request.Address?.Street;
-            var zipCode = request.Address?.ZipCode;
+            var city = request.Address.City;
+            var street = request.Address.Street;
+            var zipCode = request.Address.ZipCode;
 
-            if (street != null && city != null && zipCode != null)
-            {
-                var address = Address.Create(street, city, zipCode);
-                user.UpdateAddress(address);
-            }
+            var address = Address.Create(street, city, zipCode);
+            user.UpdateAddress(address);
 
             return await repository.Register(user, request.Password);
         }

@@ -1,8 +1,7 @@
-﻿@using BasedDomain
-@using Client_App.Domains.Categories.Responses
+﻿@using Client_App.Domains.Categories.Responses
+@using Client_App.Domains.Share
 
-
-<div class="w-full pt-10 px-10 flex justify-center  ">
+<div class="w-full pt-10 px-5 md:px-10 flex justify-center">
     <div class="w-full max-w-[1300px] flex gap-5 flex-wrap">
         @foreach (var category in Categories.Data)
         {
@@ -14,29 +13,28 @@
 </div>
 
 @* Features Section *@
-<div class="w-full pt-10 px-10 flex justify-center">
-    <div class="w-full max-w-[1300px] flex justify-center gap-10">
+<div class="w-full pt-10 px-5 md:px-10 flex justify-center">
+    <div class="w-full max-w-[1300px] flex flex-col md:flex-row justify-center gap-10">
         <div class="flex flex-col items-center">
-            <img class="max-h-[32px]" src="./images/index/icons/USA_200x.svg" alt="USA Made">
+            <img class="max-h-[32px]" src="./images/home/icons/USA_200x.svg" alt="USA Made">
             <span class="text-main">USA Made</span>
         </div>
         <div class="flex flex-col items-center">
-            <img class="max-h-[32px]" src="./images/index/icons/traceble.svg" alt="100% Traceable">
+            <img class="max-h-[32px]" src="./images/home/icons/traceble.svg" alt="100% Traceable">
             <span class="text-main">100% Traceable</span>
         </div>
         <div class="flex flex-col items-center">
-            <img class="max-h-[32px]" src="./images/index/icons/lab.svg" alt="Lab Tested">
+            <img class="max-h-[32px]" src="./images/home/icons/lab.svg" alt="Lab Tested">
             <span class="text-main">Lab Tested</span>
         </div>
         <div class="flex flex-col items-center">
-            <img class="max-h-[32px]" src="./images/index/icons/orgainc.svg" alt="USDA Organic">
+            <img class="max-h-[32px]" src="./images/home/icons/orgainc.svg" alt="USDA Organic">
             <span class="text-main">USDA Organic</span>
         </div>
     </div>
 </div>
 
-@code {
-    [Parameter] public required Pagination<CategoriesInList> Categories { get; set; } 
-    [Parameter] public CategoryById CategoryById { get; set; } = null!;
 
+@code {
+    [Parameter] public required Pagination<Category> Categories { get; set; }
 }

@@ -1,4 +1,4 @@
-﻿namespace BasedDomain.Results;
+﻿namespace Client_App.Domains.Share;
 
 public static class Errors
 {

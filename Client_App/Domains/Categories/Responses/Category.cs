@@ -1,6 +1,6 @@
 ﻿namespace Client_App.Domains.Categories.Responses;
 
-public class CategoriesInList
+public class Category
 {
     public int CategoryId { get; set; }
     public string Endpoint { get; set; } = null!;

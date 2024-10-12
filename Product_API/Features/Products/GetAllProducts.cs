@@ -1,5 +1,5 @@
-﻿using BasedDomain;
-using BasedDomain.Results;
+﻿using Base;
+using Base.Results;
 using MediatR;
 using Product_API.Domains.Products;
 using Product_API.DTOs.Products;

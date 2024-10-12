@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 using Product_API.Domains.Products;
 
 namespace Product_API.Domains.Comments;
@@ -18,11 +19,13 @@ public class Comment
     [MaxLength(255)]
     public string Title { get; private set; } = null!;
 
-    [MaxLength(255)]
+    [MaxLength(510)]
     public string Content { get; private set; } = null!;
 
     public DateTime CreatedAt { get; private init; } = DateTime.Now;
     public DateTime UpdatedAt { get; private set; } = DateTime.Now;
+
+    [JsonIgnore]
     public Product Product { get; init; } = null!;
     public Guid? ProductId { get; private set; }
 
@@ -64,6 +67,7 @@ public class Comment
             ProductId = productId;
             return;
         }
+
         throw new InvalidOperationException("Products can only be assign one time.");
     }
 }

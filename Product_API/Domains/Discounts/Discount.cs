@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
-using BasedDomain.Bases;
+using Base.Bases;
 
 namespace Product_API.Domains.Discounts;
 

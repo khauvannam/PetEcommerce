@@ -1,4 +1,4 @@
-﻿using BasedDomain.Bases;
+﻿using Base.Bases;
 
 namespace Order.API.Domains.Payments;
 

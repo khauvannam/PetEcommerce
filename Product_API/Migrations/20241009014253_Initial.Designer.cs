@@ -13,7 +13,7 @@ using Product_API.Databases;
 namespace Product_API.Migrations
 {
     [DbContext(typeof(ProductDbContext))]
-    [Migration("20241007005649_Initial")]
+    [Migration("20241009014253_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -82,8 +82,8 @@ namespace Product_API.Migrations
 
                     b.Property<string>("Content")
                         .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
+                        .HasMaxLength(510)
+                        .HasColumnType("nvarchar(510)");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");

@@ -1,26 +1,26 @@
 @using Client_App.Domains.Products.Responses
 @using Client_App.Components.Share
 
-<div class="w-full px-20 py-10 bg-[#f0f5ff] text-main flex justify-center">
+<div class="w-full px-4 md:px-10 py-10 bg-[#f0f5ff] text-main flex justify-center">
     <div class="w-full max-w-[1440px]">
         <div class="flex justify-between capitalize px-4">
-            <h1 class="text-2xl font-extrabold font-heading">Best Sellers</h1>
+            <h1 class="text-xl md:text-2xl font-extrabold font-heading">Best Sellers</h1>
             <h3>
                 <NavLink href="/products/all" class="underline">Shop all</NavLink>
             </h3>
         </div>
-        <div class="flex w-full max-w-[1440px] justify-between pt-12">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 pt-12">
             @if (Products.Count > 0)
             {
-                @foreach (var product in Products)
+                @foreach (var product in Products.Take(4))
                 {
-                    <NavLink href="@($"/product/{product.ProductId}")" class="flex flex-col justify-between bg-[#f0f5ff] items-center rounded-lg w-[300px] mt-4">
+                    <NavLink href="@($"/product/{product.ProductId}")" class="flex flex-col justify-between bg-[#f0f5ff] items-center rounded-lg p-4">
                         <div class="relative w-full flex justify-center bg-white rounded-lg">
                             <img class="h-[168px] object-fill w-full rounded-lg" src="@product.ImageUrl" alt="@product.Name">
                             <span class="text-main bg-[#FADC6F] absolute h-6 rounded-full flex items-center px-2.5 text-sm font-medium left-2.5 top-2.5">Best Seller</span>
                         </div>
-                        <p class="text-center my-4 py-3 text-xl font-bold  w-full">@product.Name</p>
-                        <p class="mb-5">@LimitDescription(product.Description!)</p>
+                        <p class="text-center my-4 text-xl font-bold w-full">@product.Name</p>
+                        <p class="mb-5">@LimitDescription(product.Description)</p>
                         <CustomButton Value="Learn more"/>
                     </NavLink>
                 }

@@ -1,5 +1,5 @@
-﻿using BasedDomain;
-using BasedDomain.Results;
+﻿using Base;
+using Base.Results;
 using Microsoft.EntityFrameworkCore;
 using Product_API.Databases;
 using Product_API.Domains.Comments;
@@ -40,14 +40,18 @@ public class CommentRepository(ProductDbContext dbContext) : ICommentRepository
         return Result.Success(comment);
     }
 
-    public async Task<Result<Pagination<Comment>>> GetAllAsync(Guid? productId)
+    public async Task<Result<Pagination<Comment>>> GetAllAsync(
+        int limit,
+        int offset,
+        Guid? productId
+    )
     {
         var query = dbContext.Comments.AsQueryable().AsNoTracking();
         if (productId is not null)
         {
             query = query.Where(c => c.ProductId == productId);
         }
-        var comments = await query.ToListAsync();
+        var comments = await query.Skip(offset).Take(limit).ToListAsync();
 
         var pagination = new Pagination<Comment>(comments, query.Count());
 

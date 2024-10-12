@@ -46,7 +46,7 @@ public class ProductController(ISender sender) : ControllerBase
         [FromQuery] int limit,
         [FromQuery] int offset,
         [FromQuery] bool isBestSeller = false,
-        [FromQuery] int? categoryId = null
+        [FromQuery] int? categoryId = default
     )
     {
         var result = await sender.Send(

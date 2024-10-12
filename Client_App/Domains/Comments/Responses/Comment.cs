@@ -1,10 +1,9 @@
-﻿namespace Client_App.Domains.Comments;
+﻿namespace Client_App.Domains.Comments.Responses;
 
 public class Comment
 {
     public int CommentId { get; init; }
     public Guid BuyerId { get; init; }
-
     public required string BuyerEmail { get; init; }
     public int Rating { get; init; }
 

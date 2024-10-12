@@ -1,7 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
-using BasedDomain.Bases;
+using Base.Bases;
 using Product_API.Domains.Comments;
+using Product_API.DTOs.Products;
 
 namespace Product_API.Domains.Products;
 
@@ -175,6 +176,25 @@ public class Product : AggregateRoot
             .ToList();
 
         return productVariantsOrderByPrice[0].OriginalPrice.Value;
+    }
+
+    public static ProductByIdResponse ToProductByIdResponse(Product product)
+    {
+        return new ProductByIdResponse(
+            ProductId: product.ProductId,
+            Name: product.Name,
+            Description: product.Description,
+            ProductUseGuide: product.ProductUseGuide,
+            TotalRating: product.TotalRating,
+            SoldQuantity: product.SoldQuantity,
+            TotalQuantity: product.TotalQuantity,
+            DiscountPercent: product.DiscountPercent.Value, // Assumes DiscountPercent is never null
+            CreatedAt: product.CreatedAt,
+            UpdatedAt: product.UpdatedAt,
+            CategoryId: product.CategoryId,
+            ProductVariants: product.ProductVariants, // Directly mapping ProductVariants
+            ImageUrlList: product.ImageUrlList
+        );
     }
 }
 

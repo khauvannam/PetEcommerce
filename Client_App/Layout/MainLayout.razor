@@ -1,9 +1,14 @@
 ﻿@using Client_App.Components.Share
+@using Client_App.Domains.Categories.Responses
+@using Client_App.Interfaces
+
+@inject ICategoryService CategoryService;
+
 @inherits LayoutComponentBase
 
 <div>
     <nav>
-        <TopBar/>
+        <TopBar Categories="Categories"/>
     </nav>
 
     <main>
@@ -16,5 +21,13 @@
 </div>
 
 @code {
+    public List<Category> Categories = [];
+    private readonly List<string> _excludedCategories = ["best-sellers", "all"];
+
+    protected override async Task OnInitializedAsync()
+    {
+        Categories = (await CategoryService.GetAllAsync<Category>()).Data.Where(c => !_excludedCategories.Contains(c.Endpoint)).ToList();
+        StateHasChanged();
+    }
 
 }

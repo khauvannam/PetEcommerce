@@ -1,5 +1,5 @@
-using BasedDomain;
-using BasedDomain.Results;
+using Base;
+using Base.Results;
 using Microsoft.EntityFrameworkCore;
 using Product_API.Databases;
 using Product_API.Domains.Categories;

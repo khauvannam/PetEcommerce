@@ -4,6 +4,8 @@
 @using Client_App.Interfaces
 @using Client_App.Components.Share
 @using Client_App.Components.ProductDetail
+@using Client_App.Domains.Comments.Responses
+@using Client_App.Domains.Share
 
 
 @if (ProductById is not null)
@@ -14,26 +16,39 @@
     <div class="mt-20">
         <Overview ProductName="@ProductById.Name"/>
     </div>
-
-    <div class="mt-20">
-        <Comments/>
-    </div>
 }
 else
 {
     <Loading/>
 }
 
+@if (Pagination is not null)
+{
+    <div class="mt-10">
+        <Discussion TotalItems="Pagination.TotalItems" Comments="Comments"/>
+    </div>
+}
 
 @code {
     [Parameter] public Guid ProductId { get; set; }
-    [Inject] public required IProductService<ProductsInList, ProductById> ProductService { get; set; }
-    public ProductById? ProductById { get; set; }
-    public List<ProductsInList>? ProductsInList { get; set; }
+
+    [Inject] public required IProductService ProductService { get; set; }
+    [Inject] public required ICommentService CommentService { get; set; }
+
+    private ProductById? ProductById { get; set; }
+    private List<Comment> Comments { get; } = [];
+    private Pagination<Comment>? Pagination { get; set; }
+    private static int Limit => 8;
+    private int Offset { get; set; }
+
 
     protected override async Task OnInitializedAsync()
     {
-        ProductById = await ProductService.GetByIdAsync(ProductId);
+        Offset = 0;
+        ProductById = await ProductService.GetByIdAsync<ProductById>(ProductId);
+        Pagination = await CommentService.GetAllByProductIdAsync<Comment>(Limit, Offset * Limit, ProductId);
+        Comments.AddRange(Pagination.Data);
     }
+
 
 }

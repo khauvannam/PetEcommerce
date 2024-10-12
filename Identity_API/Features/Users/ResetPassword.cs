@@ -1,4 +1,4 @@
-﻿using BasedDomain.Results;
+﻿using Base.Results;
 using FluentValidation;
 using Identity.API.Helpers;
 using Identity.API.Interfaces;

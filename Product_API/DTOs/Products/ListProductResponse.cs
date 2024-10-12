@@ -5,7 +5,7 @@ namespace Product_API.DTOs.Products;
 public record ListProductResponse
 {
     public Guid ProductId { get; init; }
-    public DiscountPercent DiscountPercent { get; init; } = null!;
+    public decimal DiscountPercent { get; init; }
     public string Name { get; init; } = null!;
     public string Description { get; init; } = null!;
     public string ImageUrl { get; init; } = null!;

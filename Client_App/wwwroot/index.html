@@ -15,7 +15,13 @@
 
 <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.1/dist/flowbite.min.js"></script>
 
-<script src="js/main.js">
+<script>
+    window.scrollToTop = function () {
+        const productList = document.getElementById("list-products");
+        if (productList) {
+            productList.scrollIntoView({behavior: "smooth"});
+        }
+    };
 </script>
 
 <script src="_framework/blazor.webassembly.js"></script>

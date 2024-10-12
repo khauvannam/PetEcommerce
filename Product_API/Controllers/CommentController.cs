@@ -51,9 +51,13 @@ public class CommentController(ISender sender) : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAll([FromQuery] Guid productId)
+    public async Task<IActionResult> GetAll(
+        [FromQuery] int limit,
+        [FromQuery] int offset,
+        [FromQuery] Guid? productId = default
+    )
     {
-        var result = await sender.Send(new GetAllComment.Query(productId));
+        var result = await sender.Send(new GetAllComment.Query(limit, offset, productId));
         if (!result.IsFailure)
             return Ok(result.Value);
 

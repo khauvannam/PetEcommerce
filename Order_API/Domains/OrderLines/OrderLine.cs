@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
-using BasedDomain.Bases;
+using Base.Bases;
 using Order.API.Domains.Orders;
 
 namespace Order.API.Domains.OrderLines;

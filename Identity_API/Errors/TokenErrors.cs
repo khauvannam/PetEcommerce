@@ -1,4 +1,4 @@
-﻿using BasedDomain.Results;
+﻿using Base.Results;
 
 namespace Identity.API.Errors;
 

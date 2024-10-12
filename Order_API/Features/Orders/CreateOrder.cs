@@ -1,4 +1,4 @@
-using BasedDomain.Results;
+using Base.Results;
 using MediatR;
 using Order.API.Domains.OrderLines;
 using Order.API.Domains.Orders;

@@ -1,4 +1,4 @@
-﻿using BasedDomain.Results;
+﻿using Base.Results;
 using Identity.API.Domains.Tokens;
 using Identity.API.DTOs.Tokens;
 using Identity.API.Features.Tokens;

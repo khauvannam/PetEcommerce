@@ -41,7 +41,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Customer_API", "Customer_AP
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Administrator_API", "Administrator_API\Administrator_API.csproj", "{0B5BEA92-2FF6-41EB-8A9C-02170E7E279C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BasedDomain", "BasedDomain\BasedDomain.csproj", "{402E2B2D-2583-41D5-AEFA-DC919065A5A7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Base", "Base\Base.csproj", "{402E2B2D-2583-41D5-AEFA-DC919065A5A7}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{98945BD6-0F94-4CB4-809C-060F1B2A00C2}"
 EndProject

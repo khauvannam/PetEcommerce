@@ -1,5 +1,5 @@
 ﻿using System.Security.Claims;
-using BasedDomain.Results;
+using Base.Results;
 using Identity.API.Databases;
 using Identity.API.Domains.Tokens;
 using Identity.API.Domains.Users;
@@ -46,7 +46,6 @@ internal class UserRepository(
             new("Username", user.UserName!),
             new("UserId", user.Id.ToString()),
             new("Email", user.Email!),
-            new("Avatar", user.Avatar),
         ];
 
         var accessToken = jwtHandler.GenerateAccessToken(claims);

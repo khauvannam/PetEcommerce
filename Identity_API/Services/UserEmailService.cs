@@ -1,4 +1,4 @@
-﻿using BasedDomain.Results;
+﻿using Base.Results;
 using Identity.API.Domains.Users;
 using Identity.API.Errors;
 using Microsoft.AspNetCore.Identity;

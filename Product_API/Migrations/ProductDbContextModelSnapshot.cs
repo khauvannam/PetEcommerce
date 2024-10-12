@@ -79,8 +79,8 @@ namespace Product_API.Migrations
 
                     b.Property<string>("Content")
                         .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
+                        .HasMaxLength(510)
+                        .HasColumnType("nvarchar(510)");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");

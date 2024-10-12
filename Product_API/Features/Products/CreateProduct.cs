@@ -1,4 +1,4 @@
-﻿using BasedDomain.Results;
+﻿using Base.Results;
 using FluentValidation;
 using MediatR;
 using Product_API.Domains.Products;

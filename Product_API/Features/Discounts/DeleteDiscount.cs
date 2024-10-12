@@ -1,4 +1,4 @@
-using BasedDomain.Results;
+using Base.Results;
 using MediatR;
 using Product_API.Events.DiscountEvents;
 using Product_API.Interfaces;

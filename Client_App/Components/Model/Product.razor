@@ -15,24 +15,26 @@
     </NavLink>
     <div class="w-full flex flex-col items-center">
         <div class="flex items-center w-full">
-            <p class="my-4 text-xl font-semibold w-full font-heading_bold">@ProductsInList.Name</p>
+            <p class="my-4 text-xl font-semibold w-full font-heading_bold truncate">@ProductsInList.Name</p>
         </div>
-        <p class="pb-4 font-light italic w-full">@(ProductsInList.Description![..30])...</p>
+        <p class="pb-4 font-light italic w-full truncate">@(ProductsInList.Description![..30])...</p>
 
         <div class="w-full flex">
             <Rating TotalRating="ProductsInList.TotalRating"/>
             <p class="ms-1 font-medium text-gray-500 dark:text-gray-400">@ProductsInList.TotalRating</p>
         </div>
 
-
-        <div class="flex items-center my-5 w-full">
-            <div class="text-2xl font-bold text-main ">
+        <div class="flex lg:items-center my-5 w-full lg:flex-row flex-col items-start ">
+            <div class="text-2xl font-bold text-main">
                 $@CalculateDiscountPrice(ProductsInList)
             </div>
             <div class="text-gray-500 line-through mx-3">$@ProductsInList.Price.ToString("F2")</div>
-            <div class=" whitespace-nowrap bg-red-100 text-red-600 px-2 py-1 rounded ">
-                SAVE @ProductsInList.DiscountPercent.Value%
-            </div>
+            @if (ProductsInList.DiscountPercent > 0)
+            {
+                <div class="whitespace-nowrap bg-red-100 text-red-600 px-2 py-1 rounded">
+                    SAVE @(ProductsInList.DiscountPercent)%
+                </div>
+            }
         </div>
         <CustomButton Value="Add To Cart"/>
     </div>
@@ -43,7 +45,7 @@
 
     private static string CalculateDiscountPrice(ProductsInList productsInList)
     {
-        return (productsInList.Price * productsInList.DiscountPercent.Value / 100).ToString("F2");
+        return (productsInList.Price * productsInList.DiscountPercent / 100).ToString("F2");
     }
 
 }

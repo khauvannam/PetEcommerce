@@ -1,8 +1,9 @@
 @using Client_App.Components.Share
-<div class="w-full px-10 flex justify-center">
-    <div class="w-full max-w-[1300px] justify-between flex">
-        <div class="w-5/12 mt-20">
-            <h1 class="text-4xl font-extrabold text-main uppercase font-heading">
+
+<div class="w-full px-5 md:px-10 py-10 md:py-14 flex justify-center">
+    <div class="w-full max-w-[1300px] flex flex-col md:flex-row justify-between">
+        <div class="w-full md:w-5/12 mt-10 md:mt-20">
+            <h1 class="text-3xl md:text-4xl font-extrabold text-main uppercase font-heading">
                 Every dog deserves to feel their best
             </h1>
             <p class="pt-4 pb-6 text-main">
@@ -11,23 +12,27 @@
             <div class="mb-12 w-full max-w-[335px]">
                 <CustomButton Value="Get Up to 40% Off"/>
             </div>
-            <div class="flex justify-between w-full gap-10">
-                <div class="flex flex-col gap-5 justify-center">
-                    <img class="max-h-[32px]" src="./images/index/icons/USA_200x.svg" alt=""><span class="text-main">USA Made</span>
+            <div class="flex flex-col md:flex-row justify-between w-full gap-10">
+                <div class="flex flex-col gap-3 md:gap-5 justify-center items-center">
+                    <img class="max-h-[32px]" src="./images/home/icons/USA_200x.svg" alt="USA Made">
+                    <span class="text-main">USA Made</span>
                 </div>
-                <div class="flex flex-col gap-5 justify-center">
-                    <img class="max-h-[32px]" src="./images/index/icons/traceble.svg" alt=""><span class="text-main">100% Traceable</span>
+                <div class="flex flex-col gap-3 md:gap-5 justify-center items-center">
+                    <img class="max-h-[32px]" src="./images/home/icons/traceble.svg" alt="100% Traceable">
+                    <span class="text-main">100% Traceable</span>
                 </div>
-                <div class="flex flex-col gap-5 justify-center">
-                    <img class="max-h-[32px]" src="./images/index/icons/lab.svg" alt=""><span class="text-main">Lab Tested</span>
+                <div class="flex flex-col gap-3 md:gap-5 justify-center items-center">
+                    <img class="max-h-[32px]" src="./images/home/icons/lab.svg" alt="Lab Tested">
+                    <span class="text-main">Lab Tested</span>
                 </div>
-                <div class="flex flex-col gap-5 justify-center">
-                    <img class="max-h-[32px]" src="./images/index/icons/orgainc.svg" alt=""><span class="text-main">USA Organic</span>
+                <div class="flex flex-col gap-3 md:gap-5 justify-center items-center">
+                    <img class="max-h-[32px]" src="./images/home/icons/orgainc.svg" alt="USA Organic">
+                    <span class="text-main">USA Organic</span>
                 </div>
             </div>
         </div>
-        <div class="w-5/12">
-            <img src="./images/index/slider.webp" alt="">
+        <div class="w-full md:w-5/12 mt-10 md:mt-0">
+            <img src="./images/home/slider.webp" alt="Slider Image" class="w-full h-auto">
         </div>
     </div>
 </div>

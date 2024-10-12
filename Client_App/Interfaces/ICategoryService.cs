@@ -1,7 +1,9 @@
-﻿namespace Client_App.Interfaces;
+﻿using Client_App.Domains.Categories.Responses;
 
-public interface ICategoryService<TResponse, TGetByIdResponse>
-    : IApiService<TResponse, TGetByIdResponse>
+namespace Client_App.Interfaces;
+
+public interface ICategoryService : IApiService
 {
-    public Task<TGetByIdResponse> GetByEndpointAsync(string endpoint);
-};
+    Task<T> GetByEndpointAsync<T>(string categoryEndpoint)
+        where T : Category;
+}

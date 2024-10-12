@@ -1,4 +1,4 @@
-using BasedDomain.Results;
+using Base.Results;
 using Basket_API.Interfaces;
 using MediatR;
 

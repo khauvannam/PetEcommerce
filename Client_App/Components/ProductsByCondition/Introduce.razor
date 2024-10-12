@@ -1,11 +1,8 @@
 ﻿@using Client_App.Domains.Categories.Responses
-@* Breadcrumb Navigation *@
-
-
 
 <div class="flex w-full justify-center mt-4">
-    <div class="flex max-w-[1300px] w-full justify-between">
-        <div class="w-5/12 flex flex-col justify-center ">
+    <div class="flex max-w-[1300px] w-full flex-col md:flex-row justify-between px-5 md:px-10">
+        <div class="w-full md:w-5/12 flex flex-col justify-center mb-4 md:mb-0">
             <p class="text-sm text-main mt-2.5 font-light italic">
                 Trusted, Effective Solutions
             </p>
@@ -14,7 +11,7 @@
                 @CategoryById.Description
             </p>
         </div>
-        <div class="w-5/12">
+        <div class="w-full md:w-5/12">
             <img src="@(CategoryById.ImageUrl ?? "./images/products_by_condition/default.avif")" class="object-cover w-full h-full rounded-lg" alt="">
         </div>
     </div>
@@ -22,5 +19,5 @@
 
 
 @code {
-    [Parameter] public CategoryById CategoryById { get; set; } = null!;
+    [Parameter] public Category CategoryById { get; set; } = null!;
 }
