@@ -1,0 +1,66 @@
+﻿@using Client_App.Services.Share
+
+@inject CustomValidatorService CustomValidatorService;
+
+<input @bind-value="@CurrentValue" class="@ClassCss" placeholder="@PlaceHolder" @bind-value:event="oninput"/>
+
+@code {
+    [Parameter] public string? PlaceHolder { get; set; }
+    [Parameter] public string? ClassCss { get; set; }
+    [Parameter] public string Value { get; set; } = default!;
+    [Parameter] public EventCallback<string> ValueChanged { get; set; }
+    [Parameter] public EventCallback OnChange { get; set; }
+    [Parameter] public object Model { get; set; } = null!;
+    [Parameter] public string? PropertyName { get; set; }
+
+    private string CurrentValue
+    {
+        get => Value;
+        set
+        {
+            if (EqualityComparer<string>.Default.Equals(Value, value)) return;
+
+            Value = value;
+            ValueChanged.InvokeAsync(Value);
+
+            if (OnChange.HasDelegate)
+            {
+                OnChange.InvokeAsync();
+            }
+
+            ValidateProperty();
+        }
+    }
+
+    private void ValidateProperty()
+    {
+        if (!string.IsNullOrEmpty(PropertyName))
+        {
+            var validationResults = CustomValidatorService.Validate(Model, PropertyName).ToList();
+
+            var fieldIdentifier = new FieldIdentifier(Model, PropertyName);
+            EditContext?.NotifyFieldChanged(fieldIdentifier);
+
+            if (validationResults.Any())
+            {
+                ValidationMessageStore?.Add(fieldIdentifier, validationResults.Select(v => v.ErrorMessage)!);
+            }
+            else
+            {
+                ValidationMessageStore?.Clear(fieldIdentifier);
+            }
+        }
+    }
+
+    [CascadingParameter] EditContext? EditContext { get; set; }
+    private ValidationMessageStore? ValidationMessageStore { get; set; }
+
+    protected override void OnInitialized()
+    {
+        if (EditContext is not null)
+        {
+            ValidationMessageStore = new ValidationMessageStore(EditContext);
+        }
+    }
+
+}

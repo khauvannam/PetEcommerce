@@ -1,8 +1,10 @@
 ﻿@page "/Login"
 @using Client_App.DTOs.Identities.Requests
 @using Client_App.Interfaces
+@using Client_App.Services.Share
 
 @inject IIdentityService IdentityService;
+@inject ErrorService ErrorService;
 
 
 <div class=" w-full flex justify-center text-main  ">
@@ -61,11 +63,15 @@
 </div>
 
 @code {
-    private LoginFormModel LoginModel { get; set; } = new(string.Empty, string.Empty);
+    private LoginFormModel LoginModel { get; } = LoginFormModel.Empty;
 
     private async Task HandleValidSubmit()
     {
-        await IdentityService.Login(LoginModel);
+        var result = await IdentityService.Login(LoginModel);
+        if (result.IsFailure)
+        {
+            ErrorService.SetErrorMessage(result.ErrorTypes).NavigateTo(default);
+        }
     }
 
 }

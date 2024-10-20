@@ -1,0 +1,10 @@
+﻿<div>
+    @if (!string.IsNullOrEmpty(ValidationMessage))
+    {
+        <span class="text-red-500">@ValidationMessage</span>
+    }
+</div>
+
+@code {
+    [Parameter] public string? ValidationMessage { get; set; }
+}

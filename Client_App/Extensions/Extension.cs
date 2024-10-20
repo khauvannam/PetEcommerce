@@ -44,5 +44,7 @@ public static class Extension
 
         services.AddSingleton<ErrorService>();
         services.AddSingleton<TitleService>();
+
+        services.AddTransient<CustomValidatorService>();
     }
 }

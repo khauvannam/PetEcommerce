@@ -1,11 +1,12 @@
 ﻿@page "/product/{ProductId:int}"
+
 @using Client_App.Interfaces
-@using Client_App.Components.Share
 @using Client_App.Components.ProductDetail
 @using Client_App.DTOs.Comments.Responses
 @using Client_App.DTOs.Products.Responses
 @using Client_App.DTOs.Share
 @using Client_App.Services.Share
+@using Client_App.Components.Share.ReusableComponents
 
 @inject IProductService ProductService;
 @inject  ICommentService CommentService;

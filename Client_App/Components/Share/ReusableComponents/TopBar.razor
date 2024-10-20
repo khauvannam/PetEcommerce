@@ -1,7 +1,7 @@
 @using Client_App.DTOs.Categories.Responses
 @using Client_App.Interfaces
-@using Client_App.Services
 @using Client_App.Services.Share
+@using Client_App.Components.Share.CustomInputs
 
 @inject ICategoryService CategoryService;
 @inject ErrorService ErrorService;
@@ -101,12 +101,12 @@
 
 @code {
     private List<Category>? Categories { get; set; }
-    private bool IsSectionVisible { get; set; } = false;
-    private bool IsSearchInputVisible { get; set; } = false;
+    private bool IsSectionVisible { get; set; }
+    private bool IsSearchInputVisible { get; set; }
 
-    protected override void OnParametersSet()
+    protected override void OnInitialized()
     {
-        IsSearchInputVisible = false;
+        IsSearchInputVisible = IsSectionVisible = false;
     }
 
 

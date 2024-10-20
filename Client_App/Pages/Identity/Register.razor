@@ -2,6 +2,7 @@
 @using Client_App.DTOs.Identities.Requests
 @using Client_App.Interfaces
 @using Client_App.Services.Share
+@using Client_App.Components.Share.CustomInputs
 
 @inject IIdentityService IdentityService;
 @inject ErrorService ErrorService;
@@ -16,36 +17,31 @@
         </div>
         <div class="bg-white p-8 w-1/2 rounded-lg pt-[10%] px-[5%]">
             <h1 class=" text-4xl font-bold mb-6 text-center font-heading_bold">Register An Account</h1>
+
             <EditForm Model="RegisterModel" OnValidSubmit="HandleValidSubmit">
                 <DataAnnotationsValidator/>
 
-                <div class="mb-4 flex justify-between">
-                    <input
-                        @bind-value="FirstName"
-                        @bind-value:event="oninput"
-                        @onchange="HandleUsernameInput"
-                        type="text"
-                        placeholder="First Name"
-                        class="form-control mt-1 block w-[48%] px-6 py-4 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                        required/>
+                <div class="flex justify-between">
+                    <CustomInputText @bind-Value="@FirstName" PlaceHolder="First Name"
+                                     Model="@RegisterModel"
+                                     ClassCss="form-control mt-1 block w-[48%] px-6 py-4 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                                     PropertyName="@nameof(RegisterModel.Username)"
+                                     OnChange="HandleUsernameInput"/>
 
-                    <input
-                        @bind-value="LastName"
-                        @bind-value:event="oninput"
-                        @onchange="HandleUsernameInput"
-                        type="text"
-                        placeholder="Last Name"
-                        class="form-control mt-1 block w-[48%] px-6 py-4 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                        required/>
-
-                    <ValidationMessage class="text-red-500" For="@(() => RegisterModel!.Username)"/>
+                    <CustomInputText @bind-Value="@LastName" PlaceHolder="Last Name"
+                                     Model="RegisterModel"
+                                     ClassCss="form-control mt-1 block w-[48%] px-6 py-4 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                                     PropertyName="@nameof(RegisterModel.Username)"
+                                     OnChange="HandleUsernameInput"/>
                 </div>
 
+                <div class="text-red-500 mb-4">
+                    <ValidationMessage For="() => RegisterModel.Username"/>
+                </div>
                 <!-- Phone Number -->
                 <div class="mb-4">
-                    <input
-                        @bind-value="RegisterModel!.PhoneNumber"
-                        @bind-value:event="oninput"
+                    <InputText
+                        @bind-Value="RegisterModel!.PhoneNumber"
                         type="text"
                         placeholder="Phone Number"
                         class="form-control mt-1 block w-full px-6 py-4 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
@@ -116,6 +112,7 @@
     private void HandleUsernameInput()
     {
         RegisterModel!.Username = $"{FirstName}{LastName}".Replace(" ", "").ToLower();
+        Console.WriteLine(RegisterModel.Username);
     }
 
     private async Task HandleValidSubmit()
@@ -124,7 +121,7 @@
 
         if (result.IsFailure)
         {
-            ErrorService.SetErrorMessage(result.ErrorTypes);
+            ErrorService.SetErrorMessage(result.ErrorTypes).NavigateTo(default);
             return;
         }
 

@@ -35,7 +35,7 @@ public sealed class ErrorService
         return this;
     }
 
-    public void NavigateTo(string url = "/")
+    public void NavigateTo(string? url = "/")
     {
         Url = url;
     }
