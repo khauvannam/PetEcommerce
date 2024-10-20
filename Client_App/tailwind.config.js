@@ -3,6 +3,9 @@ module.exports = {
     content: ["./**/*.{razor,html,cshtml}", "./node_modules/flowbite/**/*.js"],
     theme: {
         extend: {
+            boxShadow: {
+              product: "0 0 15px #a2b8e34d"  
+            },
             colors: {
                 main: "#00205c",
                 hover: "#FADC6F"

@@ -7,7 +7,7 @@ namespace Product_API.Features.Products;
 
 public static class DeleteProduct
 {
-    public sealed record Command(Guid ProductId) : IRequest<Result>;
+    public sealed record Command(int ProductId) : IRequest<Result>;
 
     public sealed class Handler(IProductRepository repository, BlobService blobService)
         : IRequestHandler<Command, Result>

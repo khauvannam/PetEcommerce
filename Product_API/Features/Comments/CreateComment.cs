@@ -1,6 +1,6 @@
 ﻿using Base.Results;
 using MediatR;
-using Product_API.Domains.Comments;
+using Product_API.Domain.Comments;
 using Product_API.Interfaces;
 
 namespace Product_API.Features.Comments;
@@ -8,9 +8,9 @@ namespace Product_API.Features.Comments;
 public static class CreateComment
 {
     public sealed record Command(
-        Guid BuyerId,
+        int BuyerId,
         string BuyerEmail,
-        Guid ProductId,
+        int ProductId,
         int Rating,
         string Title,
         string Content

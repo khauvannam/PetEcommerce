@@ -1,6 +1,5 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Product_API.Domains.Categories;
 using Product_API.DTOs.Categories;
 using Product_API.Features.Categories;
 

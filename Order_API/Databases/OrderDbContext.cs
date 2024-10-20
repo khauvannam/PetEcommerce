@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
-using Order.API.Domains.OrderLines;
-using Order.API.Domains.Orders;
-using Order.API.Domains.ShippingMethods;
+using Order.API.Domain.OrderLines;
+using Order.API.Domain.Orders;
+using Order.API.Domain.Shippings;
 
 namespace Order.API.Databases;
 

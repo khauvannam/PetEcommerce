@@ -1,7 +1,7 @@
 ﻿using Base.Results;
 using Microsoft.EntityFrameworkCore;
 using Product_API.Databases;
-using Product_API.Domains.Discounts;
+using Product_API.Domain.Discounts;
 using Product_API.Errors;
 using Product_API.Interfaces;
 
@@ -30,7 +30,7 @@ public class DiscountRepository(ProductDbContext context) : IDiscountRepository
         return Result.Success();
     }
 
-    public async Task<Result<Discount>> GetByIdAsync(Guid id)
+    public async Task<Result<Discount>> GetByIdAsync(int id)
     {
         var discount = await context.Discounts.FirstOrDefaultAsync(d => d.DiscountId == id);
         if (discount is null)

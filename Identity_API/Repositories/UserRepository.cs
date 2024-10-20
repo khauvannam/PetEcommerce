@@ -21,25 +21,29 @@ internal class UserRepository(
 {
     public async Task<Result> Register(User user, string password)
     {
-        var result = await userManager.CreateAsync(user, password);
+        if (await userManager.CreateAsync(user, password) is { Succeeded: false } result)
+        {
+            var errorMessages = string.Join(", ", result.Errors.Select(error => error.Description));
+            return Result.Failure(new("Invalid Request:", errorMessages));
+        }
 
-        return !result.Succeeded ? Result.Failure(UserErrors.WentWrong) : Result.Success();
+        return Result.Success();
     }
 
     public async Task<Result<LoginResponse>> Login(Login.Command command)
     {
-        var user = await userManager.FindByEmailAsync(command.Email!);
+        var user = await userManager.FindByEmailAsync(command.Email);
         if (user is null)
             return Result.Failure<LoginResponse>(UserErrors.NotFound);
 
         var result = await signInManager.PasswordSignInAsync(
             user.UserName!,
-            command.Password!,
+            command.Password,
             true,
             false
         );
         if (!result.Succeeded)
-            return Result.Failure<LoginResponse>(UserErrors.NotFound);
+            return Result.Failure<LoginResponse>(UserErrors.WrongPassword);
 
         List<Claim> claims =
         [
@@ -51,16 +55,21 @@ internal class UserRepository(
         var accessToken = jwtHandler.GenerateAccessToken(claims);
         var refreshToken = JwtHandler.GenerateRefreshToken();
         var expiredTime = DateTime.Now.AddMonths(1);
-        if (user.RefreshToken is null)
+
+        if (user.RefreshToken is not null)
+        {
+            user.RefreshToken.Refresh(refreshToken, expiredTime);
+        }
+        else
         {
             var token = RefreshToken.Create(refreshToken, expiredTime);
             user.AddToken(token);
         }
 
-        user.RefreshToken!.Refresh(refreshToken, expiredTime);
         await dbContext.SaveChangesAsync();
 
-        var loginResponse = new LoginResponse(refreshToken, accessToken);
+        var loginResponse = new LoginResponse(accessToken);
+
         return Result.Success(loginResponse);
     }
 
@@ -75,6 +84,7 @@ internal class UserRepository(
             command.Token,
             command.Password
         );
+
         if (!resultPasswordAsync.Succeeded)
             return Result.Failure(TokenErrors.WrongToken("Reset Password"));
 

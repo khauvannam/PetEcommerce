@@ -5,12 +5,12 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Identity.API.Domains.Users;
 
-public class User : IdentityUser<Guid>
+public class User : IdentityUser<int>
 {
-    public override Guid Id { get; set; } = Guid.NewGuid();
+    public override int Id { get; set; }
 
     public RefreshToken? RefreshToken { get; private set; }
-    public Address Address { get; private set; } = null!;
+    public Address Address { get; private set; } = Address.Empty();
 
     public void AddToken(RefreshToken refreshToken)
     {
@@ -55,6 +55,16 @@ public class Address : ValueObject
             Street = street,
             City = city,
             ZipCode = zipCode,
+        };
+    }
+
+    public static Address Empty()
+    {
+        return new Address
+        {
+            Street = default,
+            City = default,
+            ZipCode = default,
         };
     }
 }

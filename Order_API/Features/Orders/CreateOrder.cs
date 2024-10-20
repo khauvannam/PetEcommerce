@@ -1,14 +1,14 @@
 using Base.Results;
 using MediatR;
-using Order.API.Domains.OrderLines;
-using Order.API.Domains.Orders;
+using Order.API.Domain.OrderLines;
+using Order.API.Domain.Orders;
 using Order.API.Interfaces;
 
 namespace Order.API.Features.Orders;
 
 public static class CreateOrder
 {
-    public record Command(Guid UserId, string ShippingAddress, List<OrderLine> OrderLines)
+    public record Command(int UserId, string ShippingAddress, List<OrderLine> OrderLines)
         : IRequest<Result<OrderModel>>;
 
     internal sealed class Handler(IOrderRepository orderRepository)

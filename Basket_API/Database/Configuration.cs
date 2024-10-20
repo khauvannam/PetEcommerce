@@ -1,6 +1,5 @@
-﻿using Basket_API.Domains.BasketItems;
-using Basket_API.Domains.Baskets;
-using Basket_API.DTOs.Baskets;
+﻿using Basket_API.Domain.BasketItems;
+using Basket_API.Domain.Baskets;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -18,11 +17,7 @@ public static class Configuration
                 .HasForeignKey(bi => bi.BasketId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            builder.HasKey(b => b.BasketId).IsClustered(false);
-
-            builder.Property(b => b.ClusterId).ValueGeneratedOnAdd();
-
-            builder.HasIndex(b => b.ClusterId).IsClustered().IsUnique();
+            builder.HasKey(b => b.BasketId).IsClustered();
         }
     }
 
@@ -35,11 +30,7 @@ public static class Configuration
                 .HasConversion(value => value.Value, value => Quantity.Create(value))
                 .HasColumnName("Quantity");
 
-            builder.HasKey(bi => bi.BasketItemId).IsClustered(false);
-
-            builder.Property(bi => bi.ClusterId).ValueGeneratedOnAdd();
-
-            builder.HasIndex(bi => bi.ClusterId).IsClustered().IsUnique();
+            builder.HasKey(bi => bi.BasketItemId).IsClustered();
         }
     }
 }

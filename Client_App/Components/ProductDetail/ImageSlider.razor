@@ -14,7 +14,7 @@
             const string activeImageClass = "border-2 border-blue-500";
 
             <div @onclick="() => OnChangeImage(index)" class="w-full max-w-[150px] cursor-pointer">
-                <img src="@url" class="@(UrlIndex == index ? activeImageClass : "") w-full h-full rounded-lg opacity-30 transition-all" alt="@url" style="opacity: @(UrlIndex == index ? 1 : 0.5)"/>
+                <img  src="@url" class="@(UrlIndex == index ? activeImageClass : "") w-full h-full rounded-lg opacity-30 transition-all" alt="@url" style="opacity: @(UrlIndex == index ? 1 : 0.5)"/>
             </div>
         }
     </div>

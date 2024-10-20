@@ -1,6 +1,6 @@
 using Base.Results;
 using Order.API.Databases;
-using Order.API.Domains.ShippingMethods;
+using Order.API.Domain.Shippings;
 using Order.API.Errors;
 using Order.API.Interfaces;
 

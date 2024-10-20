@@ -3,9 +3,10 @@
 <head>
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-    <title>PETSHOP</title>
+    <title>Pet Shop</title>
     <base href="/"/>
     <link href="css/styles.min.css" rel="stylesheet">
+    <link rel="shortcut icon" href="./images/favicon.png" type="image/x-icon">
 </head>
 
 <body>
@@ -22,6 +23,10 @@
             productList.scrollIntoView({behavior: "smooth"});
         }
     };
+
+   window.setDocumentTitle =  function(title) {
+        document.title = title; // This correctly sets the title
+    }
 </script>
 
 <script src="_framework/blazor.webassembly.js"></script>

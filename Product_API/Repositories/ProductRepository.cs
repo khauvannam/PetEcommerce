@@ -2,7 +2,7 @@
 using Base.Results;
 using Microsoft.EntityFrameworkCore;
 using Product_API.Databases;
-using Product_API.Domains.Products;
+using Product_API.Domain.Products;
 using Product_API.DTOs.Products;
 using Product_API.Errors;
 using Product_API.Features.Products;
@@ -80,7 +80,7 @@ public class ProductRepository(ProductDbContext dbContext) : IProductRepository
     }
 
     public async Task<Result<Product>> GetByIdAsync(
-        Guid productId,
+        int productId,
         CancellationToken cancellationToken
     )
     {
@@ -95,7 +95,7 @@ public class ProductRepository(ProductDbContext dbContext) : IProductRepository
     }
 
     public async Task<Result<ProductByIdResponse>> GetInDetailByIdAsync(
-        Guid productId,
+        int productId,
         CancellationToken cancellationToken
     )
     {
@@ -106,10 +106,13 @@ public class ProductRepository(ProductDbContext dbContext) : IProductRepository
             .AsNoTracking()
             .FirstOrDefaultAsync(p => p.ProductId == productId, cancellationToken);
 
-        var productResponse = Product.ToProductByIdResponse(product!);
+        if (product is null)
+        {
+            return Result.Failure<ProductByIdResponse>(ProductErrors.NotFound);
+        }
 
-        return product == null
-            ? Result.Failure<ProductByIdResponse>(ProductErrors.NotFound)
-            : Result.Success(productResponse);
+        var productResponse = Product.ToProductByIdResponse(product);
+
+        return Result.Success(productResponse);
     }
 }

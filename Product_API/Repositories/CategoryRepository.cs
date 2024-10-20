@@ -2,7 +2,7 @@ using Base;
 using Base.Results;
 using Microsoft.EntityFrameworkCore;
 using Product_API.Databases;
-using Product_API.Domains.Categories;
+using Product_API.Domain.Categories;
 using Product_API.Errors;
 using Product_API.Features.Categories;
 using Product_API.Interfaces;

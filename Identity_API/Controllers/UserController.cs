@@ -16,17 +16,17 @@ public class UserController(ISender sender, UserEmailService userEmailService) :
         if (result.IsFailure)
             return BadRequest(result.ErrorTypes);
 
-        return Ok("User is created successfully");
+        return NoContent();
     }
 
     [HttpPost("Login")]
-    public async Task<IActionResult> Login(Login.Command command)
+    public async Task<IActionResult> Login([FromBody] Login.Command command)
     {
         var result = await sender.Send(command);
         if (result.IsFailure)
             return BadRequest(result.ErrorTypes);
 
-        return Ok(result);
+        return Ok(result.Value);
     }
 
     [HttpGet(nameof(ForgotPassword))]

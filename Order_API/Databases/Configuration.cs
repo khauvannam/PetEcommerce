@@ -1,8 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Order.API.Domains.OrderLines;
-using Order.API.Domains.Orders;
-using Order.API.Domains.ShippingMethods;
+using Order.API.Domain.OrderLines;
+using Order.API.Domain.Orders;
+using Order.API.Domain.Shippings;
 
 namespace Order.API.Databases;
 
@@ -12,17 +12,13 @@ public static class Configuration
     {
         public void Configure(EntityTypeBuilder<OrderModel> builder)
         {
-            builder.HasKey(o => o.OrderId).IsClustered(false);
+            builder.HasKey(o => o.OrderId).IsClustered();
 
             builder
                 .HasMany<OrderLine>()
                 .WithOne(ol => ol.OrderModel)
                 .HasForeignKey(ol => ol.OrderId)
                 .OnDelete(DeleteBehavior.Cascade);
-
-            builder.Property(o => o.ClusterId).ValueGeneratedOnAdd();
-
-            builder.HasIndex(o => o.ClusterId).IsClustered().IsUnique();
         }
 
         public static OrderConfigure Create()
@@ -35,11 +31,7 @@ public static class Configuration
     {
         public void Configure(EntityTypeBuilder<OrderLine> builder)
         {
-            builder.HasKey(ol => ol.OrderLineId).IsClustered(false);
-
-            builder.Property(ol => ol.ClusterId).ValueGeneratedOnAdd();
-
-            builder.HasIndex(ol => ol.ClusterId).IsClustered().IsUnique();
+            builder.HasKey(ol => ol.OrderLineId).IsClustered();
         }
 
         public static OrderConfigure Create()

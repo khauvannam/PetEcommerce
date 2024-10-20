@@ -1,9 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Product_API.Domains.Categories;
-using Product_API.Domains.Comments;
-using Product_API.Domains.Discounts;
-using Product_API.Domains.Products;
+using Product_API.Domain.Categories;
+using Product_API.Domain.Comments;
+using Product_API.Domain.Discounts;
+using Product_API.Domain.Products;
 
 namespace Product_API.Databases;
 
@@ -13,7 +13,7 @@ public static class Configuration
     {
         public void Configure(EntityTypeBuilder<Product> builder)
         {
-            builder.HasKey(p => p.ProductId).IsClustered(false);
+            builder.HasKey(p => p.ProductId);
 
             builder.HasIndex(p => p.Name).IsUnique();
 
@@ -35,11 +35,7 @@ public static class Configuration
 
             builder.Property(p => p.TotalRating).HasPrecision(18, 2);
 
-            builder.Property(p => p.ClusterId).ValueGeneratedOnAdd();
-
-            builder.HasIndex(p => p.ClusterId).IsClustered();
-
-            builder.Property(e => e.ProductBuyerIds).IsUnicode(false);
+            builder.Property(e => e.ProductBuyerIds).IsUnicode();
         }
 
         public static ProductConfigure Create()
@@ -52,13 +48,9 @@ public static class Configuration
     {
         public void Configure(EntityTypeBuilder<ProductVariant> builder)
         {
-            builder.HasKey(pv => pv.VariantId).IsClustered(false);
+            builder.HasKey(pv => pv.VariantId);
 
             builder.ComplexProperty(pv => pv.OriginalPrice);
-
-            builder.Property(p => p.ClusterId).ValueGeneratedOnAdd();
-
-            builder.HasIndex(p => p.ClusterId).IsClustered().IsUnique();
         }
 
         public static ProductVariantConfigure Create()
@@ -71,11 +63,9 @@ public static class Configuration
     {
         public void Configure(EntityTypeBuilder<Category> builder)
         {
-            builder.HasIndex(c => c.CategoryId).IsClustered().IsUnique();
+            builder.HasKey(c => c.CategoryId);
 
-            builder.Property(p => p.CategoryId).ValueGeneratedOnAdd();
-
-            builder.HasKey(p => new { p.Endpoint, p.CategoryName }).IsClustered(false);
+            builder.HasIndex(p => new { p.Endpoint, p.CategoryName }).IsUnique();
         }
 
         public static CategoryConfigure Create()
@@ -88,13 +78,9 @@ public static class Configuration
     {
         public void Configure(EntityTypeBuilder<Discount> builder)
         {
-            builder.HasKey(d => d.DiscountId).IsClustered(false);
+            builder.HasKey(d => d.DiscountId);
 
             builder.Property(d => d.Percent).HasColumnType("decimal(18, 2)");
-
-            builder.Property(p => p.ClusterId).ValueGeneratedOnAdd();
-
-            builder.HasIndex(p => p.ClusterId).IsClustered().IsUnique();
         }
 
         public static DiscountConfigure Create()
@@ -107,9 +93,7 @@ public static class Configuration
     {
         public void Configure(EntityTypeBuilder<Comment> builder)
         {
-            builder.HasKey(c => c.CommentId).IsClustered();
-
-            builder.Property(c => c.CommentId).ValueGeneratedOnAdd();
+            builder.HasKey(c => c.CommentId);
         }
     }
 }

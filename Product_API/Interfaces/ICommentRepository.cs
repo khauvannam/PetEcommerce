@@ -1,7 +1,6 @@
 ﻿using Base;
 using Base.Results;
-using Product_API.Domains.Comments;
-using Product_API.Domains.Discounts;
+using Product_API.Domain.Comments;
 
 namespace Product_API.Interfaces;
 
@@ -12,5 +11,5 @@ public interface ICommentRepository
     public Task<Result> UpdateAsync(Comment comment);
     public Task<Result<Comment>> GetByIdAsync(int id);
 
-    public Task<Result<Pagination<Comment>>> GetAllAsync(int limit, int offset, Guid? productId);
+    public Task<Result<Pagination<Comment>>> GetAllAsync(int limit, int offset, int? productId);
 }

@@ -11,6 +11,8 @@ public static class Configuration
     {
         public void Configure(EntityTypeBuilder<User> builder)
         {
+            builder.HasKey(x => x.Id);
+
             builder
                 .HasOne(u => u.RefreshToken)
                 .WithOne(rt => rt.User)

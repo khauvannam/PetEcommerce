@@ -1,4 +1,4 @@
-using Basket_API.Domains.Baskets;
+using Basket_API.DTOs.Baskets;
 using Basket_API.Features.Baskets;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -6,11 +6,11 @@ using Microsoft.AspNetCore.Mvc;
 namespace Basket_API.Controllers;
 
 [ApiController]
-[Route("api/[controller]/{basketId:guid}")]
+[Route("api/[controller]/{basketId:int}")]
 public class BasketController(ISender sender) : ControllerBase
 {
     [HttpPost]
-    public async Task<IActionResult> Update([FromBody] AddToBasketRequest request, Guid basketId)
+    public async Task<IActionResult> Update([FromBody] AddToBasketRequest request, int basketId)
     {
         var command = new AddToBasket.Command(
             basketId,
@@ -26,7 +26,7 @@ public class BasketController(ISender sender) : ControllerBase
     }
 
     [HttpDelete]
-    public async Task<IActionResult> Delete(Guid basketId)
+    public async Task<IActionResult> Delete(int basketId)
     {
         var result = await sender.Send(new DeleteBasket.Command(basketId));
         if (!result.IsFailure)
@@ -36,7 +36,7 @@ public class BasketController(ISender sender) : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetById(Guid basketId)
+    public async Task<IActionResult> GetById(int basketId)
     {
         var result = await sender.Send(new GetBasketById.Query(basketId));
         if (!result.IsFailure)

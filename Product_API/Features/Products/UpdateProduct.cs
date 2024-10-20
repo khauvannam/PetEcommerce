@@ -1,6 +1,6 @@
 ﻿using Base.Results;
 using MediatR;
-using Product_API.Domains.Products;
+using Product_API.Domain.Products;
 using Product_API.DTOs.Products;
 using Product_API.Interfaces;
 using Shared.Errors;
@@ -10,7 +10,7 @@ namespace Product_API.Features.Products;
 
 public static class UpdateProduct
 {
-    public sealed record Command(Guid ProductId, UpdateProductRequest UpdateProductRequest)
+    public sealed record Command(int ProductId, UpdateProductRequest UpdateProductRequest)
         : IRequest<Result<Product>>;
 
     public sealed class Handler(IProductRepository repository, BlobService blobService)

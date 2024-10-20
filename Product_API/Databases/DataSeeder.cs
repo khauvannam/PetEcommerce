@@ -1,7 +1,7 @@
 ﻿using Bogus;
-using Product_API.Domains.Categories;
-using Product_API.Domains.Comments;
-using Product_API.Domains.Products;
+using Product_API.Domain.Categories;
+using Product_API.Domain.Comments;
+using Product_API.Domain.Products;
 
 namespace Product_API.Databases;
 
@@ -97,21 +97,21 @@ public static class DataSeeder
                 $"{commerceFaker.ProductDescription()} {commerceFaker.ProductName()} {commerceFaker.ProductDescription()}";
 
             var comment1 = Comment.Create(
-                Guid.NewGuid(),
+                random.Next(),
                 faker.Person.Email,
                 faker.Random.Number(1, 5),
                 commerceFaker.ProductDescription(),
                 commentDescription
             );
             var comment2 = Comment.Create(
-                Guid.NewGuid(),
+                random.Next(),
                 faker.Person.Email,
                 faker.Random.Number(1, 5),
                 commerceFaker.ProductDescription(),
                 commentDescription
             );
             var comment3 = Comment.Create(
-                Guid.NewGuid(),
+                random.Next(1, 10),
                 faker.Person.Email,
                 faker.Random.Number(1, 5),
                 commerceFaker.ProductDescription(),

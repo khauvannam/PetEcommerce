@@ -11,7 +11,7 @@ public static class DiscountEventHandlers
     private static async Task ApplyDiscountToProductsAsync(
         ProductDbContext context,
         int? categoryId,
-        List<Guid>? productIdList,
+        List<int>? productIdList,
         decimal discountPercent
     )
     {
@@ -79,7 +79,7 @@ public static class DiscountEventHandlers
                 return;
 
             var productIdList =
-                JsonConvert.DeserializeObject<List<Guid>>(discount.ProductIdListJson) ?? [];
+                JsonConvert.DeserializeObject<List<int>>(discount.ProductIdListJson) ?? [];
 
             await ApplyDiscountToProductsAsync(
                 context,
@@ -101,7 +101,7 @@ public static class DiscountEventHandlers
             var discount = notification.Discount;
 
             var productIdList =
-                JsonConvert.DeserializeObject<List<Guid>>(discount.ProductIdListJson) ?? [];
+                JsonConvert.DeserializeObject<List<int>>(discount.ProductIdListJson) ?? [];
 
             await ApplyDiscountToProductsAsync(
                 context,

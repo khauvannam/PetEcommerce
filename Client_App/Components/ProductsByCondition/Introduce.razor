@@ -1,23 +1,22 @@
-﻿@using Client_App.Domains.Categories.Responses
-
+﻿@using Client_App.DTOs.Categories.Responses
 <div class="flex w-full justify-center mt-4">
     <div class="flex max-w-[1300px] w-full flex-col md:flex-row justify-between px-5 md:px-10">
         <div class="w-full md:w-5/12 flex flex-col justify-center mb-4 md:mb-0">
             <p class="text-sm text-main mt-2.5 font-light italic">
                 Trusted, Effective Solutions
             </p>
-            <h3 class="text-main text-[48px] font-bold mb-5 font-heading_bold">@CategoryById.CategoryName</h3>
+            <h3 class="text-main text-[48px] font-bold mb-5 font-heading_bold">@Category.CategoryName</h3>
             <p class="my-4 text-main font-light text-sm">
-                @CategoryById.Description
+                @Category.Description
             </p>
         </div>
         <div class="w-full md:w-5/12">
-            <img src="@(CategoryById.ImageUrl ?? "./images/products_by_condition/default.avif")" class="object-cover w-full h-full rounded-lg" alt="">
+            <img src="@(Category.ImageUrl)" class="object-cover w-full h-full rounded-lg" alt="">
         </div>
     </div>
 </div>
 
 
 @code {
-    [Parameter] public Category CategoryById { get; set; } = null!;
+    [Parameter] public Category Category { get; set; } = null!;
 }

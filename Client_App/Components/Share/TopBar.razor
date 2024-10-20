@@ -1,6 +1,13 @@
-@using Client_App.Domains.Categories.Responses
-<div class="w-full flex justify-center items-center border-b-2 bg-white">
-    <div class="w-full max-w-[1300px] flex justify-between items-center">
+@using Client_App.DTOs.Categories.Responses
+@using Client_App.Interfaces
+@using Client_App.Services
+@using Client_App.Services.Share
+
+@inject ICategoryService CategoryService;
+@inject ErrorService ErrorService;
+
+<div class="w-full flex justify-center items-center border-b-2 bg-white px-5">
+    <div class="w-full max-w-[1300px] flex justify-between items-center relative">
         <!-- Logo -->
         <div class="flex items-center">
             <a href="/" class="text-3xl md:text-4xl text-main font-heading font-extrabold uppercase">PET SHOP</a>
@@ -17,7 +24,7 @@
                 </NavLink>
             </div>
             <div class="p-5 font-thin flex justify-center items-center text-main">
-                <div class="relative group" @onmouseout="OnMouseOut" @onmouseover="OnMouseOver">
+                <div class="relative group cursor-pointer" @onmouseout="ToggleSectionVisible" @onmouseover="ToggleSectionVisible">
                     <div class="flex">
                         <p class="">
                             EXPLORE SOLUTIONS
@@ -35,15 +42,18 @@
                         </span>
                     </div>
                     <div
-                        class="border-2 bg-white border-solid border-[#f2f2f2] pt-2.5 px-4 pb-5 absolute text-main top-full w-full border-t-0 duration-300 ease-in flex-col flex items-center  @(IsVisible ? "opacity-100" : "opacity-0")">
-                        @foreach (var category in Categories!)
+                        class="overflow-hidden border-2 bg-white border-solid border-[#f2f2f2] pt-2.5 px-4 pb-5 absolute text-main top-full w-full border-t-0 duration-300 ease-in flex-col flex items-center  @(IsSectionVisible ? "opacity-100 max-h-screen visible" : "opacity-0 max-h-0 invisible") z-10">
+                        @if (Categories is not null)
                         {
-                            const string classes = "py-1.5 text-sm text-main font-thin uppercase opacity-100 whitespace-nowrap text-start w-full hover:underline duration-300 transition-all ease-in tracking-wider";
+                            @foreach (var category in Categories)
+                            {
+                                const string classes = "py-1.5 text-sm text-main font-thin uppercase opacity-100 whitespace-nowrap text-start w-full hover:underline duration-300 transition-all ease-in tracking-wider";
 
-                            <NavLink href=@($"/products/{category.Endpoint}")
-                                     class="@classes">
-                                @category.CategoryName
-                            </NavLink>
+                                <NavLink href=@($"/products/{category.Endpoint}")
+                                         class="@classes">
+                                    @category.CategoryName
+                                </NavLink>
+                            }
                         }
                     </div>
                 </div>
@@ -67,13 +77,13 @@
                         d="M4 22C4 17.5817 7.58172 14 12 14C16.4183 14 20 17.5817 20 22H18C18 18.6863 15.3137 16 12 16C8.68629 16 6 18.6863 6 22H4ZM12 13C8.685 13 6 10.315 6 7C6 3.685 8.685 1 12 1C15.315 1 18 3.685 18 7C18 10.315 15.315 13 12 13ZM12 11C14.21 11 16 9.21 16 7C16 4.79 14.21 3 12 3C9.79 3 8 4.79 8 7C8 9.21 9.79 11 12 11Z"/>
                 </svg>
             </NavLink>
-            <NavLink href="/search" class="p-2.5 flex justify-center items-center">
+            <button @onclick="ToggleSearchInputVisible" class="p-2.5 flex justify-center items-center">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"
                      fill="rgba(45,77,108,1)">
                     <path
                         d="M18.031 16.6168L22.3137 20.8995L20.8995 22.3137L16.6168 18.031C15.0769 19.263 13.124 20 11 20C6.032 20 2 15.968 2 11C2 6.032 6.032 2 11 2C15.968 2 20 6.032 20 11C20 13.124 19.263 15.0769 18.031 16.6168ZM16.0247 15.8748C17.2475 14.6146 18 12.8956 18 11C18 7.1325 14.8675 4 11 4C7.1325 4 4 7.1325 4 11C4 14.8675 7.1325 18 11 18C12.8956 18 14.6146 17.2475 15.8748 16.0247L16.0247 15.8748Z"/>
                 </svg>
-            </NavLink>
+            </button>
             <NavLink href="/cart" class="p-2.5 flex justify-center items-center">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"
                      fill="rgba(45,77,108,1)">
@@ -82,21 +92,47 @@
                 </svg>
             </NavLink>
         </div>
+        <div class="w-full max-w-[1300px] transition-all ease-in-out @(IsSearchInputVisible ? "opacity-100 max-h-screen translate-y-0 z-20 visible fixed" : "opacity-0 max-h-0 -translate-y-full invisible absolute")">
+            <SearchInput ToggleSearchInput="ToggleSearchInputVisible"/>
+        </div>
     </div>
+
 </div>
 
 @code {
-    [Parameter] public List<Category>? Categories { get; set; }
-    private bool IsVisible { get; set; } = false;
+    private List<Category>? Categories { get; set; }
+    private bool IsSectionVisible { get; set; } = false;
+    private bool IsSearchInputVisible { get; set; } = false;
 
-    private void OnMouseOver()
+    protected override void OnParametersSet()
     {
-        IsVisible = true;
+        IsSearchInputVisible = false;
     }
 
-    private void OnMouseOut()
+
+    private void ToggleSectionVisible()
     {
-        IsVisible = false;
+        IsSectionVisible = !IsSectionVisible;
+    }
+
+    private void ToggleSearchInputVisible()
+    {
+        IsSearchInputVisible = !IsSearchInputVisible;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        List<string> excludedCategories = ["all", "best-sellers"];
+        var result = await CategoryService.GetAllAsync<Category>();
+        if (!result.IsFailure)
+        {
+            Categories = result.Value.Data.Where(c => !excludedCategories.Contains(c.Endpoint)).ToList();
+            StateHasChanged();
+        }
+        else
+        {
+            ErrorService.SetErrorMessage(result.ErrorTypes);
+        }
     }
 
 }

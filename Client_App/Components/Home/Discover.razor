@@ -1,6 +1,5 @@
-@using Client_App.Domains.Categories.Responses
-
-
+@using Client_App.DTOs.Categories.Responses
+@using Client_App.DTOs.Share
 <div class="pt-10 pb-8">
     <h1 class="font-extrabold text-2xl sm:text-3xl lg:text-4xl px-5 sm:px-10 lg:px-24 mb-5 text-center text-main font-heading">
         Science-backed essentials for your pets
@@ -11,9 +10,9 @@
             {
                 @foreach (var category in Categories.Take(4))
                 {
-                    <NavLink href="@($"/products/{category.Endpoint}")" class="flex flex-col justify-between bg-[#f0f5ff] items-center rounded-lg w-[90%] sm:w-[45%] lg:w-[300px] m-3 hover:bg-[#FADC6F] transition-all ease-out group">
+                    <NavLink href="@($"/products/{category.Endpoint}")" class="flex flex-col justify-between bg-[#f0f5ff] items-center rounded-lg w-[90%] sm:w-[45%] lg:w-[300px] m-3 hover:bg-[#FADC6F] transition-all ease-in-out group">
                         <div class="w-full flex justify-center bg-white">
-                            <img class="h-[168px] rounded-t-lg object-fill w-full" src="@category.ImageUrl" alt="@category.CategoryName">
+                            <img class="h-[168px] rounded-t-lg object-fill w-full" src="@category.ImageUrl" alt="@category.CategoryName" @onerror="() => category.ImageUrl = ImageUrl.DefaultCategory">
                         </div>
                         <p class="my-4 text-main text-lg sm:text-xl font-thin group-hover:text-black ">@category.CategoryName</p>
                     </NavLink>

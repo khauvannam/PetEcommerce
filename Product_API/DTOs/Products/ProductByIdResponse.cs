@@ -1,9 +1,9 @@
-﻿using Product_API.Domains.Products;
+﻿using Product_API.Domain.Products;
 
 namespace Product_API.DTOs.Products;
 
 public record ProductByIdResponse(
-    Guid ProductId,
+    int ProductId,
     string Name,
     string Description,
     string ProductUseGuide,

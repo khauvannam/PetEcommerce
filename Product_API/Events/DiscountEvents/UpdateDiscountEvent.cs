@@ -1,5 +1,5 @@
 ﻿using MediatR;
-using Product_API.Domains.Discounts;
+using Product_API.Domain.Discounts;
 
 namespace Product_API.Events.DiscountEvents;
 

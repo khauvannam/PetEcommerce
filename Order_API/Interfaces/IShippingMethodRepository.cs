@@ -1,5 +1,5 @@
 using Base.Results;
-using Order.API.Domains.ShippingMethods;
+using Order.API.Domain.Shippings;
 
 namespace Order.API.Interfaces;
 

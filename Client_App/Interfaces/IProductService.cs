@@ -1,11 +1,11 @@
-﻿using Client_App.Domains.Products.Responses;
-using Client_App.Domains.Share;
+﻿using Client_App.DTOs.Products.Responses;
+using Client_App.DTOs.Share;
 
 namespace Client_App.Interfaces;
 
 public interface IProductService : IApiService
 {
-    public Task<Pagination<T>> GetProductsByConditionAsync<T>(
+    public Task<Result<Pagination<T>>> GetProductsByConditionAsync<T>(
         int offset,
         int? categoryId,
         bool isBestSeller,

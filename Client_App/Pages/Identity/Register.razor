@@ -1,6 +1,13 @@
 ﻿@page "/Register"
+@using Client_App.DTOs.Identities.Requests
+@using Client_App.Interfaces
+@using Client_App.Services.Share
 
-<div class=" w-full flex justify-center text-main  ">
+@inject IIdentityService IdentityService;
+@inject ErrorService ErrorService;
+@inject NavigationManager NavigationManager;
+
+<div class=" w-full flex justify-center text-main">
     <div class="flex w-full">
         <div class="w-1/2 flex">
             <div class="w-full h-[100vh] bg-cover bg-center"
@@ -8,65 +15,120 @@
             </div>
         </div>
         <div class="bg-white p-8 w-1/2 rounded-lg pt-[10%] px-[5%]">
-            <h1 class=" text-4xl font-bold mb-6 text-center font-heading_bold">Create Account</h1>
-            <form method="post" action="">
+            <h1 class=" text-4xl font-bold mb-6 text-center font-heading_bold">Register An Account</h1>
+            <EditForm Model="RegisterModel" OnValidSubmit="HandleValidSubmit">
+                <DataAnnotationsValidator/>
+
                 <div class="mb-4 flex justify-between">
                     <input
+                        @bind-value="FirstName"
+                        @bind-value:event="oninput"
+                        @onchange="HandleUsernameInput"
+                        type="text"
                         placeholder="First Name"
                         class="form-control mt-1 block w-[48%] px-6 py-4 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                        required>
+                        required/>
+
                     <input
+                        @bind-value="LastName"
+                        @bind-value:event="oninput"
+                        @onchange="HandleUsernameInput"
+                        type="text"
                         placeholder="Last Name"
                         class="form-control mt-1 block w-[48%] px-6 py-4 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                        required>
-                </div>
-                <div class="mb-4">
-                    <input
-                        placeholder="Phone Number"
-                        class="form-control mt-1 block w-full px-6 py-4 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                        required>
-                </div>
-                <div class="mb-4">
-                    <input
-                        type="email"
-                        name="email"
-                        placeholder="Email"
-                        class="form-control mt-1 block w-full px-6 py-4 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                        required>
-                </div>
-                <div class="mb-4">
-                    <input
-                        type="password"
-                        name="password"
-                        placeholder="Password"
-                        class="form-control mt-1 block w-full px-6 py-4 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                        required>
+                        required/>
+
+                    <ValidationMessage class="text-red-500" For="@(() => RegisterModel!.Username)"/>
                 </div>
 
+                <!-- Phone Number -->
+                <div class="mb-4">
+                    <input
+                        @bind-value="RegisterModel!.PhoneNumber"
+                        @bind-value:event="oninput"
+                        type="text"
+                        placeholder="Phone Number"
+                        class="form-control mt-1 block w-full px-6 py-4 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                        required/>
+
+                    <ValidationMessage class="text-red-500" For="@(() => RegisterModel.PhoneNumber)"/>
+                </div>
+
+                <!-- Email -->
+                <div class="mb-4">
+                    <InputText
+                        @bind-Value="RegisterModel.Email"
+                        type="email"
+                        placeholder="Email"
+                        class="form-control mt-1 block w-full px-6 py-4 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                        required/>
+                    <ValidationMessage class="text-red-500" For="@(() => RegisterModel.Email)"/>
+                </div>
+
+                <!-- Password -->
+                <div class="mb-4">
+                    <InputText
+                        @bind-Value="RegisterModel.Password"
+                        type="password"
+                        placeholder="Password"
+                        class="form-control mt-1 block w-full px-6 py-4 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                        required/>
+                    <ValidationMessage class="text-red-500" For="@(() => RegisterModel.Password)"/>
+                </div>
                 <div>
                     <button type="submit"
                             class="w-full inline-flex justify-center py-2 px-4 border border-transparent shadow-sm font-medium rounded-sm text-white bg-[#00205c] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 text-xl transition-all ease-out">
                         Register
                     </button>
                 </div>
+            </EditForm>
 
-                <div class="w-full flex justify-between mt-3  ">
-                    <button class="hover:underline" type="button">
-                        <NavLink href="/login">
-                            Already Have An Account?
-                        </NavLink>
-                    </button>
-                    <button class="hover:underline " type="submit">
-                        <a href="">
-                            Forgot Password?
-                        </a>
-                    </button>
-                </div>
-            </form>
+            <div class="w-full flex justify-between mt-3  ">
+                <button class="hover:underline" type="button">
+                    <NavLink href="/login">
+                        Already Have An Account?
+                    </NavLink>
+                </button>
+                <button class="hover:underline " type="submit">
+                    <a href="">
+                        Forgot Password?
+                    </a>
+                </button>
+            </div>
         </div>
     </div>
 </div>
 
 @code {
+
+    [SupplyParameterFromForm] private RegisterFormModel? RegisterModel { get; set; }
+
+    private string FirstName { get; set; } = string.Empty;
+
+    private string LastName { get; set; } = string.Empty;
+
+
+    protected override void OnInitialized()
+    {
+        RegisterModel ??= RegisterFormModel.Empty;
+    }
+
+    private void HandleUsernameInput()
+    {
+        RegisterModel!.Username = $"{FirstName}{LastName}".Replace(" ", "").ToLower();
+    }
+
+    private async Task HandleValidSubmit()
+    {
+        var result = await IdentityService.Register(RegisterModel!);
+
+        if (result.IsFailure)
+        {
+            ErrorService.SetErrorMessage(result.ErrorTypes);
+            return;
+        }
+
+        NavigationManager.NavigateTo("/login");
+    }
 
 }

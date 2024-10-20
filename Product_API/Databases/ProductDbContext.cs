@@ -1,8 +1,8 @@
 using Microsoft.EntityFrameworkCore;
-using Product_API.Domains.Categories;
-using Product_API.Domains.Comments;
-using Product_API.Domains.Discounts;
-using Product_API.Domains.Products;
+using Product_API.Domain.Categories;
+using Product_API.Domain.Comments;
+using Product_API.Domain.Discounts;
+using Product_API.Domain.Products;
 
 namespace Product_API.Databases;
 

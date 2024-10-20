@@ -1,10 +1,8 @@
-﻿using Product_API.Domains.Products;
-
-namespace Product_API.DTOs.Products;
+﻿namespace Product_API.DTOs.Products;
 
 public record ListProductResponse
 {
-    public Guid ProductId { get; init; }
+    public int ProductId { get; init; }
     public decimal DiscountPercent { get; init; }
     public string Name { get; init; } = null!;
     public string Description { get; init; } = null!;

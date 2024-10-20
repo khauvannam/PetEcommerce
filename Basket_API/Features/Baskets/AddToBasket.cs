@@ -1,8 +1,7 @@
 using Base.Results;
-using Basket_API.Domains.BasketItems;
-using Basket_API.Domains.Baskets;
+using Basket_API.Domain.BasketItems;
+using Basket_API.Domain.Baskets;
 using Basket_API.DTOs.BasketItems;
-using Basket_API.DTOs.Baskets;
 using Basket_API.Interfaces;
 using FluentValidation;
 using MediatR;
@@ -11,11 +10,8 @@ namespace Basket_API.Features.Baskets;
 
 public static class AddToBasket
 {
-    public record Command(
-        Guid BasketId,
-        Guid CustomerId,
-        List<BasketItemRequest> BasketItemRequests
-    ) : IRequest<Result<Basket>>;
+    public record Command(int BasketId, int CustomerId, List<BasketItemRequest> BasketItemRequests)
+        : IRequest<Result<Basket>>;
 
     internal sealed class Handler(IBasketRepository repository, IValidator<Command> validator)
         : IRequestHandler<Command, Result<Basket>>

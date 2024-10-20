@@ -1,4 +1,8 @@
-﻿<div class="grid h-screen place-content-center bg-white px-4">
+﻿@using Client_App.Services.Share
+
+@inject TitleService TitleService;
+
+<div class="grid h-screen place-content-center bg-white px-4">
     <div class="text-center">
         <h1 class="text-9xl font-black text-gray-200">404</h1>
 
@@ -16,5 +20,10 @@
 
 
 @code {
+
+    protected override async Task OnInitializedAsync()
+    {
+        await TitleService.SetTitleErrorAsync();
+    }
 
 }

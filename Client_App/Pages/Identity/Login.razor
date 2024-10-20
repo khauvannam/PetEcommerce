@@ -1,4 +1,9 @@
 ﻿@page "/Login"
+@using Client_App.DTOs.Identities.Requests
+@using Client_App.Interfaces
+
+@inject IIdentityService IdentityService;
+
 
 <div class=" w-full flex justify-center text-main  ">
     <div class="flex w-full">
@@ -9,22 +14,26 @@
         </div>
         <div class="bg-white p-8 w-1/2 rounded-lg pt-[10%] px-[5%]">
             <h1 class=" text-4xl font-bold mb-6 text-center font-heading_bold">Welcome Back!</h1>
-            <form method="post" action="">
+            <EditForm Model="LoginModel" OnValidSubmit="HandleValidSubmit">
+                <DataAnnotationsValidator/>
+                <ValidationSummary/>
+
                 <div class="mb-4">
-                    <input
+                    <InputText
+                        @bind-Value="LoginModel.Email"
                         type="email"
-                        name="email"
                         placeholder="Email"
-                        class="form-control mt-1 block w-full px-6 py-4 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                        required>
+                        class="form-control mt-1 block w-full px-6 py-4 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"/>
+                    <ValidationMessage For="@(() => LoginModel.Email)"/>
                 </div>
+
                 <div class="mb-4">
-                    <input
+                    <InputText
+                        @bind-Value="LoginModel.Password"
                         type="password"
-                        name="password"
                         placeholder="Password"
-                        class="form-control mt-1 block w-full px-6 py-4 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                        required>
+                        class="form-control mt-1 block w-full px-6 py-4 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"/>
+                    <ValidationMessage For="@(() => LoginModel.Password)"/>
                 </div>
 
                 <div>
@@ -33,24 +42,30 @@
                         Login
                     </button>
                 </div>
+            </EditForm>
+            <div class="w-full flex justify-between mt-3  ">
+                <button class="hover:underline" type="button">
 
-                <div class="w-full flex justify-between mt-3  ">
-                    <button class="hover:underline" type="button">
-
-                        <NavLink href="/register">
-                            Create an Account
-                        </NavLink>
-                    </button>
-                    <button class="hover:underline " type="submit">
-                        <a href="">
-                            Forgot Password?
-                        </a>
-                    </button>
-                </div>
-            </form>
+                    <NavLink href="/register">
+                        Create an Account
+                    </NavLink>
+                </button>
+                <button class="hover:underline " type="submit">
+                    <a href="">
+                        Forgot Password?
+                    </a>
+                </button>
+            </div>
         </div>
     </div>
 </div>
 
-@code {}
+@code {
+    private LoginFormModel LoginModel { get; set; } = new(string.Empty, string.Empty);
 
+    private async Task HandleValidSubmit()
+    {
+        await IdentityService.Login(LoginModel);
+    }
+
+}

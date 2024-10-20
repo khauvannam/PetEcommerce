@@ -25,38 +25,36 @@ namespace Product_API.Migrations
 
             modelBuilder.Entity("Product_API.Domains.Categories.Category", b =>
                 {
-                    b.Property<string>("Endpoint")
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
-
-                    b.Property<string>("CategoryName")
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
-
                     b.Property<int>("CategoryId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CategoryId"));
 
+                    b.Property<string>("CategoryName")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(2000)
                         .HasColumnType("nvarchar(2000)");
+
+                    b.Property<string>("Endpoint")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<string>("ImageUrl")
                         .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
-                    b.HasKey("Endpoint", "CategoryName");
+                    b.HasKey("CategoryId");
 
-                    SqlServerKeyBuilderExtensions.IsClustered(b.HasKey("Endpoint", "CategoryName"), false);
-
-                    b.HasIndex("CategoryId")
+                    b.HasIndex("Endpoint", "CategoryName")
                         .IsUnique();
-
-                    SqlServerIndexBuilderExtensions.IsClustered(b.HasIndex("CategoryId"));
 
                     b.ToTable("Categories");
                 });
@@ -74,8 +72,8 @@ namespace Product_API.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<Guid>("BuyerId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("BuyerId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Content")
                         .IsRequired()
@@ -85,8 +83,8 @@ namespace Product_API.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("ProductId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int?>("ProductId")
+                        .HasColumnType("int");
 
                     b.Property<int>("Rating")
                         .HasColumnType("int");
@@ -108,20 +106,16 @@ namespace Product_API.Migrations
 
             modelBuilder.Entity("Product_API.Domains.Discounts.Discount", b =>
                 {
-                    b.Property<Guid>("DiscountId")
+                    b.Property<int>("DiscountId")
                         .ValueGeneratedOnAdd()
                         .HasMaxLength(255)
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DiscountId"));
 
                     b.Property<int?>("CategoryId")
                         .HasMaxLength(255)
                         .HasColumnType("int");
-
-                    b.Property<int>("ClusterId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ClusterId"));
 
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime2");
@@ -147,32 +141,21 @@ namespace Product_API.Migrations
 
                     b.HasKey("DiscountId");
 
-                    SqlServerKeyBuilderExtensions.IsClustered(b.HasKey("DiscountId"), false);
-
-                    b.HasIndex("ClusterId")
-                        .IsUnique();
-
-                    SqlServerIndexBuilderExtensions.IsClustered(b.HasIndex("ClusterId"));
-
                     b.ToTable("Discounts");
                 });
 
             modelBuilder.Entity("Product_API.Domains.Products.Product", b =>
                 {
-                    b.Property<Guid>("ProductId")
+                    b.Property<int>("ProductId")
                         .ValueGeneratedOnAdd()
                         .HasMaxLength(255)
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ProductId"));
 
                     b.Property<int>("CategoryId")
                         .HasMaxLength(255)
                         .HasColumnType("int");
-
-                    b.Property<int>("ClusterId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ClusterId"));
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -197,8 +180,8 @@ namespace Product_API.Migrations
 
                     b.Property<string>("ProductBuyerIds")
                         .IsRequired()
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(max)");
+                        .IsUnicode(true)
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ProductUseGuide")
                         .IsRequired()
@@ -220,12 +203,6 @@ namespace Product_API.Migrations
 
                     b.HasKey("ProductId");
 
-                    SqlServerKeyBuilderExtensions.IsClustered(b.HasKey("ProductId"), false);
-
-                    b.HasIndex("ClusterId");
-
-                    SqlServerIndexBuilderExtensions.IsClustered(b.HasIndex("ClusterId"));
-
                     b.HasIndex("Name")
                         .IsUnique();
 
@@ -234,20 +211,16 @@ namespace Product_API.Migrations
 
             modelBuilder.Entity("Product_API.Domains.Products.ProductVariant", b =>
                 {
-                    b.Property<Guid>("VariantId")
+                    b.Property<int>("VariantId")
                         .ValueGeneratedOnAdd()
                         .HasMaxLength(255)
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("ClusterId")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ClusterId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("VariantId"));
 
-                    b.Property<Guid>("ProductId")
+                    b.Property<int>("ProductId")
                         .HasMaxLength(255)
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int");
 
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
@@ -269,13 +242,6 @@ namespace Product_API.Migrations
                         });
 
                     b.HasKey("VariantId");
-
-                    SqlServerKeyBuilderExtensions.IsClustered(b.HasKey("VariantId"), false);
-
-                    b.HasIndex("ClusterId")
-                        .IsUnique();
-
-                    SqlServerIndexBuilderExtensions.IsClustered(b.HasIndex("ClusterId"));
 
                     b.HasIndex("ProductId");
 

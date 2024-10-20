@@ -1,10 +1,14 @@
-﻿using Client_App.Domains.Comments.Responses;
-using Client_App.Domains.Share;
+﻿using Client_App.DTOs.Comments.Responses;
+using Client_App.DTOs.Share;
 
 namespace Client_App.Interfaces;
 
 public interface ICommentService : IApiService
 {
-    public Task<Pagination<T>> GetAllByProductIdAsync<T>(int limit, int offset, Guid? productId)
+    public Task<Result<Pagination<T>>> GetAllByProductIdAsync<T>(
+        int limit,
+        int offset,
+        int? productId
+    )
         where T : Comment;
 }

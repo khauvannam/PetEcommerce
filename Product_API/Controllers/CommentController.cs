@@ -1,6 +1,5 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Product_API.Domains.Comments;
 using Product_API.DTOs.Comments;
 using Product_API.Features.Comments;
 
@@ -54,7 +53,7 @@ public class CommentController(ISender sender) : ControllerBase
     public async Task<IActionResult> GetAll(
         [FromQuery] int limit,
         [FromQuery] int offset,
-        [FromQuery] Guid? productId = default
+        [FromQuery] int? productId = default
     )
     {
         var result = await sender.Send(new GetAllComment.Query(limit, offset, productId));

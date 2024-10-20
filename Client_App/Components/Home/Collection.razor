@@ -1,5 +1,6 @@
 @using Client_App.Components.Share
-@using Client_App.Domains.Categories.Responses
+@using Client_App.DTOs.Categories.Responses
+@using Client_App.DTOs.Share
 
 <div class="w-full px-6 md:px-20 py-10 bg-[#f0f5ff] text-main flex justify-center">
     <div class="w-full max-w-[1440px] mx-auto">
@@ -9,14 +10,14 @@
                 <NavLink href="/products/all" class="underline">Shop all</NavLink>
             </h3>
         </div>
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 pt-12">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 pt-12">
             @if (Categories.Count > 0)
             {
-                @foreach (var category in Categories.Take(4))
+                @foreach (var category in Categories[..4])
                 {
                     <NavLink href="@($"/products/{category.Endpoint}")" class="flex flex-col justify-between bg-[#f0f5ff] items-center rounded-lg w-full">
                         <div class="w-full flex justify-center bg-white rounded-lg">
-                            <img class="h-[168px] object-fill w-full rounded-lg" src="@category.ImageUrl" alt="@category.CategoryName">
+                            <img class="h-[168px] object-cover w-full rounded-lg" src="@category.ImageUrl" alt="@category.CategoryName" @onerror="() => category.ImageUrl = ImageUrl.DefaultCategory">
                         </div>
                         <p class="text-center my-4 py-3 text-xl font-bold  w-full">@category.CategoryName</p>
                         <p class="mb-5">@LimitDescription(category.Description!)</p>

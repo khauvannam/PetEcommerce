@@ -1,5 +1,6 @@
-@using Client_App.Domains.Products.Responses
 @using Client_App.Components.Share
+@using Client_App.DTOs.Products.Responses
+@using Client_App.DTOs.Share
 
 <div class="w-full px-4 md:px-10 py-10 bg-[#f0f5ff] text-main flex justify-center">
     <div class="w-full max-w-[1440px]">
@@ -16,7 +17,7 @@
                 {
                     <NavLink href="@($"/product/{product.ProductId}")" class="flex flex-col justify-between bg-[#f0f5ff] items-center rounded-lg p-4">
                         <div class="relative w-full flex justify-center bg-white rounded-lg">
-                            <img class="h-[168px] object-fill w-full rounded-lg" src="@product.ImageUrl" alt="@product.Name">
+                            <img class="h-[168px] object-cover w-full rounded-lg" src="@product.ImageUrl" alt="@product.Name" @onerror="() => product.ImageUrl = ImageUrl.DefaultProduct">
                             <span class="text-main bg-[#FADC6F] absolute h-6 rounded-full flex items-center px-2.5 text-sm font-medium left-2.5 top-2.5">Best Seller</span>
                         </div>
                         <p class="text-center my-4 text-xl font-bold w-full">@product.Name</p>

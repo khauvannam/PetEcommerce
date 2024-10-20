@@ -2,9 +2,7 @@
 
 public abstract class Entity
 {
-    protected Guid Id { get; init; } = Guid.NewGuid();
-
-    protected int ClusterId { get; init; }
+    protected int Id { get; init; }
 
     public override bool Equals(object? obj)
     {

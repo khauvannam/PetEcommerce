@@ -10,7 +10,7 @@ namespace Identity.API.Features.Users;
 
 public static class Login
 {
-    public record Command(string? Email, string? Password) : IRequest<Result<LoginResponse>>;
+    public record Command(string Email, string Password) : IRequest<Result<LoginResponse>>;
 
     internal sealed class Handler(IUserRepository repository, IValidator<Command> validator)
         : IRequestHandler<Command, Result<LoginResponse>>

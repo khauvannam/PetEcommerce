@@ -1,7 +1,7 @@
 ﻿using Base.Results;
 using FluentValidation;
 using MediatR;
-using Product_API.Domains.Products;
+using Product_API.Domain.Products;
 using Product_API.DTOs.Products;
 using Product_API.Errors;
 using Product_API.Interfaces;

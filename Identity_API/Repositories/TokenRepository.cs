@@ -1,7 +1,6 @@
 ﻿using System.Security.Claims;
 using Base.Results;
 using Identity.API.Databases;
-using Identity.API.Domains.Tokens;
 using Identity.API.Domains.Users;
 using Identity.API.DTOs.Tokens;
 using Identity.API.Errors;
@@ -19,7 +18,7 @@ public class TokenRepository(UserDbContext dbContext, JwtHandler jwtHandler) : I
         var claimsPrincipal = jwtHandler.GetClaimsPrincipalFromExpiredToken(command.AccessToken);
         var userIdString = claimsPrincipal.FindFirstValue("UserId");
 
-        if (!Guid.TryParse(userIdString, out var userId))
+        if (!int.TryParse(userIdString, out var userId))
             return Result.Failure<TokenResponse>(UserErrors.NotFound);
 
         var user = dbContext.Users.Include(u => u.RefreshToken).FirstOrDefault(u => u.Id == userId);
@@ -36,7 +35,7 @@ public class TokenRepository(UserDbContext dbContext, JwtHandler jwtHandler) : I
         var refreshToken = JwtHandler.GenerateRefreshToken();
         var accessToken = jwtHandler.GenerateAccessToken(claimsPrincipal.Claims);
         var expiredTime = DateTime.Now.AddMonths(1);
-        var tokenResponseDto = new TokenResponse(refreshToken, accessToken);
+        var tokenResponseDto = new TokenResponse(accessToken);
 
         user.RefreshToken!.Refresh(refreshToken, expiredTime);
         await dbContext.SaveChangesAsync();

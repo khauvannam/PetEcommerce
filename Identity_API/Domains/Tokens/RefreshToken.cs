@@ -16,8 +16,7 @@ public class RefreshToken
 
     public DateTime ExpiredAt { get; private set; }
 
-    [MaxLength(450)]
-    public Guid UserId { get; init; }
+    public int UserId { get; init; }
 
     public User User { get; init; } = null!;
 

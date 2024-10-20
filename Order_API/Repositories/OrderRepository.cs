@@ -1,7 +1,7 @@
 using Base.Results;
 using Microsoft.EntityFrameworkCore;
 using Order.API.Databases;
-using Order.API.Domains.Orders;
+using Order.API.Domain.Orders;
 using Order.API.Errors;
 using Order.API.Interfaces;
 
@@ -24,7 +24,7 @@ public class OrderRepository(OrderDbContext context) : IOrderRepository
         return Result.Success();
     }
 
-    public async Task<Result<OrderModel>> GetByIdAsync(Guid orderId)
+    public async Task<Result<OrderModel>> GetByIdAsync(int orderId)
     {
         var order = await context
             .Orders.Include(o => o.OrderLines)

@@ -1,7 +1,7 @@
 using Base.Results;
 using MediatR;
 using Newtonsoft.Json;
-using Product_API.Domains.Discounts;
+using Product_API.Domain.Discounts;
 using Product_API.Errors;
 using Product_API.Events.DiscountEvents;
 using Product_API.Interfaces;
@@ -15,7 +15,7 @@ public static class CreateDiscount
     {
         public string Name { get; set; } = null!;
         public decimal Percent { get; set; } = 0;
-        public List<Guid> ProductIdList { get; } = [];
+        public List<int> ProductIdList { get; } = [];
         public int? CategoryId { get; } = null;
         public DateTime StartDate { get; } = DateTime.Now;
         public DateTime EndDate { get; } = default;

@@ -11,11 +11,10 @@ public static class Register
 {
     public sealed class Command : IRequest<Result>
     {
-        public required string Email { get; init; }
-        public required string Username { get; init; }
-        public required string Password { get; init; }
-        public required string PhoneNumber { get; init; }
-        public required Address Address { get; init; }
+        public string? Email { get; init; }
+        public string? Username { get; init; }
+        public string? Password { get; init; }
+        public string? PhoneNumber { get; init; }
     }
 
     public sealed class Handler(IUserRepository repository, IValidator<Command> validator)
@@ -39,14 +38,7 @@ public static class Register
                 PhoneNumber = request.PhoneNumber,
             };
 
-            var city = request.Address.City;
-            var street = request.Address.Street;
-            var zipCode = request.Address.ZipCode;
-
-            var address = Address.Create(street, city, zipCode);
-            user.UpdateAddress(address);
-
-            return await repository.Register(user, request.Password);
+            return await repository.Register(user, request.Password!);
         }
     }
 

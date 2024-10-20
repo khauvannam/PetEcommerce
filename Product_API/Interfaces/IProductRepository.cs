@@ -1,6 +1,6 @@
 ﻿using Base;
 using Base.Results;
-using Product_API.Domains.Products;
+using Product_API.Domain.Products;
 using Product_API.DTOs.Products;
 using Product_API.Features.Products;
 
@@ -12,9 +12,9 @@ public interface IProductRepository
     Task<Result<Product>> CreateAsync(Product product);
     Task<Result> DeleteAsync(Product product, CancellationToken cancellationToken);
     Task<Result<Product>> UpdateAsync(Product product, CancellationToken cancellationToken);
-    Task<Result<Product>> GetByIdAsync(Guid productId, CancellationToken cancellationToken);
+    Task<Result<Product>> GetByIdAsync(int productId, CancellationToken cancellationToken);
     Task<Result<ProductByIdResponse>> GetInDetailByIdAsync(
-        Guid productId,
+        int productId,
         CancellationToken cancellationToken
     );
 }

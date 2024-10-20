@@ -21,8 +21,8 @@ public class OrdersController(ISender sender) : ControllerBase
         return BadRequest(result.ErrorTypes);
     }
 
-    [HttpDelete("{orderId}")]
-    public async Task<IActionResult> DeleteOrder(Guid orderId)
+    [HttpDelete("{orderId:int}")]
+    public async Task<IActionResult> DeleteOrder(int orderId)
     {
         var command = new DeleteOrder.Command(orderId);
         var result = await sender.Send(command);
@@ -31,8 +31,8 @@ public class OrdersController(ISender sender) : ControllerBase
         return NotFound(result.ErrorTypes);
     }
 
-    [HttpGet("{orderId}")]
-    public async Task<IActionResult> GetOrderById(Guid orderId)
+    [HttpGet("{orderId:int}")]
+    public async Task<IActionResult> GetOrderById(int orderId)
     {
         var query = new GetOrderById.Query(orderId);
         var result = await sender.Send(query);

@@ -1,19 +1,21 @@
-﻿@using Client_App.Domains.Products.Responses
-@using Client_App.Components.Share
+﻿@using Client_App.Components.Share
+@using Client_App.DTOs.Products.Responses
+@using Client_App.DTOs.Share
 
-<div class="flex flex-col justify-between items-center rounded-lg max-w-[300px] mt-12 pb-4 shadow-sm-light">
+<div class="flex flex-col justify-between items-center rounded-lg mt-12 pb-4 shadow-sm-light">
     <NavLink class="w-full" href="@($"/product/{ProductsInList.ProductId}")">
-        <div class="flex justify-center bg-white rounded-lg relative">
-            <img class="h-[350px] object-center w-full rounded-lg"
+        <div class="flex justify-center bg-white rounded-lg relative shadow-product overflow-hidden">
+            <img class="h-[350px] object-cover w-full rounded-lg hover:scale-125 transition-all duration-200 ease-in"
                  src="@ProductsInList.ImageUrl"
-                 alt="@ProductsInList.Name">
+                 alt="@ProductsInList.Name"
+                 @onerror="() => ProductsInList.ImageUrl = ImageUrl.DefaultProduct">
             @if (ProductsInList.SoldQuantity > 100)
             {
                 <span class="text-main bg-[#FADC6F] absolute h-6 rounded-full flex items-center px-2.5 text-sm font-medium left-2.5 top-2.5">Best Seller</span>
             }
         </div>
     </NavLink>
-    <div class="w-full flex flex-col items-center">
+    <div class="w-full flex flex-col ">
         <div class="flex items-center w-full">
             <p class="my-4 text-xl font-semibold w-full font-heading_bold truncate">@ProductsInList.Name</p>
         </div>
@@ -36,7 +38,9 @@
                 </div>
             }
         </div>
-        <CustomButton Value="Add To Cart"/>
+        <div class="w-full max-w-[300px]">
+            <CustomButton Value="Add To Cart"/>
+        </div>
     </div>
 </div>
 

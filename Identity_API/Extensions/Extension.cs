@@ -24,9 +24,7 @@ public static class Extension
     {
         var assembly = typeof(Program).Assembly;
         services
-            .AddIdentity<User, IdentityRole<Guid>>(opt =>
-                opt.SignIn.RequireConfirmedAccount = false
-            )
+            .AddIdentity<User, IdentityRole<int>>(opt => opt.SignIn.RequireConfirmedAccount = false)
             .AddSignInManager()
             .AddDefaultTokenProviders()
             .AddEntityFrameworkStores<UserDbContext>();

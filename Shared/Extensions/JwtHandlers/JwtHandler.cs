@@ -8,13 +8,13 @@ namespace Shared.Extensions.JwtHandlers;
 
 public class JwtHandler
 {
-    private readonly string _secret = Key.JwtSecret;
+    private const string Secret = Key.JwtSecret;
 
-    private SigningCredentials GetSigningCredentials()
+    private static SigningCredentials GetSigningCredentials()
     {
-        var key = Encoding.UTF8.GetBytes(_secret);
+        var key = Encoding.UTF8.GetBytes(Secret);
         var secret = new SymmetricSecurityKey(key);
-        return new SigningCredentials(secret, SecurityAlgorithms.HmacSha256);
+        return new SigningCredentials(secret, SecurityAlgorithms.Aes128CbcHmacSha256);
     }
 
     public string GenerateAccessToken(IEnumerable<Claim> claims)
@@ -45,7 +45,7 @@ public class JwtHandler
             ValidateIssuer = false,
             ValidateLifetime = false,
             ValidateIssuerSigningKey = false,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_secret)),
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Secret)),
         };
         var tokenHandler = new JwtSecurityTokenHandler();
         var principals = tokenHandler.ValidateToken(

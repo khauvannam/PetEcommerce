@@ -1,17 +1,19 @@
-﻿using System.Text.Json;
-using Client_App.Domains.Share;
+﻿using System.Text;
+using System.Text.Json;
+using Client_App.DTOs.Share;
 using Client_App.Interfaces;
+using Microsoft.AspNetCore.Components.Forms;
 
 namespace Client_App.Abstraction;
 
 public abstract class ApiService(IHttpClientFactory factory, string baseUrl, string endpoint)
-    : IApiService
+    : BaseApiService(factory, baseUrl, endpoint),
+        IApiService
 {
-    protected HttpClient Client { get; } = factory.CreateClient(baseUrl);
-    protected string Endpoint { get; } = endpoint;
-    private JsonSerializerOptions Options { get; } = new() { PropertyNameCaseInsensitive = true };
-
-    public virtual async Task<Pagination<T>> GetAllAsync<T>(int? limit = null, int? offset = null)
+    public virtual async Task<Result<Pagination<T>>> GetAllAsync<T>(
+        int? limit = null,
+        int? offset = null
+    )
         where T : class
     {
         var query = CreateQuery(limit, offset);
@@ -19,26 +21,34 @@ public abstract class ApiService(IHttpClientFactory factory, string baseUrl, str
         return await HandleResponse<Pagination<T>>(response);
     }
 
-    public virtual async Task<T> GetByIdAsync<T>(Guid id)
+    public virtual async Task<Result<T>> GetByIdAsync<T>(int id)
         where T : class
     {
         var response = await Client.GetAsync($"{Endpoint}/{id}");
         return await HandleResponse<T>(response);
     }
 
-    public virtual async Task CreateAsync<TRequest>(TRequest item)
+    public virtual async Task<Result> CreateAsync<TRequest>(TRequest item)
+        where TRequest : class
     {
-        var response = await Client.PostAsync(Endpoint, SerializeItem(item!));
-        await HandleResponse(response);
+        HttpContent content = HasIBrowserFile(item)
+            ? SerializeItemToMultipart(item)
+            : SerializeItemToJson(item);
+        var response = await Client.PostAsync(Endpoint, content);
+        return await HandleResponse(response);
     }
 
-    public virtual async Task UpdateAsync<TRequest>(TRequest item, string id)
+    public virtual async Task<Result> UpdateAsync<TRequest>(TRequest item, int id)
+        where TRequest : class
     {
-        var response = await Client.PutAsync($"{Endpoint}/{id}", SerializeItem(item!));
-        await HandleResponse(response);
+        HttpContent content = HasIBrowserFile(item)
+            ? SerializeItemToMultipart(item)
+            : SerializeItemToJson(item);
+        var response = await Client.PutAsync($"{Endpoint}/{id}", content);
+        return await HandleResponse(response);
     }
 
-    public virtual async Task DeleteAsync(string id)
+    public virtual async Task DeleteAsync(int id)
     {
         var response = await Client.DeleteAsync($"{Endpoint}/{id}");
         await HandleResponse(response);
@@ -50,33 +60,114 @@ public abstract class ApiService(IHttpClientFactory factory, string baseUrl, str
             ? $"?limit={limit}&offset={offset}"
             : string.Empty;
     }
+}
 
-    private StringContent SerializeItem(object item)
+public abstract class BaseApiService(IHttpClientFactory factory, string baseUrl, string endpoint)
+{
+    protected HttpClient Client { get; } = factory.CreateClient(baseUrl);
+    protected string Endpoint { get; } = endpoint;
+    private JsonSerializerOptions Options { get; } = new() { PropertyNameCaseInsensitive = true };
+
+    protected static StringContent SerializeItemToJson<TItem>(TItem item)
+        where TItem : class
     {
-        return new StringContent(JsonSerializer.Serialize(item, Options));
+        var content = new StringContent(
+            JsonSerializer.Serialize(item),
+            Encoding.UTF8,
+            "application/json"
+        );
+
+        return content;
+    }
+
+    protected static MultipartFormDataContent SerializeItemToMultipart<TItem>(TItem item)
+        where TItem : class
+    {
+        var content = new MultipartFormDataContent();
+
+        // Assuming 'item' has properties that should be sent as fields
+        foreach (var prop in item.GetType().GetProperties())
+        {
+            var value = prop.GetValue(item)?.ToString();
+            if (!string.IsNullOrEmpty(value))
+            {
+                content.Add(new StringContent(value), prop.Name);
+            }
+        }
+
+        return content;
     }
 
     // Handle response without returning any value
-    protected async Task HandleResponse(HttpResponseMessage response)
+    protected async Task<Result> HandleResponse(HttpResponseMessage response)
     {
-        var content = await response.Content.ReadAsStringAsync();
-        CheckErrors(content);
+        try
+        {
+            if (response.IsSuccessStatusCode)
+            {
+                return Result.Success();
+            }
+
+            var content = await response.Content.ReadAsStringAsync();
+            var error = JsonSerializer.Deserialize<ErrorType>(content, Options);
+            return Result.Failure(
+                error ?? new ErrorType("UnknownError", "An unknown error occurred")
+            );
+        }
+        catch (HttpRequestException httpRequestException)
+        {
+            return Result.Failure(
+                new ErrorType("HttpRequestException", httpRequestException.Message)
+            );
+        }
+        catch (Exception exception)
+        {
+            return Result.Failure(new(exception.Message, exception.StackTrace!));
+        }
     }
 
-    // Handle response with returning a deserialized object
-    protected async Task<TResult> HandleResponse<TResult>(HttpResponseMessage response)
-        where TResult : class
+    protected async Task<Result<T>> HandleResponse<T>(HttpResponseMessage response)
+        where T : class
     {
-        var content = await response.Content.ReadAsStringAsync();
-        var result = JsonSerializer.Deserialize<TResult>(content, Options)!;
-        return CheckErrors(result);
+        try
+        {
+            var content = await response.Content.ReadAsStringAsync();
+
+            if (!response.IsSuccessStatusCode)
+            {
+                var errorResult = JsonSerializer.Deserialize<ErrorType>(content, Options)!;
+                return Result.Failure<T>(new(errorResult.Code, errorResult.Description));
+            }
+
+            var result = JsonSerializer.Deserialize<T>(content, Options)!;
+
+            return Result.Success(result);
+        }
+        catch (NullReferenceException nullReferenceException)
+        {
+            return Result.Failure<T>(
+                new(nullReferenceException.Source!, nullReferenceException.Message)
+            );
+        }
+        catch (JsonException jsonException)
+        {
+            return Result.Failure<T>(new(jsonException.HelpLink!, jsonException.Message));
+        }
+        catch (HttpRequestException httpRequestException)
+        {
+            return Result.Failure<T>(new("httpRequestException ", httpRequestException.Message));
+        }
+        catch (Exception exception)
+        {
+            return Result.Failure<T>(new(exception.Message, exception.StackTrace!));
+        }
     }
 
-    // Error-checking logic
-    private static TItem CheckErrors<TItem>(TItem item)
-        where TItem : class
+    protected static bool HasIBrowserFile<TRequest>(TRequest item)
+        where TRequest : class
     {
-        // Implement error-checking logic if necessary
-        return item;
+        return item.GetType()
+            .GetProperties()
+            .Any(p => typeof(IBrowserFile).IsAssignableFrom(p.PropertyType));
     }
 }

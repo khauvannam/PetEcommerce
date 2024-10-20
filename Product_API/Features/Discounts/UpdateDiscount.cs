@@ -1,6 +1,5 @@
 ﻿using Base.Results;
 using MediatR;
-using Product_API.Domains.Discounts;
 using Product_API.DTOs.Discounts;
 using Product_API.Errors;
 using Product_API.Events.DiscountEvents;
@@ -10,7 +9,7 @@ namespace Product_API.Features.Discounts;
 
 public static class UpdateDiscount
 {
-    public record Command(Guid DiscountId, DiscountRequest Request) : IRequest<Result>;
+    public record Command(int DiscountId, DiscountRequest Request) : IRequest<Result>;
 
     public class Handler(IDiscountRepository repository, IMediator mediator)
         : IRequestHandler<Command, Result>

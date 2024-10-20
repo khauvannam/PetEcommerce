@@ -1,11 +1,16 @@
 @page "/"
 
 @using Client_App.Components.Home
-@using Client_App.Domains.Categories.Responses
-@using Client_App.Domains.Products.Responses
 @using Client_App.Interfaces
 @using Client_App.Components.Share
-@using Client_App.Domains.Share
+@using Client_App.DTOs.Categories.Responses
+@using Client_App.DTOs.Products.Responses
+@using Client_App.DTOs.Share
+@using Client_App.Services
+@using Client_App.Services.Share
+
+@inject ErrorService ErrorService;
+@inject TitleService TitleService;
 
 
 <Slider/>
@@ -35,13 +40,33 @@ else
     [Inject] public ICategoryService CategoryService { get; set; } = null!;
     [Inject] public IProductService ProductService { get; set; } = null!;
 
-    private readonly List<string> _excludedCategories = ["best-sellers", "all"];
-
     protected override async Task OnInitializedAsync()
     {
-        Products = await ProductService.GetProductsByConditionAsync<ProductsInList>(0, default, true, 8);
+        await TitleService.SetTitleAsync("Adopt love, adopt a pet");
 
-        Categories = (await CategoryService.GetAllAsync<Category>()).Data.Where(c => !_excludedCategories.Contains(c.Endpoint)).ToList();
+        var productResult = await ProductService.GetProductsByConditionAsync<ProductsInList>(0, default, true, 8);
+
+        if (!productResult.IsFailure)
+        {
+            Products = productResult.Value;
+        }
+        else
+        {
+            ErrorService.SetErrorMessage(productResult.ErrorTypes).NavigateTo();
+            return;
+        }
+
+        var categoryResult = await CategoryService.GetAllAsync<Category>(4);
+
+        if (!categoryResult.IsFailure)
+        {
+            Categories = categoryResult.Value.Data;
+        }
+        else
+        {
+            ErrorService.SetErrorMessage(categoryResult.ErrorTypes).NavigateTo();
+        }
+
         StateHasChanged();
     }
 

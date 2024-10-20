@@ -1,7 +1,6 @@
 using Base.Results;
 using Basket_API.Database;
-using Basket_API.Domains.Baskets;
-using Basket_API.DTOs.Baskets;
+using Basket_API.Domain.Baskets;
 using Basket_API.Errors;
 using Basket_API.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -30,7 +29,7 @@ public class BasketRepository(BasketDbContext context) : IBasketRepository
         return Result.Success();
     }
 
-    public async Task<Result<Basket>> GetByIdAsync(Guid basketId)
+    public async Task<Result<Basket>> GetByIdAsync(int basketId)
     {
         var basket = await context
             .Baskets.Include(b => b.BasketItemsList)

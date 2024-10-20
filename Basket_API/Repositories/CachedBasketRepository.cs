@@ -1,6 +1,5 @@
 using Base.Results;
-using Basket_API.Domains.Baskets;
-using Basket_API.DTOs.Baskets;
+using Basket_API.Domain.Baskets;
 using Basket_API.Interfaces;
 using Microsoft.Extensions.Caching.Distributed;
 using Newtonsoft.Json;
@@ -43,7 +42,7 @@ public class CachedBasketRepository(IDistributedCache cache, IBasketRepository d
         return result;
     }
 
-    public async Task<Result<Basket>> GetByIdAsync(Guid basketId)
+    public async Task<Result<Basket>> GetByIdAsync(int basketId)
     {
         var key = $"basket-{basketId}";
         var cachedBasket = await cache.GetStringAsync(key);

@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Identity.API.Databases;
 
 public class UserDbContext(DbContextOptions<UserDbContext> options)
-    : IdentityDbContext<User, IdentityRole<Guid>, Guid>(options)
+    : IdentityDbContext<User, IdentityRole<int>, int>(options)
 {
     public DbSet<RefreshToken> RefreshTokens { get; set; }
 

@@ -2,7 +2,7 @@
 using Base.Results;
 using Microsoft.EntityFrameworkCore;
 using Product_API.Databases;
-using Product_API.Domains.Comments;
+using Product_API.Domain.Comments;
 using Product_API.Errors;
 using Product_API.Interfaces;
 
@@ -43,7 +43,7 @@ public class CommentRepository(ProductDbContext dbContext) : ICommentRepository
     public async Task<Result<Pagination<Comment>>> GetAllAsync(
         int limit,
         int offset,
-        Guid? productId
+        int? productId
     )
     {
         var query = dbContext.Comments.AsQueryable().AsNoTracking();

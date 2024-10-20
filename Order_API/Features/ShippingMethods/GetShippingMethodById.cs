@@ -1,6 +1,6 @@
 using Base.Results;
 using MediatR;
-using Order.API.Domains.ShippingMethods;
+using Order.API.Domain.Shippings;
 using Order.API.Interfaces;
 
 namespace Order.API.Features.ShippingMethods;

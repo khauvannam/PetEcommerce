@@ -1,6 +1,5 @@
 using Base.Results;
-using Basket_API.Domains.Baskets;
-using Basket_API.DTOs.Baskets;
+using Basket_API.Domain.Baskets;
 using Basket_API.Interfaces;
 using MediatR;
 
@@ -8,7 +7,7 @@ namespace Basket_API.Features.Baskets;
 
 public static class GetBasketById
 {
-    public record Query(Guid BasketId) : IRequest<Result<Basket>>;
+    public record Query(int BasketId) : IRequest<Result<Basket>>;
 
     internal sealed class Handler(IBasketRepository repository)
         : IRequestHandler<Query, Result<Basket>>

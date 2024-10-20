@@ -1,6 +1,5 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Product_API.Domains.Discounts;
 using Product_API.DTOs.Discounts;
 using Product_API.Features.Discounts;
 
@@ -20,7 +19,7 @@ public class DiscountController(ISender sender) : ControllerBase
     }
 
     [HttpDelete("{discountId}")]
-    public async Task<IActionResult> DeleteDiscount(Guid discountId)
+    public async Task<IActionResult> DeleteDiscount(int discountId)
     {
         var result = await sender.Send(new DeleteDiscount.Command(discountId));
         if (result.IsFailure)
@@ -30,7 +29,7 @@ public class DiscountController(ISender sender) : ControllerBase
 
     [HttpPut("{discountId}")]
     public async Task<IActionResult> UpdateDiscount(
-        Guid discountId,
+        int discountId,
         [FromForm] DiscountRequest request
     )
     {
