@@ -23,54 +23,53 @@
 
                 <div class="flex justify-between">
                     <CustomInputText @bind-Value="@FirstName" PlaceHolder="First Name"
-                                     Model="@RegisterModel"
                                      ClassCss="form-control mt-1 block w-[48%] px-6 py-4 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                                     PropertyName="@nameof(RegisterModel.Username)"
+                                     PropertyToValidate="@nameof(RegisterModel.Username)"
                                      OnChange="HandleUsernameInput"/>
 
                     <CustomInputText @bind-Value="@LastName" PlaceHolder="Last Name"
-                                     Model="RegisterModel"
                                      ClassCss="form-control mt-1 block w-[48%] px-6 py-4 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                                     PropertyName="@nameof(RegisterModel.Username)"
+                                     PropertyToValidate="@nameof(RegisterModel.Username)"
                                      OnChange="HandleUsernameInput"/>
                 </div>
 
                 <div class="text-red-500 mb-4">
-                    <ValidationMessage For="() => RegisterModel.Username"/>
+                    <ValidationMessage For="@(() => RegisterModel!.Username)"/>
                 </div>
+
                 <!-- Phone Number -->
                 <div class="mb-4">
-                    <InputText
+                    <CustomInputText
                         @bind-Value="RegisterModel!.PhoneNumber"
-                        type="text"
                         placeholder="Phone Number"
-                        class="form-control mt-1 block w-full px-6 py-4 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                        required/>
+                        ClassCss="form-control mt-1 block w-full px-6 py-4 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                        PropertyToValidate="@nameof(RegisterModel.PhoneNumber)"/>
 
                     <ValidationMessage class="text-red-500" For="@(() => RegisterModel.PhoneNumber)"/>
                 </div>
 
                 <!-- Email -->
                 <div class="mb-4">
-                    <InputText
-                        @bind-Value="RegisterModel.Email"
-                        type="email"
+                    <CustomInputText
+                        @bind-Value="RegisterModel!.Email"
                         placeholder="Email"
-                        class="form-control mt-1 block w-full px-6 py-4 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                        required/>
+                        ClassCss="form-control mt-1 block w-full px-6 py-4 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                        PropertyToValidate="@nameof(RegisterModel.Email)"/>
+
                     <ValidationMessage class="text-red-500" For="@(() => RegisterModel.Email)"/>
                 </div>
 
                 <!-- Password -->
                 <div class="mb-4">
-                    <InputText
-                        @bind-Value="RegisterModel.Password"
-                        type="password"
+                    <CustomInputText
+                        @bind-Value="RegisterModel!.Password"
                         placeholder="Password"
-                        class="form-control mt-1 block w-full px-6 py-4 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                        required/>
+                        ClassCss="form-control mt-1 block w-full px-6 py-4 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                        PropertyToValidate="@nameof(RegisterModel.Password)"/>
+
                     <ValidationMessage class="text-red-500" For="@(() => RegisterModel.Password)"/>
                 </div>
+
                 <div>
                     <button type="submit"
                             class="w-full inline-flex justify-center py-2 px-4 border border-transparent shadow-sm font-medium rounded-sm text-white bg-[#00205c] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 text-xl transition-all ease-out">
@@ -102,7 +101,6 @@
     private string FirstName { get; set; } = string.Empty;
 
     private string LastName { get; set; } = string.Empty;
-
 
     protected override void OnInitialized()
     {

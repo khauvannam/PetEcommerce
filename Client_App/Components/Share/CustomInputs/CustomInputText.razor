@@ -2,7 +2,7 @@
 
 @inject CustomValidatorService CustomValidatorService;
 
-<input @bind-value="@CurrentValue" class="@ClassCss" placeholder="@PlaceHolder" @bind-value:event="oninput"/>
+<input @bind:get="@Value" @bind:set="OnInput" type="text" class="@ClassCss" placeholder="@PlaceHolder" @bind:event="oninput"/>
 
 @code {
     [Parameter] public string? PlaceHolder { get; set; }
@@ -10,57 +10,55 @@
     [Parameter] public string Value { get; set; } = default!;
     [Parameter] public EventCallback<string> ValueChanged { get; set; }
     [Parameter] public EventCallback OnChange { get; set; }
-    [Parameter] public object Model { get; set; } = null!;
-    [Parameter] public string? PropertyName { get; set; }
+    [Parameter] public string? PropertyToValidate { get; set; }
 
-    private string CurrentValue
+    [CascadingParameter] EditContext? EditContext { get; set; }
+
+    private ValidationMessageStore? ValidationMessageStore { get; set; }
+    private FieldIdentifier FieldIdentifier { get; set; }
+    private object Model { get; set; } = null!;
+
+    private void OnInput(string? value)
     {
-        get => Value;
-        set
+        if (EqualityComparer<string?>.Default.Equals(Value, value)) return;
+
+        Value = value!;
+        ValueChanged.InvokeAsync(Value);
+
+        if (OnChange.HasDelegate)
         {
-            if (EqualityComparer<string>.Default.Equals(Value, value)) return;
-
-            Value = value;
-            ValueChanged.InvokeAsync(Value);
-
-            if (OnChange.HasDelegate)
-            {
-                OnChange.InvokeAsync();
-            }
-
-            ValidateProperty();
+            OnChange.InvokeAsync();
         }
+
+        ValidateProperty();
     }
 
     private void ValidateProperty()
     {
-        if (!string.IsNullOrEmpty(PropertyName))
+        if (string.IsNullOrEmpty(PropertyToValidate)) return;
+        
+        var validationResults = CustomValidatorService.Validate(Model, PropertyToValidate).ToList();
+
+        var fieldIdentifier = new FieldIdentifier(Model, PropertyToValidate);
+        EditContext?.NotifyFieldChanged(fieldIdentifier);
+
+        if (validationResults.Any())
         {
-            var validationResults = CustomValidatorService.Validate(Model, PropertyName).ToList();
-
-            var fieldIdentifier = new FieldIdentifier(Model, PropertyName);
-            EditContext?.NotifyFieldChanged(fieldIdentifier);
-
-            if (validationResults.Any())
-            {
-                ValidationMessageStore?.Add(fieldIdentifier, validationResults.Select(v => v.ErrorMessage)!);
-            }
-            else
-            {
-                ValidationMessageStore?.Clear(fieldIdentifier);
-            }
+            ValidationMessageStore?.Add(fieldIdentifier, validationResults.Select(v => v.ErrorMessage)!);
+        }
+        else
+        {
+            ValidationMessageStore?.Clear(fieldIdentifier);
         }
     }
 
-    [CascadingParameter] EditContext? EditContext { get; set; }
-    private ValidationMessageStore? ValidationMessageStore { get; set; }
-
     protected override void OnInitialized()
     {
-        if (EditContext is not null)
-        {
-            ValidationMessageStore = new ValidationMessageStore(EditContext);
-        }
+        if (EditContext is null) return;
+
+        Model = EditContext.Model;
+        
+        ValidationMessageStore = new ValidationMessageStore(EditContext);
     }
 
 }

@@ -11,11 +11,11 @@ using Shared.Extensions.JwtHandlers;
 
 namespace Identity.API.Repositories;
 
-public class TokenRepository(UserDbContext dbContext, JwtHandler jwtHandler) : ITokenRepository
+public class TokenRepository(UserDbContext dbContext) : ITokenRepository
 {
     public async Task<Result<TokenResponse>> Refresh(Refresh.Command command)
     {
-        var claimsPrincipal = jwtHandler.GetClaimsPrincipalFromExpiredToken(command.AccessToken);
+        var claimsPrincipal = JwtHandler.GetClaimsPrincipalFromExpiredToken(command.AccessToken);
         var userIdString = claimsPrincipal.FindFirstValue("UserId");
 
         if (!int.TryParse(userIdString, out var userId))
@@ -33,7 +33,7 @@ public class TokenRepository(UserDbContext dbContext, JwtHandler jwtHandler) : I
             return Result.Failure<TokenResponse>(TokenErrors.ExpiredToken());
 
         var refreshToken = JwtHandler.GenerateRefreshToken();
-        var accessToken = jwtHandler.GenerateAccessToken(claimsPrincipal.Claims);
+        var accessToken = JwtHandler.GenerateAccessToken(claimsPrincipal.Claims);
         var expiredTime = DateTime.Now.AddMonths(1);
         var tokenResponseDto = new TokenResponse(accessToken);
 

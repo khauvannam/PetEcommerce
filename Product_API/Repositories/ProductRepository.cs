@@ -1,4 +1,5 @@
-﻿using Base;
+﻿using System.Reflection;
+using Base;
 using Base.Results;
 using Microsoft.EntityFrameworkCore;
 using Product_API.Databases;
@@ -92,6 +93,92 @@ public class ProductRepository(ProductDbContext dbContext) : IProductRepository
         return product == null
             ? Result.Failure<Product>(ProductErrors.NotFound)
             : Result.Success(product);
+    }
+
+    public async ValueTask<Result<Pagination<ListProductResponse>>> GetProductsBySearch(
+        ProductsSearchFilterRequest filterRequest
+    )
+    {
+        if (string.IsNullOrEmpty(filterRequest.SearchText))
+        {
+            return Result.Failure<Pagination<ListProductResponse>>(
+                new("Search text is required", "Your search text is empty, please try again.")
+            );
+        }
+
+        // Start with the base query for products
+        var productsQueryable = dbContext
+            .Products.FromSqlInterpolated(
+                $"SELECT * FROM Products p WHERE LOWER(p.Name) LIKE {'%' + filterRequest.SearchText.Trim().ToLower() + '%'}"
+            )
+            .Include(p => p.ProductVariants)
+            .AsQueryable();
+
+        if (!filterRequest.Available)
+        {
+            productsQueryable = productsQueryable.Where(p => p.TotalQuantity == 0);
+        }
+
+        if (filterRequest.MinPrice > 0M)
+        {
+            productsQueryable = productsQueryable.Where(p =>
+                p.ProductVariants.Any(v => v.OriginalPrice.Value >= filterRequest.MinPrice)
+            );
+        }
+
+        if (filterRequest.MaxPrice is > 0M and < 10000M)
+        {
+            productsQueryable = productsQueryable.Where(p =>
+                p.ProductVariants.Any(v => v.OriginalPrice.Value <= filterRequest.MaxPrice)
+            );
+        }
+
+        if (!string.IsNullOrEmpty(filterRequest.SortBy))
+        {
+            var property = typeof(Product).GetProperty(
+                filterRequest.SortBy,
+                BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance
+            );
+
+            if (property is null)
+            {
+                return Result.Failure<Pagination<ListProductResponse>>(
+                    new(
+                        "Invalid Sort Property",
+                        $"Property '{filterRequest.SortBy}' does not exist."
+                    )
+                );
+            }
+
+            productsQueryable = filterRequest.IsDesc
+                ? productsQueryable.OrderByDescending(p => EF.Property<object>(p, property.Name))
+                : productsQueryable.OrderBy(p => EF.Property<object>(p, property.Name));
+        }
+
+        // Apply pagination and project to response model
+        var products = await productsQueryable
+            .Skip(filterRequest.Offset)
+            .Take(filterRequest.Limit)
+            .Select(p => new ListProductResponse
+            {
+                ProductId = p.ProductId,
+                CreatedAt = p.CreatedAt,
+                Description = p.Description,
+                DiscountPercent = p.DiscountPercent.Value,
+                ImageUrl = p.ImageUrlList[0],
+                Name = p.Name,
+                Price = p.ProductVariants[0].OriginalPrice.Value,
+                Quantity = p.TotalQuantity,
+                TotalRating = p.TotalRating,
+                SoldQuantity = p.SoldQuantity,
+            })
+            .ToListAsync();
+
+        // Count total products after filters for pagination
+        var totalCount = await productsQueryable.CountAsync();
+        var pagination = new Pagination<ListProductResponse>(products, totalCount);
+
+        return Result.Success(pagination);
     }
 
     public async Task<Result<ProductByIdResponse>> GetInDetailByIdAsync(

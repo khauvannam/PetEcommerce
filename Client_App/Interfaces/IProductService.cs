@@ -5,11 +5,13 @@ namespace Client_App.Interfaces;
 
 public interface IProductService : IApiService
 {
-    public Task<Result<Pagination<T>>> GetProductsByConditionAsync<T>(
+    Task<Result<Pagination<T>>> GetProductsByConditionAsync<T>(
         int offset,
         int? categoryId,
         bool isBestSeller,
         int limit = 10
     )
         where T : ProductsInList;
+
+    Task<Result<Pagination<T>>> GetProductsBySearch<T>(string searchText, int limit = 4);
 }

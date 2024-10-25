@@ -15,8 +15,7 @@ namespace Identity.API.Repositories;
 internal class UserRepository(
     UserManager<User> userManager,
     SignInManager<User> signInManager,
-    UserDbContext dbContext,
-    JwtHandler jwtHandler
+    UserDbContext dbContext
 ) : IUserRepository
 {
     public async Task<Result> Register(User user, string password)
@@ -33,8 +32,11 @@ internal class UserRepository(
     public async Task<Result<LoginResponse>> Login(Login.Command command)
     {
         var user = await userManager.FindByEmailAsync(command.Email);
+
         if (user is null)
             return Result.Failure<LoginResponse>(UserErrors.NotFound);
+
+        await dbContext.Entry(user).Reference(u => u.RefreshToken).LoadAsync();
 
         var result = await signInManager.PasswordSignInAsync(
             user.UserName!,
@@ -52,7 +54,7 @@ internal class UserRepository(
             new("Email", user.Email!),
         ];
 
-        var accessToken = jwtHandler.GenerateAccessToken(claims);
+        var accessToken = JwtHandler.GenerateAccessToken(claims);
         var refreshToken = JwtHandler.GenerateRefreshToken();
         var expiredTime = DateTime.Now.AddMonths(1);
 

@@ -13,8 +13,13 @@ public interface IProductRepository
     Task<Result> DeleteAsync(Product product, CancellationToken cancellationToken);
     Task<Result<Product>> UpdateAsync(Product product, CancellationToken cancellationToken);
     Task<Result<Product>> GetByIdAsync(int productId, CancellationToken cancellationToken);
+
     Task<Result<ProductByIdResponse>> GetInDetailByIdAsync(
         int productId,
         CancellationToken cancellationToken
+    );
+
+    ValueTask<Result<Pagination<ListProductResponse>>> GetProductsBySearch(
+        ProductsSearchFilterRequest filterRequest
     );
 }

@@ -1,11 +1,10 @@
-﻿
-<nav aria-label="Page navigation example">
+﻿<nav aria-label="Page navigation example">
     <ul class="inline-flex -space-x-px text-base h-10">
         <li>
             <button class="flex items-center justify-center px-4 h-10 ms-0 leading-tight text-gray-500 bg-white border border-e-0 border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700"
                     disabled="@(CurrentPage == 1)"
-                    @onclick="() => OnPageClick.InvokeAsync(1)">
-                Previous
+                    @onclick="() => OnPageChangeAsync(1)">
+                First
             </button>
         </li>
 
@@ -16,7 +15,7 @@
                     var currentPage = page;
                 }
                 <button class="flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 " style=" @(currentPage == CurrentPage ? "background-color: #00205c;color: white" : ""); "
-                        @onclick="() => OnPageClick.InvokeAsync(currentPage)" disabled="@(currentPage == -1)">
+                        @onclick="() => OnPageChangeAsync(currentPage)" disabled="@(currentPage == -1)">
                     @(page == -1 ? "..." : currentPage)
                 </button>
             </li>
@@ -24,9 +23,9 @@
 
         <li>
             <button class="flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700"
-                    disabled="@(CurrentPage == TotalPages )"
-                    @onclick="() => OnPageClick.InvokeAsync(TotalPages)">
-                Next
+                    disabled="@(CurrentPage == TotalPages)"
+                    @onclick="() => OnPageChangeAsync(TotalPages)">
+                Last
             </button>
         </li>
     </ul>
@@ -34,7 +33,7 @@
 
 @code {
     [Parameter] public int TotalPages { get; set; }
-    [Parameter] public int CurrentPage { get; set; }
+    private int CurrentPage { get; set; } = 1;
     [Parameter] public EventCallback<int> OnPageClick { get; set; }
     private List<int> PaginationList { get; set; } = null!;
 
@@ -78,4 +77,22 @@
         return pagination;
     }
 
+    private async Task OnPageChangeAsync(int newPage)
+    {
+        if (newPage < 1 || newPage > TotalPages || newPage == CurrentPage)
+        {
+            return;
+        }
+
+        CurrentPage = newPage;
+        
+        PaginationList = GetPagination(CurrentPage, TotalPages);
+        
+        if (OnPageClick.HasDelegate)
+        {
+            await OnPageClick.InvokeAsync(CurrentPage);
+        }
+        
+        
+    }
 }

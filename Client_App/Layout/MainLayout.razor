@@ -1,8 +1,7 @@
-﻿@using Client_App.Services.Share
-@using Client_App.Components.Share.Helpers
+﻿@using Client_App.Components.Share.Helpers
 @using Client_App.Components.Share.ReusableComponents
+@using Client_App.Components.Share.CustomInputs
 
-@inject ErrorService ErrorService;
 
 @inherits LayoutComponentBase
 
@@ -22,12 +21,9 @@
 
 <ErrorModal/>
 
+<SearchInput/>
+
 @code {
 
-    protected override Task OnInitializedAsync()
-    {
-        ErrorService.ClearErrorMessage();
-        return Task.CompletedTask;
-    }
 
 }

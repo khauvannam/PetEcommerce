@@ -5,7 +5,7 @@
 
 @inject IIdentityService IdentityService;
 @inject ErrorService ErrorService;
-
+@inject NavigationManager NavigationManager;
 
 <div class=" w-full flex justify-center text-main  ">
     <div class="flex w-full">
@@ -18,24 +18,27 @@
             <h1 class=" text-4xl font-bold mb-6 text-center font-heading_bold">Welcome Back!</h1>
             <EditForm Model="LoginModel" OnValidSubmit="HandleValidSubmit">
                 <DataAnnotationsValidator/>
-                <ValidationSummary/>
 
                 <div class="mb-4">
+ 
                     <InputText
                         @bind-Value="LoginModel.Email"
                         type="email"
                         placeholder="Email"
                         class="form-control mt-1 block w-full px-6 py-4 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"/>
-                    <ValidationMessage For="@(() => LoginModel.Email)"/>
+
+                    <ValidationMessage class="text-red-500" For="@(() => LoginModel.Email)"/>
                 </div>
 
                 <div class="mb-4">
+                    
                     <InputText
                         @bind-Value="LoginModel.Password"
                         type="password"
                         placeholder="Password"
                         class="form-control mt-1 block w-full px-6 py-4 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"/>
-                    <ValidationMessage For="@(() => LoginModel.Password)"/>
+                    
+                    <ValidationMessage class="text-red-500" For="@(() => LoginModel.Password)"/>
                 </div>
 
                 <div>
@@ -68,10 +71,13 @@
     private async Task HandleValidSubmit()
     {
         var result = await IdentityService.Login(LoginModel);
+        
         if (result.IsFailure)
         {
             ErrorService.SetErrorMessage(result.ErrorTypes).NavigateTo(default);
         }
+        
+        NavigationManager.NavigateTo("/");
     }
 
 }

@@ -17,7 +17,7 @@ public class JwtHandler
         return new SigningCredentials(secret, SecurityAlgorithms.Aes128CbcHmacSha256);
     }
 
-    public string GenerateAccessToken(IEnumerable<Claim> claims)
+    public static string GenerateAccessToken(IEnumerable<Claim> claims)
     {
         var signingCredentials = GetSigningCredentials();
         var tokenOption = new JwtSecurityToken(
@@ -37,7 +37,7 @@ public class JwtHandler
         return refreshToken;
     }
 
-    public ClaimsPrincipal GetClaimsPrincipalFromExpiredToken(string token)
+    public static ClaimsPrincipal GetClaimsPrincipalFromExpiredToken(string token)
     {
         var tokenValidationParameters = new TokenValidationParameters
         {

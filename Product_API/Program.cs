@@ -17,6 +17,7 @@ var provider = app.Services;
 provider.AddDataSeeder();
 
 app.UseCors("AllowAllOrigins");
+
 app.MapControllers();
 app.UseSwaggerConfig();
 app.Run();

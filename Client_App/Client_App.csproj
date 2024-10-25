@@ -15,8 +15,8 @@
     </ItemGroup>
 
     <ItemGroup>
+        <Folder Include="DTOs\Baskets\Requests\" />
         <Folder Include="DTOs\Categories\Requests\" />
-        <Folder Include="DTOs\Products\Requests\" />
         <Folder Include="wwwroot\images\identity\" />
     </ItemGroup>
 

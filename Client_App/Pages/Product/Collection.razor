@@ -41,7 +41,7 @@ else
             </div>
 
             <div class="my-10 w-full justify-center flex">
-                <Pagination TotalPages="TotalPages" CurrentPage="CurrentPage" OnPageClick="OnPageChangeAsync"/>
+                <Pagination TotalPages="TotalPages" OnPageClick="OnPageClick"/>
             </div>
         }
         else
@@ -77,26 +77,21 @@ else
     public Pagination<Category>? CategoriesPagination { get; set; }
 
     private static int Limit => 10;
-    private int CurrentPage { get; set; } = 1;
     private int TotalPages { get; set; }
 
     [Inject] public required IProductService ProductService { get; set; }
     [Inject] public required ICategoryService CategoryService { get; set; }
 
-    protected override Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
         if (string.IsNullOrEmpty(CategoryEndpoint))
         {
             NavigationManager.NavigateTo("/products/all", true); // Force reload
-            return Task.CompletedTask;
         }
-
-        return Task.CompletedTask;
     }
 
     protected override async Task OnParametersSetAsync()
     {
-        CurrentPage = 1;
         await LoadDataAsync();
         TotalPages = (int)Math.Ceiling((double)ProductsPagination!.TotalItems / Limit);
     }
@@ -113,6 +108,7 @@ else
         }
 
         Category = categoryResult.Value;
+
         await TitleService.SetTitleAsync(Category.CategoryName!);
 
         var categoryPaginationResult = await CategoryService.GetAllAsync<Category>();
@@ -125,13 +121,12 @@ else
 
         CategoriesPagination = categoryPaginationResult.Value;
 
-
-        await FetchProductAsync(CurrentPage - 1);
+        await FetchProductAsync(default);
 
         StateHasChanged();
     }
 
-    private async Task FetchProductAsync(int offset = 0)
+    private async Task FetchProductAsync(int offset)
     {
         var result = CategoryEndpoint switch
         {
@@ -139,6 +134,7 @@ else
             "best-sellers" => await ProductService.GetProductsByConditionAsync<ProductsInList>(offset * Limit, default, true, Limit),
             _ => await ProductService.GetProductsByConditionAsync<ProductsInList>(offset * Limit, Category!.CategoryId, false, Limit)
         };
+        
         if (result.IsFailure)
         {
             ErrorService.SetErrorMessage(result.ErrorTypes).NavigateTo();
@@ -148,10 +144,10 @@ else
         ProductsPagination = result.Value;
     }
 
-    private async Task OnPageChangeAsync(int newPage)
+    private async Task OnPageClick(int newPage)
     {
-        CurrentPage = newPage;
-        await FetchProductAsync(CurrentPage - 1); // Update the offset based on page
+        await FetchProductAsync(newPage - 1);
+
         await JsRuntime.InvokeVoidAsync("scrollToTop"); // Scroll to the top of the product list
     }
 

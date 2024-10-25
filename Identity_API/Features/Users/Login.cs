@@ -21,10 +21,15 @@ public static class Login
         )
         {
             var validatorResult = await validator.ValidateAsync(request, cancellationToken);
+
             if (!validatorResult.IsValid)
+            {
+                var errors = string.Join(", ", validatorResult.Errors.Select(x => x.ErrorMessage));
                 return Result.Failure<LoginResponse>(
-                    new ErrorType("Login.Command", validatorResult.Errors.ToString()!)
+                    new(nameof(Command), $"Invalid request : {errors}")
                 );
+            }
+
             return await repository.Login(request);
         }
     }

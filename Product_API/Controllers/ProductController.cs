@@ -1,5 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using MediatR;
+﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Product_API.DTOs.Products;
 using Product_API.Features.Products;
@@ -55,6 +54,18 @@ public class ProductController(ISender sender) : ControllerBase
             return Ok(result.Value);
 
         return NotFound(result.ErrorTypes);
+    }
+
+    [HttpGet("search")]
+    public async Task<IActionResult> Search([FromQuery] ProductsSearchFilterRequest request)
+    {
+        var result = await sender.Send(new GetProductsBySearch.Query(request));
+        if (!result.IsFailure)
+        {
+            return Ok(result.Value);
+        }
+
+        return BadRequest(result.ErrorTypes);
     }
 
     [HttpPut("{productId:int}")]

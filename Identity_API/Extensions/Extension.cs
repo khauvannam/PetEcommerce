@@ -33,12 +33,12 @@ public static class Extension
 
         services.AddValidatorsFromAssembly(assembly);
 
-        // Add outside services
+        // Add external services
+
         services.AddBlobService();
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<ITokenRepository, TokenRepository>();
         services.AddScoped<IUserServiceRepository, UserServiceRepository>();
         services.AddScoped<UserEmailService>();
-        services.AddTransient<JwtHandler>();
     }
 }

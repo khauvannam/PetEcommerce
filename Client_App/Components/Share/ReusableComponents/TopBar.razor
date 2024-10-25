@@ -1,12 +1,12 @@
-@using Client_App.DTOs.Categories.Responses
 @using Client_App.Interfaces
 @using Client_App.Services.Share
-@using Client_App.Components.Share.CustomInputs
 
 @inject ICategoryService CategoryService;
 @inject ErrorService ErrorService;
+@inject IJSRuntime JsRuntime;
+@inject ToggleSearchInputService SearchInputService;
 
-<div class="w-full flex justify-center items-center border-b-2 bg-white px-5">
+<div id="top-bar" class="w-full flex justify-center items-center border-b-2 bg-white px-5">
     <div class="w-full max-w-[1300px] flex justify-between items-center relative">
         <!-- Logo -->
         <div class="flex items-center">
@@ -43,17 +43,16 @@
                     </div>
                     <div
                         class="overflow-hidden border-2 bg-white border-solid border-[#f2f2f2] pt-2.5 px-4 pb-5 absolute text-main top-full w-full border-t-0 duration-300 ease-in flex-col flex items-center  @(IsSectionVisible ? "opacity-100 max-h-screen visible" : "opacity-0 max-h-0 invisible") z-10">
-                        @if (Categories is not null)
+                        @foreach (var category in Categories)
                         {
-                            @foreach (var category in Categories)
-                            {
-                                const string classes = "py-1.5 text-sm text-main font-thin uppercase opacity-100 whitespace-nowrap text-start w-full hover:underline duration-300 transition-all ease-in tracking-wider";
+                            var endpoint = category.Trim().Replace(" ", "-").ToLower();
 
-                                <NavLink href=@($"/products/{category.Endpoint}")
-                                         class="@classes">
-                                    @category.CategoryName
-                                </NavLink>
-                            }
+                            const string classes = "py-1.5 text-sm text-main font-thin uppercase opacity-100 whitespace-nowrap text-start w-full hover:underline duration-300 transition-all ease-in tracking-wider";
+
+                            <NavLink href=@($"/products/{endpoint}")
+                                     class="@classes">
+                                @category
+                            </NavLink>
                         }
                     </div>
                 </div>
@@ -77,13 +76,15 @@
                         d="M4 22C4 17.5817 7.58172 14 12 14C16.4183 14 20 17.5817 20 22H18C18 18.6863 15.3137 16 12 16C8.68629 16 6 18.6863 6 22H4ZM12 13C8.685 13 6 10.315 6 7C6 3.685 8.685 1 12 1C15.315 1 18 3.685 18 7C18 10.315 15.315 13 12 13ZM12 11C14.21 11 16 9.21 16 7C16 4.79 14.21 3 12 3C9.79 3 8 4.79 8 7C8 9.21 9.79 11 12 11Z"/>
                 </svg>
             </NavLink>
-            <button @onclick="ToggleSearchInputVisible" class="p-2.5 flex justify-center items-center">
+
+            <button @onclick="() => { SearchInputService.SetIsHidden(false); }" id="search-button" class="p-2.5 flex justify-center items-center">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"
                      fill="rgba(45,77,108,1)">
                     <path
                         d="M18.031 16.6168L22.3137 20.8995L20.8995 22.3137L16.6168 18.031C15.0769 19.263 13.124 20 11 20C6.032 20 2 15.968 2 11C2 6.032 6.032 2 11 2C15.968 2 20 6.032 20 11C20 13.124 19.263 15.0769 18.031 16.6168ZM16.0247 15.8748C17.2475 14.6146 18 12.8956 18 11C18 7.1325 14.8675 4 11 4C7.1325 4 4 7.1325 4 11C4 14.8675 7.1325 18 11 18C12.8956 18 14.6146 17.2475 15.8748 16.0247L16.0247 15.8748Z"/>
                 </svg>
             </button>
+
             <NavLink href="/cart" class="p-2.5 flex justify-center items-center">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"
                      fill="rgba(45,77,108,1)">
@@ -92,47 +93,37 @@
                 </svg>
             </NavLink>
         </div>
-        <div class="w-full max-w-[1300px] transition-all ease-in-out @(IsSearchInputVisible ? "opacity-100 max-h-screen translate-y-0 z-20 visible fixed" : "opacity-0 max-h-0 -translate-y-full invisible absolute")">
-            <SearchInput ToggleSearchInput="ToggleSearchInputVisible"/>
-        </div>
+
     </div>
 
 </div>
 
 @code {
-    private List<Category>? Categories { get; set; }
+
+    private List<string> Categories { get; set; } =
+    [
+        "Dog Food",
+        "Cat Food",
+        "Pet Toys",
+        "Aquarium Supplies",
+        "Bird Accessories",
+        "Reptile Supplies",
+        "Grooming Tools",
+        "Pet Health",
+        "Pet Clothing",
+        "Pet Beds"
+    ];
+
     private bool IsSectionVisible { get; set; }
-    private bool IsSearchInputVisible { get; set; }
 
     protected override void OnInitialized()
     {
-        IsSearchInputVisible = IsSectionVisible = false;
+        IsSectionVisible = false;
     }
-
 
     private void ToggleSectionVisible()
     {
         IsSectionVisible = !IsSectionVisible;
-    }
-
-    private void ToggleSearchInputVisible()
-    {
-        IsSearchInputVisible = !IsSearchInputVisible;
-    }
-
-    protected override async Task OnInitializedAsync()
-    {
-        List<string> excludedCategories = ["all", "best-sellers"];
-        var result = await CategoryService.GetAllAsync<Category>();
-        if (!result.IsFailure)
-        {
-            Categories = result.Value.Data.Where(c => !excludedCategories.Contains(c.Endpoint)).ToList();
-            StateHasChanged();
-        }
-        else
-        {
-            ErrorService.SetErrorMessage(result.ErrorTypes);
-        }
     }
 
 }

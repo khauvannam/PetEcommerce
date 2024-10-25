@@ -1,4 +1,5 @@
 using Client_App.Abstraction;
+using Client_App.Components.Share.ReusableComponents;
 using Client_App.DTOs.Products.Responses;
 using Client_App.DTOs.Share;
 using Client_App.Interfaces;
@@ -11,8 +12,6 @@ public sealed class ProductService(
     string endpoint = "api/product"
 ) : ApiService(factory, baseUrl, endpoint), IProductService
 {
-    private readonly string _endpoint = endpoint;
-
     public async Task<Result<Pagination<T>>> GetProductsByConditionAsync<T>(
         int offset,
         int? categoryId,
@@ -38,10 +37,19 @@ public sealed class ProductService(
             query += $"&isBestSeller={isBestSeller}";
         }
 
-        var baseEndpoint = $"{_endpoint}{query}";
+        var baseEndpoint = $"{Endpoint}{query}";
 
         var result = await Client.GetAsync(baseEndpoint);
 
+        return await HandleResponse<Pagination<T>>(result);
+    }
+
+    public async Task<Result<Pagination<T>>> GetProductsBySearch<T>(
+        string searchText,
+        int limit = 4
+    )
+    {
+        var result = await Client.GetAsync($"{Endpoint}/{searchText}?limit={limit}");
         return await HandleResponse<Pagination<T>>(result);
     }
 };

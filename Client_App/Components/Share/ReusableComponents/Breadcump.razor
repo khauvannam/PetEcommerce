@@ -1,4 +1,4 @@
-﻿<div class="w-full pt-5 px-10 flex justify-center ">
+﻿<div class="w-full pt-5 flex justify-center ">
     <div class="w-full max-w-[1300px] flex items-center text-main">
         <NavLink href="/" class="hover:underline">Home</NavLink>
         <span class="mx-1">
@@ -7,16 +7,19 @@
             </svg>
         </span>
         <NavLink class="hover:underline" href="products/all">Products</NavLink>
-        <span class="mx-1">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="rgba(0,32,92,1)">
-                <path d="M13.1717 12.0007L8.22192 7.05093L9.63614 5.63672L16.0001 12.0007L9.63614 18.3646L8.22192 16.9504L13.1717 12.0007Z"></path>
-            </svg>
-        </span>
-        <NavLink class="hover:underline" href="@Endpoint">@Name</NavLink>
+        @if (!(string.IsNullOrEmpty(Name) && string.IsNullOrEmpty(Endpoint)))
+        {
+            <span class="mx-1">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="rgba(0,32,92,1)">
+                    <path d="M13.1717 12.0007L8.22192 7.05093L9.63614 5.63672L16.0001 12.0007L9.63614 18.3646L8.22192 16.9504L13.1717 12.0007Z"></path>
+                </svg>
+            </span>
+            <NavLink class="hover:underline" href="@Endpoint">@Name</NavLink>
+        }
     </div>
 </div>
 
 @code {
-    [Parameter] public string Name { get; set; } = null!;
-    [Parameter] public string Endpoint { get; set; } = null!;
+    [Parameter] public string? Name { get; set; }
+    [Parameter] public string? Endpoint { get; set; }
 }

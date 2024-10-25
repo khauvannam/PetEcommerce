@@ -1,4 +1,6 @@
-﻿namespace Client_App.DTOs.Share;
+﻿using Client_App.DTOs.Products.Responses;
+
+namespace Client_App.DTOs.Share;
 
 public class Result
 {

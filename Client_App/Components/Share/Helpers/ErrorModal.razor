@@ -4,7 +4,6 @@
 @inject ErrorService ErrorService;
 @inject NavigationManager NavigationManager;
 
-
 @implements System.IDisposable;
 
 @if (ErrorService.ErrorMessage != Errors.None)
@@ -44,14 +43,15 @@
     public void Dispose()
     {
         ErrorService.UnsubscribeEvent(StateHasChanged);
+
+        ErrorService.ClearErrorMessage();
     }
 
     private void OnClick()
     {
-        ErrorService.ClearErrorMessage();
         if (!string.IsNullOrEmpty(ErrorService.Url))
         {
-            NavigationManager.NavigateTo(ErrorService.Url);
+            NavigationManager.NavigateTo(ErrorService.Url, true);
         }
     }
 

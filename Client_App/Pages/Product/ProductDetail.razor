@@ -43,19 +43,20 @@ else
     private int Offset { get; set; }
 
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnParametersSetAsync()
     {
         Offset = 0;
         var productResult = await ProductService.GetByIdAsync<ProductById>(ProductId);
         if (productResult.IsFailure)
         {
             ErrorService.SetErrorMessage(productResult.ErrorTypes).NavigateTo();
-            await TitleService.SetTitleErrorAsync(); 
+            await TitleService.SetTitleErrorAsync();
             return;
         }
 
         ProductById = productResult.Value;
-        await TitleService.SetTitleAsync(ProductById.Name); 
+
+        await TitleService.SetTitleAsync(ProductById.Name);
 
         var commentResult = await CommentService.GetAllByProductIdAsync<Comment>(Limit, Offset * Limit, ProductId);
 
