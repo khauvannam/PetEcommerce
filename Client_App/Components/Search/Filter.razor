@@ -1,165 +1,189 @@
-﻿<div class="">
+﻿@using Client_App.DTOs.Products.Requests
+@using Client_App.Components.Share.CustomInputs
+<div class="">
     <!-- Filters -->
-    <form class="mt-4 border-t border-gray-200">
-        <h3 class="sr-only">Categories</h3>
-        <ul role="list" class="px-2 py-3 font-medium text-gray-900">
-            <li>
-                <a href="#" class="block px-2 py-3">Totes</a>
-            </li>
-            <li>
-                <a href="#" class="block px-2 py-3">Backpacks</a>
-            </li>
-            <li>
-                <a href="#" class="block px-2 py-3">Travel Bags</a>
-            </li>
-            <li>
-                <a href="#" class="block px-2 py-3">Hip Bags</a>
-            </li>
-            <li>
-                <a href="#" class="block px-2 py-3">Laptop Sleeves</a>
-            </li>
-        </ul>
+    <form class="mt-4">
 
-        <div class="border-t border-gray-200 px-4 py-6">
-            <h3 class="-mx-2 -my-3 flow-root">
+        <div class="px-4 py-6">
+            <h3 class="-mx-2 -my-3 flow-root" @onclick="() => ToggleSection(nameof(ProductsSearchFilterRequest.IsDesc))">
                 <!-- Expand/collapse section button -->
                 <button type="button" class="flex w-full items-center justify-between bg-white px-2 py-3 text-gray-400 hover:text-gray-500" aria-controls="filter-section-mobile-0" aria-expanded="false">
-                    <span class="font-medium text-gray-900">Color</span>
+                    <span class="font-medium text-gray-900">Relevance</span>
                     <span class="ml-6 flex items-center">
-                        <!-- Expand icon, show/hide based on section open state. -->
-                        <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" data-slot="icon">
-                            <path d="M10.75 4.75a.75.75 0 0 0-1.5 0v4.5h-4.5a.75.75 0 0 0 0 1.5h4.5v4.5a.75.75 0 0 0 1.5 0v-4.5h4.5a.75.75 0 0 0 0-1.5h-4.5v-4.5Z"/>
-                        </svg>
-                        <!-- Collapse icon, show/hide based on section open state. -->
-                        <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" data-slot="icon">
-                            <path fill-rule="evenodd" d="M4 10a.75.75 0 0 1 .75-.75h10.5a.75.75 0 0 1 0 1.5H4.75A.75.75 0 0 1 4 10Z" clip-rule="evenodd"/>
-                        </svg>
+                        <div class="rotate-@(_sectionVisible[nameof(ProductsSearchFilterRequest.IsDesc)] ? "180" : "0") transition-transform duration-200">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+                                <path d="M11.9999 10.8284L7.0502 15.7782L5.63599 14.364L11.9999 8L18.3639 14.364L16.9497 15.7782L11.9999 10.8284Z"></path>
+                            </svg>
+                        </div>
                     </span>
                 </button>
             </h3>
+
             <!-- Filter section, show/hide based on section state. -->
-            <div class="pt-6" id="filter-section-mobile-0">
+            <div class="max-h-0 overflow-hidden transition-all ease-out 
+                    @(_sectionVisible[nameof(ProductsSearchFilterRequest.IsDesc)] ? "max-h-screen opacity-100 mt-2 pt-6 " : "opacity-0")">
                 <div class="space-y-6">
                     <div class="flex items-center">
-                        <input id="filter-mobile-color-0" name="color[]" value="white" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
-                        <label for="filter-mobile-color-0" class="ml-3 min-w-0 flex-1 text-gray-500">White</label>
+                        <input value="white" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-transparent" @onchange="OnRelevanceChecked" checked="@(!FilterRequest.IsDesc)">
+                        <label class="ml-3 min-w-0 flex-1 text-gray-500">Low to high</label>
                     </div>
                     <div class="flex items-center">
-                        <input id="filter-mobile-color-1" name="color[]" value="beige" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
-                        <label for="filter-mobile-color-1" class="ml-3 min-w-0 flex-1 text-gray-500">Beige</label>
-                    </div>
-                    <div class="flex items-center">
-                        <input id="filter-mobile-color-2" name="color[]" value="blue" type="checkbox" checked class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
-                        <label for="filter-mobile-color-2" class="ml-3 min-w-0 flex-1 text-gray-500">Blue</label>
-                    </div>
-                    <div class="flex items-center">
-                        <input id="filter-mobile-color-3" name="color[]" value="brown" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
-                        <label for="filter-mobile-color-3" class="ml-3 min-w-0 flex-1 text-gray-500">Brown</label>
-                    </div>
-                    <div class="flex items-center">
-                        <input id="filter-mobile-color-4" name="color[]" value="green" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
-                        <label for="filter-mobile-color-4" class="ml-3 min-w-0 flex-1 text-gray-500">Green</label>
-                    </div>
-                    <div class="flex items-center">
-                        <input id="filter-mobile-color-5" name="color[]" value="purple" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
-                        <label for="filter-mobile-color-5" class="ml-3 min-w-0 flex-1 text-gray-500">Purple</label>
+                        <input value="beige" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-transparent " @onchange="OnRelevanceChecked" checked="@(FilterRequest.IsDesc)">
+                        <label for="filter-mobile-color-1" class="ml-3 min-w-0 flex-1 text-gray-500">High to low</label>
                     </div>
                 </div>
             </div>
         </div>
+
         <div class="border-t border-gray-200 px-4 py-6">
-            <h3 class="-mx-2 -my-3 flow-root">
+            <h3 class="-mx-2 -my-3 flow-root" @onclick="() => ToggleSection(nameof(ProductsSearchFilterRequest.Available))">
+                <!-- Expand/collapse section button -->
+                <button type="button" class="flex w-full items-center justify-between bg-white px-2 py-3 text-gray-400 hover:text-gray-500" aria-controls="filter-section-mobile-0" aria-expanded="false">
+                    <span class="font-medium text-gray-900">Availability</span>
+                    <span class="ml-6 flex items-center">
+                        <div class="rotate-@(_sectionVisible[nameof(ProductsSearchFilterRequest.Available)] ? "180" : "0") transition-transform duration-200">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+                                <path d="M11.9999 10.8284L7.0502 15.7782L5.63599 14.364L11.9999 8L18.3639 14.364L16.9497 15.7782L11.9999 10.8284Z"></path>
+                            </svg>
+                        </div>
+                    </span>
+                </button>
+            </h3>
+
+            <!-- Filter section, show/hide based on section state. -->
+            <div class="max-h-0 overflow-hidden transition-all ease-out 
+                    @(_sectionVisible[nameof(ProductsSearchFilterRequest.Available)] ? "max-h-screen opacity-100 mt-2 pt-6 " : "opacity-0")" id="filter-section-mobile-0">
+                <div class="space-y-6">
+                    <div class="flex items-center">
+                        <input value="white" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-transparent focus:ring-offset-transparent" @onchange="OnAvailableChecked" checked="@FilterRequest.Available">
+                        <label class="ml-3 min-w-0 flex-1 text-gray-500">In stock</label>
+                    </div>
+                    <div class="flex items-center">
+                        <input id="filter-mobile-color-1" value="beige" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-transparent focus:ring-offset-transparent" @onchange="OnAvailableChecked" checked="@(!FilterRequest.Available)">
+                        <label for="filter-mobile-color-1" class="ml-3 min-w-0 flex-1 text-gray-500">Out stock</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="border-t border-gray-200 px-4 py-6">
+            <h3 class="-mx-2 -my-3 flow-root" @onclick="() => ToggleSection(nameof(ProductsSearchFilterRequest.FilerBy))">
                 <!-- Expand/collapse section button -->
                 <button type="button" class="flex w-full items-center justify-between bg-white px-2 py-3 text-gray-400 hover:text-gray-500" aria-controls="filter-section-mobile-1" aria-expanded="false">
-                    <span class="font-medium text-gray-900">Category</span>
-                    <span class="ml-6 flex items-center">
-                        <!-- Expand icon, show/hide based on section open state. -->
-                        <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" data-slot="icon">
-                            <path d="M10.75 4.75a.75.75 0 0 0-1.5 0v4.5h-4.5a.75.75 0 0 0 0 1.5h4.5v4.5a.75.75 0 0 0 1.5 0v-4.5h4.5a.75.75 0 0 0 0-1.5h-4.5v-4.5Z"/>
+                    <span class="font-medium text-gray-900">Filter By</span>
+                    <div class="rotate-@(_sectionVisible[nameof(ProductsSearchFilterRequest.FilerBy)] ? "180" : "0") transition-transform duration-200">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+                            <path d="M11.9999 10.8284L7.0502 15.7782L5.63599 14.364L11.9999 8L18.3639 14.364L16.9497 15.7782L11.9999 10.8284Z"></path>
                         </svg>
-                        <!-- Collapse icon, show/hide based on section open state. -->
-                        <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" data-slot="icon">
-                            <path fill-rule="evenodd" d="M4 10a.75.75 0 0 1 .75-.75h10.5a.75.75 0 0 1 0 1.5H4.75A.75.75 0 0 1 4 10Z" clip-rule="evenodd"/>
-                        </svg>
-                    </span>
+                    </div>
                 </button>
             </h3>
             <!-- Filter section, show/hide based on section state. -->
-            <div class="pt-6" id="filter-section-mobile-1">
-                <div class="space-y-6">
-                    <div class="flex items-center">
-                        <input id="filter-mobile-category-0" name="category[]" value="new-arrivals" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
-                        <label for="filter-mobile-category-0" class="ml-3 min-w-0 flex-1 text-gray-500">New Arrivals</label>
-                    </div>
-                    <div class="flex items-center">
-                        <input id="filter-mobile-category-1" name="category[]" value="sale" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
-                        <label for="filter-mobile-category-1" class="ml-3 min-w-0 flex-1 text-gray-500">Sale</label>
-                    </div>
-                    <div class="flex items-center">
-                        <input id="filter-mobile-category-2" name="category[]" value="travel" type="checkbox" checked class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
-                        <label for="filter-mobile-category-2" class="ml-3 min-w-0 flex-1 text-gray-500">Travel</label>
-                    </div>
-                    <div class="flex items-center">
-                        <input id="filter-mobile-category-3" name="category[]" value="organization" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
-                        <label for="filter-mobile-category-3" class="ml-3 min-w-0 flex-1 text-gray-500">Organization</label>
-                    </div>
-                    <div class="flex items-center">
-                        <input id="filter-mobile-category-4" name="category[]" value="accessories" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
-                        <label for="filter-mobile-category-4" class="ml-3 min-w-0 flex-1 text-gray-500">Accessories</label>
-                    </div>
+            <div class=" max-h-0 overflow-hidden transition-all ease-in 
+                    @(_sectionVisible[nameof(ProductsSearchFilterRequest.FilerBy)] ? "max-h-screen opacity-100 mt-2 pt-6" : "opacity-0")" id="filter-section-mobile-1">
+                <div class="space-y-6 ">
+                    @foreach (var (key, value) in _filterByCheckBox)
+                    {
+                        <div class="flex items-center">
+                            <input @onchange="() => OnFilterCheckBoxHandle(key)" value="@value" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-transparent focus:ring-offset-transparent" checked="@value">
+                            <label class="ml-3 min-w-0 flex-1 text-gray-500">@Capitalize(key.Replace('-', ' '))</label>
+                        </div>
+                    }
+
                 </div>
             </div>
         </div>
+
         <div class="border-t border-gray-200 px-4 py-6">
-            <h3 class="-mx-2 -my-3 flow-root">
+            <h3 class="-mx-2 -my-3 flow-root" @onclick="() => ToggleSection(nameof(ProductsSearchFilterRequest.MinPrice))">
                 <!-- Expand/collapse section button -->
-                <button type="button" class="flex w-full items-center justify-between bg-white px-2 py-3 text-gray-400 hover:text-gray-500" aria-controls="filter-section-mobile-2" aria-expanded="false">
-                    <span class="font-medium text-gray-900">Size</span>
-                    <span class="ml-6 flex items-center">
-                        <!-- Expand icon, show/hide based on section open state. -->
-                        <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" data-slot="icon">
-                            <path d="M10.75 4.75a.75.75 0 0 0-1.5 0v4.5h-4.5a.75.75 0 0 0 0 1.5h4.5v4.5a.75.75 0 0 0 1.5 0v-4.5h4.5a.75.75 0 0 0 0-1.5h-4.5v-4.5Z"/>
+                <button type="button" class="flex w-full items-center justify-between bg-white px-2 py-3 text-gray-400 hover:text-gray-500" aria-controls="filter-section-mobile-1" aria-expanded="false">
+                    <span class="font-medium text-gray-900">Price Range</span>
+                    <div class="rotate-@(_sectionVisible[nameof(ProductsSearchFilterRequest.MinPrice)] ? "180" : "0") transition-transform duration-200">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+                            <path d="M11.9999 10.8284L7.0502 15.7782L5.63599 14.364L11.9999 8L18.3639 14.364L16.9497 15.7782L11.9999 10.8284Z"></path>
                         </svg>
-                        <!-- Collapse icon, show/hide based on section open state. -->
-                        <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" data-slot="icon">
-                            <path fill-rule="evenodd" d="M4 10a.75.75 0 0 1 .75-.75h10.5a.75.75 0 0 1 0 1.5H4.75A.75.75 0 0 1 4 10Z" clip-rule="evenodd"/>
-                        </svg>
-                    </span>
+                    </div>
                 </button>
             </h3>
-            <!-- Filter section, show/hide based on section state. -->
-            <div class="pt-6" id="filter-section-mobile-2">
-                <div class="space-y-6">
-                    <div class="flex items-center">
-                        <input id="filter-mobile-size-0" name="size[]" value="2l" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
-                        <label for="filter-mobile-size-0" class="ml-3 min-w-0 flex-1 text-gray-500">2L</label>
-                    </div>
-                    <div class="flex items-center">
-                        <input id="filter-mobile-size-1" name="size[]" value="6l" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
-                        <label for="filter-mobile-size-1" class="ml-3 min-w-0 flex-1 text-gray-500">6L</label>
-                    </div>
-                    <div class="flex items-center">
-                        <input id="filter-mobile-size-2" name="size[]" value="12l" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
-                        <label for="filter-mobile-size-2" class="ml-3 min-w-0 flex-1 text-gray-500">12L</label>
-                    </div>
-                    <div class="flex items-center">
-                        <input id="filter-mobile-size-3" name="size[]" value="18l" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
-                        <label for="filter-mobile-size-3" class="ml-3 min-w-0 flex-1 text-gray-500">18L</label>
-                    </div>
-                    <div class="flex items-center">
-                        <input id="filter-mobile-size-4" name="size[]" value="20l" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
-                        <label for="filter-mobile-size-4" class="ml-3 min-w-0 flex-1 text-gray-500">20L</label>
-                    </div>
-                    <div class="flex items-center">
-                        <input id="filter-mobile-size-5" name="size[]" value="40l" type="checkbox" checked class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
-                        <label for="filter-mobile-size-5" class="ml-3 min-w-0 flex-1 text-gray-500">40L</label>
-                    </div>
-                </div>
+
+            <div class="gap-x-4 grid w-full pt-6 transition-all duration-300 ease-in-out 
+                    max-h-0 overflow-hidden 
+                    @(_sectionVisible[nameof(ProductsSearchFilterRequest.MinPrice)] ? "max-h-screen opacity-100 mt-2" : "opacity-0")">
+
+                <DualRangeInput @bind-LeftValue="FilterRequest.MinPrice" @bind-RightValue="FilterRequest.MaxPrice" OnPriceChanged="FilterRequestChanged"/>
             </div>
         </div>
+
     </form>
 </div>
 
 @code {
+
+    private readonly Dictionary<string, bool> _filterByCheckBox = new()
+    {
+        { "best-seller", false }, { "new-arrivals", false }, { "high-rating", false }
+    };
+
+    private readonly Dictionary<string, bool> _sectionVisible = new()
+    {
+        { nameof(ProductsSearchFilterRequest.IsDesc), false }, { nameof(ProductsSearchFilterRequest.FilerBy), true }, { nameof(ProductsSearchFilterRequest.Available), false }, { nameof(ProductsSearchFilterRequest.MinPrice), false }
+    };
+
+    [Parameter] public ProductsSearchFilterRequest FilterRequest { get; set; } = null!;
+    [Parameter] public EventCallback<ProductsSearchFilterRequest> FilterRequestChanged { get; set; }
+
+    private void ToggleSection(string section)
+    {
+        _sectionVisible[section] = !_sectionVisible[section];
+    }
+
+    private void OnFilterCheckBoxHandle(string checkBox)
+    {
+        var currentCheckState = _filterByCheckBox[checkBox];
+
+        foreach (var key in _filterByCheckBox.Keys)
+        {
+            _filterByCheckBox[key] = false;
+        }
+
+        _filterByCheckBox[checkBox] = !currentCheckState;
+
+        FilterRequest.FilerBy = _filterByCheckBox[checkBox] ? checkBox : default;
+
+        FilterRequestChanged.InvokeAsync(FilterRequest);
+    }
+
+    private void OnAvailableChecked()
+    {
+        FilterRequest.Available = !FilterRequest.Available;
+
+        FilterRequestChanged.InvokeAsync(FilterRequest);
+    }
+
+    private void OnRelevanceChecked()
+    {
+        FilterRequest.IsDesc = !FilterRequest.IsDesc;
+
+        FilterRequestChanged.InvokeAsync(FilterRequest);
+    }
+
+    private string Capitalize(string input)
+    {
+        if (string.IsNullOrEmpty(input))
+            return input;
+
+        var words = input.Split(' ');
+
+        for (var i = 0; i < words.Length; i++)
+        {
+            if (words[i].Length > 0)
+            {
+                words[i] = char.ToUpper(words[i][0]) + words[i][1..].ToLower();
+            }
+        }
+
+        return string.Join(" ", words);
+    }
 
 }

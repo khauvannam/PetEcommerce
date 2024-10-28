@@ -17,8 +17,8 @@
 <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.1/dist/flowbite.min.js"></script>
 
 <script>
-    window.scrollToTop = function () {
-        const productList = document.getElementById("list-products");
+    window.scrollToTop = function (id) {
+        const productList = document.getElementById(id);
         if (productList) {
             productList.scrollIntoView({behavior: "smooth"});
         }
@@ -27,6 +27,45 @@
     window.setDocumentTitle = function (title) {
         document.title = title; // This correctly sets the title
     }
+    window.dualRangeSliderImplement = function () {
+        const inputLeft = document.getElementById("input-left");
+        const inputRight = document.getElementById("input-right");
+        const thumbLeft = document.getElementById("thumb-left");
+        const thumbRight = document.getElementById("thumb-right");
+        const range = document.getElementById("range");
+        const minPriceInput = document.getElementById("minprice");
+        const maxPriceInput = document.getElementById("maxprice");
+
+        function setLeftValue() {
+            const min = parseInt(inputLeft.min);
+            const max = parseInt(inputLeft.max);
+            inputLeft.value = Math.min(parseInt(inputLeft.value), parseInt(inputRight.value) - 1);
+            const percent = ((inputLeft.value - min) / (max - min)) * 100;
+            thumbLeft.style.left = percent + "%";
+            range.style.left = percent + "%";
+            minPriceInput.value = inputLeft.value;
+        }
+
+        function setRightValue() {
+            const min = parseInt(inputRight.min);
+            const max = parseInt(inputRight.max);
+            inputRight.value = Math.max(parseInt(inputRight.value), parseInt(inputLeft.value) + 1);
+            const percent = ((inputRight.value - min) / (max - min)) * 100;
+            thumbRight.style.right = (100 - percent) + "%";
+            range.style.right = (100 - percent) + "%";
+            maxPriceInput.value = inputRight.value;
+        }
+
+        inputLeft.addEventListener("input", setLeftValue);
+        inputRight.addEventListener("input", setRightValue);
+
+        // Initialize values on load
+        setLeftValue();
+        setRightValue();
+
+    }
+
+
 </script>
 
 <script src="_framework/blazor.webassembly.js"></script>

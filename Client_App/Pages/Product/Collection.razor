@@ -13,7 +13,6 @@
 @inject ErrorService ErrorService
 @inject TitleService TitleService
 
-
 @if (Category is not null)
 {
     <Breadcump Name="@Category.CategoryName" Endpoint="@($"/products/{Category.Endpoint}")"/>
@@ -134,7 +133,7 @@ else
             "best-sellers" => await ProductService.GetProductsByConditionAsync<ProductsInList>(offset * Limit, default, true, Limit),
             _ => await ProductService.GetProductsByConditionAsync<ProductsInList>(offset * Limit, Category!.CategoryId, false, Limit)
         };
-        
+
         if (result.IsFailure)
         {
             ErrorService.SetErrorMessage(result.ErrorTypes).NavigateTo();
@@ -148,7 +147,7 @@ else
     {
         await FetchProductAsync(newPage - 1);
 
-        await JsRuntime.InvokeVoidAsync("scrollToTop"); // Scroll to the top of the product list
+        await JsRuntime.InvokeVoidAsync("scrollToTop", "list-products");
     }
 
 }

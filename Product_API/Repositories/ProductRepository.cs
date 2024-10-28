@@ -133,26 +133,50 @@ public class ProductRepository(ProductDbContext dbContext) : IProductRepository
             );
         }
 
-        if (!string.IsNullOrEmpty(filterRequest.SortBy))
+        if (!string.IsNullOrEmpty(filterRequest.FilterBy))
         {
-            var property = typeof(Product).GetProperty(
-                filterRequest.SortBy,
-                BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance
-            );
+            string sortByProperty;
 
-            if (property is null)
+            switch (filterRequest.FilterBy)
             {
-                return Result.Failure<Pagination<ListProductResponse>>(
-                    new(
-                        "Invalid Sort Property",
-                        $"Property '{filterRequest.SortBy}' does not exist."
-                    )
-                );
+                case "best-seller":
+                    sortByProperty = nameof(Product.SoldQuantity);
+
+                    productsQueryable = productsQueryable
+                        .Where(p => p.SoldQuantity > 100)
+                        .OrderByDescending(p => p.SoldQuantity);
+                    break;
+                case "new-arrivals":
+                    sortByProperty = nameof(Product.CreatedAt);
+
+                    var oneWeekAgo = DateTime.Now.AddDays(-7);
+                    productsQueryable = productsQueryable
+                        .Where(p => p.CreatedAt >= oneWeekAgo)
+                        .OrderByDescending(p => p.CreatedAt);
+                    break;
+                case "high-rating":
+                    sortByProperty = nameof(Product.TotalRating);
+
+                    productsQueryable = productsQueryable
+                        .Where(p => p.TotalRating > 3M)
+                        .OrderByDescending(p => p.TotalRating);
+                    break;
+                default:
+                    return Result.Failure<Pagination<ListProductResponse>>(
+                        new(
+                            "Invalid Sort Property",
+                            $"Property '{filterRequest.FilterBy}' does not exist."
+                        )
+                    );
             }
 
+            var propertyInfo = typeof(Product).GetProperty(sortByProperty)!;
+
             productsQueryable = filterRequest.IsDesc
-                ? productsQueryable.OrderByDescending(p => EF.Property<object>(p, property.Name))
-                : productsQueryable.OrderBy(p => EF.Property<object>(p, property.Name));
+                ? productsQueryable.OrderByDescending(p =>
+                    EF.Property<object>(p, propertyInfo.Name)
+                )
+                : productsQueryable.OrderBy(p => EF.Property<object>(p, propertyInfo.Name));
         }
 
         // Apply pagination and project to response model

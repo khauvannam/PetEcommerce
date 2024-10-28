@@ -5,7 +5,7 @@ public record ProductsSearchFilterRequest(
     int Limit = 5,
     decimal MinPrice = decimal.Zero,
     decimal MaxPrice = 10000M,
-    string? SortBy = default,
+    string? FilterBy = default,
     bool Available = true,
     int Offset = default,
     bool IsDesc = default

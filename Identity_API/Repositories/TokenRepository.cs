@@ -26,9 +26,6 @@ public class TokenRepository(UserDbContext dbContext) : ITokenRepository
         if (user is null)
             return Result.Failure<TokenResponse>(UserErrors.NotFound);
 
-        if (CheckInValidToken(user, command.RefreshToken))
-            return Result.Failure<TokenResponse>(TokenErrors.WrongToken("refresh token"));
-
         if (CheckTokenIsExpired(user))
             return Result.Failure<TokenResponse>(TokenErrors.ExpiredToken());
 
@@ -55,11 +52,6 @@ public class TokenRepository(UserDbContext dbContext) : ITokenRepository
         user.RevokeToken();
         await dbContext.SaveChangesAsync();
         return Result.Success();
-    }
-
-    private bool CheckInValidToken(User user, string refreshToken)
-    {
-        return user.RefreshToken!.Token != refreshToken;
     }
 
     private bool CheckTokenIsExpired(User user)

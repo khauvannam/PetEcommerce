@@ -1,4 +1,5 @@
-﻿using Client_App.DTOs.Products.Responses;
+﻿using Client_App.DTOs.Products.Requests;
+using Client_App.DTOs.Products.Responses;
 using Client_App.DTOs.Share;
 
 namespace Client_App.Interfaces;
@@ -13,5 +14,5 @@ public interface IProductService : IApiService
     )
         where T : ProductsInList;
 
-    Task<Result<Pagination<T>>> GetProductsBySearch<T>(string searchText, int limit = 4);
+    Task<Result<Pagination<T>>> GetProductsBySearch<T>(ProductsSearchFilterRequest request);
 }

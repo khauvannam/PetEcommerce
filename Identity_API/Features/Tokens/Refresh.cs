@@ -9,8 +9,7 @@ namespace Identity.API.Features.Tokens;
 
 public static class Refresh
 {
-    public record Command(string RefreshToken, string AccessToken)
-        : IRequest<Result<TokenResponse>>;
+    public record Command(string AccessToken) : IRequest<Result<TokenResponse>>;
 
     internal class Handler(ITokenRepository repository)
         : IRequestHandler<Command, Result<TokenResponse>>
@@ -28,7 +27,6 @@ public static class Refresh
     {
         public Validator()
         {
-            RuleFor(c => c.RefreshToken).NotEmpty();
             RuleFor(c => c.AccessToken).NotEmpty();
         }
     }

@@ -9,9 +9,9 @@ namespace Identity.API.Controllers;
 public class TokenController(ISender sender) : ControllerBase
 {
     [HttpGet("Refresh")]
-    public async Task<IActionResult> Refresh(Refresh.Command command)
+    public async Task<IActionResult> Refresh([FromQuery] string accessToken)
     {
-        var result = await sender.Send(command);
+        var result = await sender.Send(new Refresh.Command(accessToken));
         if (result.IsFailure)
             return BadRequest(result.ErrorTypes);
         return Ok(result);

@@ -52,7 +52,9 @@
         if (!string.IsNullOrEmpty(ErrorService.Url))
         {
             NavigationManager.NavigateTo(ErrorService.Url, true);
+            return;
         }
+        ErrorService.ClearErrorMessage();
     }
 
 }

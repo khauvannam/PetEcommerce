@@ -11,6 +11,6 @@ public static class TokenErrors
 
     public static ErrorType ExpiredToken()
     {
-        return new ErrorType("Expired Token", "Your Token has expired");
+        return new ErrorType("Expired Token", "Your Session has expired");
     }
 }
