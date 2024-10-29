@@ -111,7 +111,34 @@
                     max-h-0 overflow-hidden 
                     @(_sectionVisible[nameof(ProductsSearchFilterRequest.MinPrice)] ? "max-h-screen opacity-100 mt-2" : "opacity-0")">
 
-                <DualRangeInput @bind-LeftValue="FilterRequest.MinPrice" @bind-RightValue="FilterRequest.MaxPrice" OnPriceChanged="FilterRequestChanged"/>
+                <div class="flex justify-center items-center">
+                    <div class="relative max-w-xl w-full">
+                        <div>
+                            <input type="range" @bind:get="FilterRequest.MinPrice" step="100" min="@Min" max="@Max" @bind:set="SetLeftValue" @bind:event="oninput"
+                                   class="absolute pointer-events-none appearance-none z-20 h-2 w-full opacity-0 cursor-pointer">
+                            <input type="range" @bind:get="FilterRequest.MaxPrice" step="100" min="@Min" max="@Max" @bind:set="SetRightValue" @bind:event="oninput"
+                                   class="absolute pointer-events-none appearance-none z-20 h-2 w-full opacity-0 cursor-pointer">
+
+                            <div class="relative z-10 h-2">
+                                <div class="absolute z-10 left-0 right-0 bottom-0 top-0 rounded-md bg-gray-200"></div>
+                                <div class="absolute z-20 top-0 bottom-0 rounded-md bg-[#0043c1]" style="@GetRangePosition()"></div>
+                                <div class="absolute z-30 w-6 h-6 top-0 bg-[#0043c1] rounded-full -mt-2" style="@GetLeftThumbPosition()"></div>
+                                <div class="absolute z-30 w-6 h-6 top-0 bg-[#0043c1] rounded-full -mt-2" style="@GetRightThumbPosition()"></div>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center justify-between pt-5 space-x-4 text-sm text-gray-700">
+                            <div>
+                                <input type="text" @bind:get="FilterRequest.MinPrice" maxlength="5" @bind:set="SetLeftValue"
+                                       class="w-24 px-3 py-2 text-center border border-gray-200 rounded-lg bg-gray-50 focus:outline-none">
+                            </div>
+                            <div>
+                                <input type="text" @bind:get="FilterRequest.MaxPrice" maxlength="5" @bind:set="SetRightValue"
+                                       class="w-24 px-3 py-2 text-center border border-gray-200 rounded-lg bg-gray-50 focus:outline-none">
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -119,6 +146,41 @@
 </div>
 
 @code {
+    private decimal Min { get; set; }
+    private decimal Max { get; set; }
+
+    [Parameter] public ProductsSearchFilterRequest FilterRequest { get; set; } = null!;
+    [Parameter] public EventCallback<ProductsSearchFilterRequest> FilterRequestChanged { get; set; }
+
+
+    protected override void OnInitialized()
+    {
+        Min = FilterRequest.MinPrice;
+        Max = FilterRequest.MaxPrice;
+    }
+
+
+    private void SetLeftValue(decimal value)
+    {
+        FilterRequest.MinPrice = Math.Min(value, FilterRequest.MaxPrice - 100);
+        FilterRequestChanged.InvokeAsync(FilterRequest);
+    }
+
+    private void SetRightValue(decimal value)
+    {
+        FilterRequest.MaxPrice = Math.Max(value, FilterRequest.MinPrice + 100);
+
+        FilterRequestChanged.InvokeAsync(FilterRequest);
+    }
+
+    private string GetLeftThumbPosition() =>
+        $"left: {((FilterRequest.MinPrice - Min) / (Max - Min) * 100)}%;";
+
+    private string GetRightThumbPosition() =>
+        $"right: {100 - ((FilterRequest.MaxPrice - Min) / (Max - Min) * 100)}%;";
+
+    private string GetRangePosition() =>
+        $"left: {((FilterRequest.MinPrice - Min) / (Max - Min) * 100)}%; right: {100 - ((FilterRequest.MaxPrice - Min) / (Max - Min) * 100)}%;";
 
     private readonly Dictionary<string, bool> _filterByCheckBox = new()
     {
@@ -129,9 +191,6 @@
     {
         { nameof(ProductsSearchFilterRequest.IsDesc), false }, { nameof(ProductsSearchFilterRequest.FilerBy), true }, { nameof(ProductsSearchFilterRequest.Available), false }, { nameof(ProductsSearchFilterRequest.MinPrice), false }
     };
-
-    [Parameter] public ProductsSearchFilterRequest FilterRequest { get; set; } = null!;
-    [Parameter] public EventCallback<ProductsSearchFilterRequest> FilterRequestChanged { get; set; }
 
     private void ToggleSection(string section)
     {
@@ -184,6 +243,11 @@
         }
 
         return string.Join(" ", words);
+    }
+
+    private void BindingTwoWays()
+    {
+        FilterRequestChanged.InvokeAsync(FilterRequest);
     }
 
 }

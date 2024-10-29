@@ -51,7 +51,7 @@
 
             <div class="w-full flex">
                 <div class="w-3/12">
-                    <Filter FilterRequest="Request" FilterRequestChanged="OnFilterRequestChanged"/>
+                    <Filter @bind-FilterRequest="Request" @bind-FilterRequest:after="FetchDataAsync"/>
                 </div>
                 <div id="search-products" class="w-9/12 pt-8 pl-6 flex justify-center items-center">
                     @if (Pagination.TotalItems > 0)
@@ -91,7 +91,7 @@
     protected override async Task OnInitializedAsync()
     {
         Request.SearchText = SearchText;
-        await FetchDataAsync(Request);
+        await FetchDataAsync();
 
         TotalPages = (int)Math.Ceiling((double)Pagination.TotalItems / Request.Limit);
     }
@@ -100,27 +100,22 @@
     {
         NavigationManager.NavigateTo($"/search/{SearchText}");
         Request.SearchText = SearchText;
-        await FetchDataAsync(Request);
+        await FetchDataAsync();
         StateHasChanged();
-    }
-
-    private async Task OnFilterRequestChanged(ProductsSearchFilterRequest request)
-    {
-        await FetchDataAsync(request);
     }
 
     private async Task OnPageChangeAsync(int newPage)
     {
         Request.Offset = (newPage - 1) * Request.Limit;
 
-        await FetchDataAsync(Request);
+        await FetchDataAsync();
 
         await JsRuntime.InvokeVoidAsync("scrollToTop", "search-products"); // Scroll to the top of the product list
     }
 
-    private async Task FetchDataAsync(ProductsSearchFilterRequest request)
+    private async Task FetchDataAsync()
     {
-        var result = await ProductService.GetProductsBySearch<ProductsInList>(request);
+        var result = await ProductService.GetProductsBySearch<ProductsInList>(Request);
 
         if (result.IsFailure)
         {

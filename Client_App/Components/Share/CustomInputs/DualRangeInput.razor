@@ -38,6 +38,7 @@
 
     [Parameter] public EventCallback<decimal> LeftValueChanged { get; set; }
     [Parameter] public EventCallback<decimal> RightValueChanged { get; set; }
+
     [Parameter] public EventCallback<ProductsSearchFilterRequest> OnPriceChanged { get; set; }
 
     protected override void OnInitialized()
@@ -50,7 +51,6 @@
     {
         LeftValue = Math.Min(value, RightValue - 100);
         await LeftValueChanged.InvokeAsync(LeftValue);
-
         if (OnPriceChanged.HasDelegate)
         {
             await OnPriceChanged.InvokeAsync();
