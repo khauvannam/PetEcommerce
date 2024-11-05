@@ -11,9 +11,7 @@ public partial class NoWhitespaceOrSpecialCharactersAttribute : ValidationAttrib
             return ValidationResult.Success!;
 
         if (string.IsNullOrWhiteSpace(str))
-        {
             return new ValidationResult("This field is required and cannot contain whitespace.");
-        }
 
         // Check for special characters
         var regex = MyRegex(); // Allow only alphanumeric characters

@@ -1,5 +1,7 @@
-﻿@using Client_App.DTOs.Products.Responses
-@using Client_App.Components.Share.ReusableComponents
+﻿@using Client_App.Components.Share.Reusable
+@using Client_App.Services.Clients
+@inject ProductDetailModalService Service;
+
 
 <div class="w-6/12 ml-10 pr-5">
     @if (ProductById.SoldQuantity > 100)
@@ -38,12 +40,32 @@
         <div class="mb-2">
             <p class="font-semibold font-heading text-xl text-gray-600">Size</p>
         </div>
-        <select name="variants" class="outline-none hover:border-[#FADC6F] w-full border-[#00205c] border-2 border-solid py-3 px-8 rounded-sm text-main" @bind="Price">
-            @foreach (var variant in ProductById.ProductVariants)
-            {
-                <option value="@variant.OriginalPrice.Value">@variant.VariantName</option>
-            }
-        </select>
+
+
+        <div class="relative">
+
+            <button class="outline-none hover:border-[#FADC6F] w-full border-[#00205c] relative border-2 border-solid py-4 px-8 text-main flex items-center justify-between rounded-md" type="button" @onclick="ToggleSelectInput">
+                <p>@VariantName</p>
+                <svg class="w-2.5 h-2.5 mt-1.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
+                </svg>
+            </button>
+
+            <!-- Dropdown menu -->
+            <div id="dropdown" class="z-10 w-full bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-950 mt-0.5 @(!SelectInputVisible ? "opacity-0 invisible" : "opacity-100 visible") absolute transition-opacity duration-300 ease-out">
+
+                <ul class="text-sm text-gray-700 dark:text-gray-200 " aria-labelledby="dropdownDefaultButton">
+                    @foreach (var variant in ProductById.ProductVariants)
+                    {
+                        <li @onclick="() => { OnDropdownClicked(variant.VariantName); }" class="">
+                            <p class="block px-8 py-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white ">@variant.VariantName</p>
+                        </li>
+                    }
+
+                </ul>
+            </div>
+        </div>
+
     </div>
     <div class="flex gap-x-10 my-8">
         <div class="flex items-center">
@@ -98,7 +120,7 @@
                     </div>
                 </div>
             </div>
-            <div class="px-2 font-medium transition-all duration-300 ease-in-out 
+            <div class=" px-2 font-medium transition-all duration-300 ease-in-out 
                     max-h-0 overflow-hidden 
                     @(_isVisible[nameof(ProductById.Description)] ? "max-h-screen opacity-100 mt-2" : "opacity-0")">
                 <p>@ProductById.Description</p>
@@ -133,45 +155,5 @@
 </div>
 
 @code {
-    [Parameter] public ProductById ProductById { get; set; } = null!;
-    private decimal Price { get; set; }
-    private int Quantity { get; set; } = 1;
-
-    private readonly Dictionary<string, bool> _isVisible =
-        new()
-        {
-            { nameof(ProductById.Description), false },
-            { nameof(ProductById.ProductUseGuide), false }
-        };
-
-
-    protected override Task OnParametersSetAsync()
-    {
-        Price = ProductById.ProductVariants[0].OriginalPrice.Value;
-        return Task.CompletedTask;
-    }
-
-    private string CalculateDiscountPrice(ProductById productById, decimal price)
-    {
-        return (price * productById.DiscountPercent / 100).ToString("F2");
-    }
-
-    private void AdjustQuantity(char behavior)
-    {
-        Quantity = behavior switch
-        {
-            '+' => Math.Min(Quantity + 1, 20), // Increment up to max 20
-            '-' => Math.Max(Quantity - 1, 1), // Decrement down to min 1
-            _ => Quantity // Fallback case
-        };
-    }
-
-    private void ToggleSection(string section)
-    {
-        if (_isVisible.ContainsKey(section))
-        {
-            _isVisible[section] = !_isVisible[section];
-        }
-    }
 
 }

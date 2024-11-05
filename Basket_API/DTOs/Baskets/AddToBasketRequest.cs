@@ -2,4 +2,7 @@
 
 namespace Basket_API.DTOs.Baskets;
 
-public record AddToBasketRequest(int CustomerId, List<BasketItemRequest> BasketItemRequests);
+public record AddToBasketRequest(
+    int CustomerId,
+    UpdateBasketItemRequest UpdateBasketItemRequest
+) { }

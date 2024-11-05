@@ -19,9 +19,7 @@ public class CustomValidatorService
         var property = model.GetType().GetProperty(propertyName);
 
         if (property is null)
-        {
             return validationResults;
-        }
 
         property.GetValue(model);
 

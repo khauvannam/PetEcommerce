@@ -1,5 +1,4 @@
-﻿using System.Reflection;
-using Base;
+﻿using Base;
 using Base.Results;
 using Microsoft.EntityFrameworkCore;
 using Product_API.Databases;
@@ -40,7 +39,7 @@ public class ProductRepository(ProductDbContext dbContext) : IProductRepository
                 DiscountPercent = p.DiscountPercent.Value,
                 ImageUrl = p.ImageUrlList[0],
                 Name = p.Name,
-                Price = p.ProductVariants[0].OriginalPrice.Value,
+                Price = p.ProductVariants.Select(variant => variant.OriginalPrice.Value).Min(),
                 Quantity = p.TotalQuantity,
                 TotalRating = p.TotalRating,
                 SoldQuantity = p.SoldQuantity,
@@ -135,31 +134,28 @@ public class ProductRepository(ProductDbContext dbContext) : IProductRepository
 
         if (!string.IsNullOrEmpty(filterRequest.FilterBy))
         {
-            string sortByProperty;
+            // string sortByProperty;
 
             switch (filterRequest.FilterBy)
             {
                 case "best-seller":
-                    sortByProperty = nameof(Product.SoldQuantity);
+                    // sortByProperty = nameof(Product.SoldQuantity);
 
-                    productsQueryable = productsQueryable
-                        .Where(p => p.SoldQuantity > 100)
-                        .OrderByDescending(p => p.SoldQuantity);
+                    productsQueryable = productsQueryable.Where(p => p.SoldQuantity > 100);
+
                     break;
                 case "new-arrivals":
-                    sortByProperty = nameof(Product.CreatedAt);
+                    // sortByProperty = nameof(Product.CreatedAt);
 
                     var oneWeekAgo = DateTime.Now.AddDays(-7);
-                    productsQueryable = productsQueryable
-                        .Where(p => p.CreatedAt >= oneWeekAgo)
-                        .OrderByDescending(p => p.CreatedAt);
+                    productsQueryable = productsQueryable.Where(p => p.CreatedAt >= oneWeekAgo);
+
                     break;
                 case "high-rating":
-                    sortByProperty = nameof(Product.TotalRating);
+                    // sortByProperty = nameof(Product.TotalRating);
 
-                    productsQueryable = productsQueryable
-                        .Where(p => p.TotalRating > 3M)
-                        .OrderByDescending(p => p.TotalRating);
+                    productsQueryable = productsQueryable.Where(p => p.TotalRating > 3M);
+
                     break;
                 default:
                     return Result.Failure<Pagination<ListProductResponse>>(
@@ -170,14 +166,22 @@ public class ProductRepository(ProductDbContext dbContext) : IProductRepository
                     );
             }
 
-            var propertyInfo = typeof(Product).GetProperty(sortByProperty)!;
-
-            productsQueryable = filterRequest.IsDesc
-                ? productsQueryable.OrderByDescending(p =>
-                    EF.Property<object>(p, propertyInfo.Name)
-                )
-                : productsQueryable.OrderBy(p => EF.Property<object>(p, propertyInfo.Name));
+            // var propertyInfo = typeof(Product).GetProperty(sortByProperty)!;
+            //
+            // productsQueryable = filterRequest.IsDesc
+            //     ? productsQueryable.OrderByDescending(p =>
+            //         EF.Property<object>(p, propertyInfo.Name)
+            //     )
+            //     : productsQueryable.OrderBy(p => EF.Property<object>(p, propertyInfo.Name));
         }
+
+        productsQueryable = filterRequest.IsDesc
+            ? productsQueryable.OrderByDescending(p =>
+                p.ProductVariants.Select(v => v.OriginalPrice.Value).Min()
+            )
+            : productsQueryable.OrderBy(p =>
+                p.ProductVariants.Select(v => v.OriginalPrice.Value).Min()
+            );
 
         // Apply pagination and project to response model
         var products = await productsQueryable
@@ -191,7 +195,7 @@ public class ProductRepository(ProductDbContext dbContext) : IProductRepository
                 DiscountPercent = p.DiscountPercent.Value,
                 ImageUrl = p.ImageUrlList[0],
                 Name = p.Name,
-                Price = p.ProductVariants[0].OriginalPrice.Value,
+                Price = p.ProductVariants.Select(variant => variant.OriginalPrice.Value).Min(),
                 Quantity = p.TotalQuantity,
                 TotalRating = p.TotalRating,
                 SoldQuantity = p.SoldQuantity,

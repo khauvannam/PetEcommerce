@@ -7,8 +7,8 @@ using Product_API.Features.Products;
 using Product_API.Interfaces;
 using Product_API.Repositories;
 using Product_API.Services;
-using Shared.Domain.Services;
-using Shared.Extensions;
+using Share.Domain.Services;
+using Share.Extensions;
 
 namespace Product_API.Extensions;
 

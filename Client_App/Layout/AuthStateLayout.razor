@@ -1,5 +1,19 @@
-﻿<h3>AuthStateLayout</h3>
+﻿@inject AuthStateService Service;
+
+@using Client_App.Services.States
+@inherits LayoutComponentBase
+
+<div class="">
+    @ChildContent
+</div>
 
 @code {
-    
+
+    [Parameter] public RenderFragment? ChildContent { get; set; } // This property allows child content to be rendered
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Service.CheckAndRefreshTokenAsync();
+    }
+
 }

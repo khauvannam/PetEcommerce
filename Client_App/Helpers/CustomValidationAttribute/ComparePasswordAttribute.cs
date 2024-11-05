@@ -10,16 +10,12 @@ public class ComparePasswordAttribute(string password) : ValidationAttribute
         var property = validationContext.ObjectType.GetProperty(password);
 
         if (property is null)
-        {
             return new ValidationResult($"Property {password} not found.");
-        }
 
         var compareValue = property.GetValue(validationContext.ObjectInstance, null) as string;
 
         if (currentValue != compareValue)
-        {
             return new ValidationResult($"Property {password} does not match.");
-        }
 
         return ValidationResult.Success!;
     }

@@ -29,12 +29,12 @@ public class BasketRepository(BasketDbContext context) : IBasketRepository
         return Result.Success();
     }
 
-    public async Task<Result<Basket>> GetByIdAsync(int basketId)
+    public async Task<Result<Basket>> GetByIdAsync(int customerId)
     {
         var basket = await context
             .Baskets.Include(b => b.BasketItemsList)
             .AsSplitQuery()
-            .FirstOrDefaultAsync(b => b.BasketId == basketId);
+            .FirstOrDefaultAsync(b => b.CustomerId == customerId);
         if (basket != null)
             return Result.Success(basket);
         return Result.Failure<Basket>(BasketErrors.NotFound);

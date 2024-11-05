@@ -56,9 +56,7 @@ public abstract class ApiService(IHttpClientFactory factory, string baseUrl, str
 
     private static string CreateQuery(int? limit, int? offset)
     {
-        return (limit.HasValue && offset.HasValue)
-            ? $"?limit={limit}&offset={offset}"
-            : string.Empty;
+        return limit.HasValue && offset.HasValue ? $"?limit={limit}&offset={offset}" : string.Empty;
     }
 }
 
@@ -90,9 +88,7 @@ public abstract class BaseApiService(IHttpClientFactory factory, string baseUrl,
         {
             var value = prop.GetValue(item)?.ToString();
             if (!string.IsNullOrEmpty(value))
-            {
                 content.Add(new StringContent(value), prop.Name);
-            }
         }
 
         return content;
@@ -104,9 +100,7 @@ public abstract class BaseApiService(IHttpClientFactory factory, string baseUrl,
         try
         {
             if (response.IsSuccessStatusCode)
-            {
                 return Result.Success();
-            }
 
             var content = await response.Content.ReadAsStringAsync();
             var error = JsonSerializer.Deserialize<ErrorType>(content, Options);
@@ -122,7 +116,7 @@ public abstract class BaseApiService(IHttpClientFactory factory, string baseUrl,
         }
         catch (Exception exception)
         {
-            return Result.Failure(new(exception.Message, exception.StackTrace!));
+            return Result.Failure(new ErrorType(exception.Message, exception.StackTrace!));
         }
     }
 
@@ -136,7 +130,7 @@ public abstract class BaseApiService(IHttpClientFactory factory, string baseUrl,
             if (!response.IsSuccessStatusCode)
             {
                 var errorResult = JsonSerializer.Deserialize<ErrorType>(content, Options)!;
-                return Result.Failure<T>(new(errorResult.Code, errorResult.Description));
+                return Result.Failure<T>(new ErrorType(errorResult.Code, errorResult.Description));
             }
 
             var result = JsonSerializer.Deserialize<T>(content, Options)!;
@@ -146,20 +140,22 @@ public abstract class BaseApiService(IHttpClientFactory factory, string baseUrl,
         catch (NullReferenceException nullReferenceException)
         {
             return Result.Failure<T>(
-                new(nullReferenceException.Source!, nullReferenceException.Message)
+                new ErrorType(nullReferenceException.Source!, nullReferenceException.Message)
             );
         }
         catch (JsonException jsonException)
         {
-            return Result.Failure<T>(new(jsonException.HelpLink!, jsonException.Message));
+            return Result.Failure<T>(new ErrorType(jsonException.HelpLink!, jsonException.Message));
         }
         catch (HttpRequestException httpRequestException)
         {
-            return Result.Failure<T>(new("httpRequestException ", httpRequestException.Message));
+            return Result.Failure<T>(
+                new ErrorType("httpRequestException ", httpRequestException.Message)
+            );
         }
         catch (Exception exception)
         {
-            return Result.Failure<T>(new(exception.Message, exception.StackTrace!));
+            return Result.Failure<T>(new ErrorType(exception.Message, exception.StackTrace!));
         }
     }
 

@@ -22,7 +22,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\Base\Base.csproj" />
-        <ProjectReference Include="..\Shared\Shared.csproj"/>
+        <ProjectReference Include="..\Share\Share.csproj" />
     </ItemGroup>
 
     <ItemGroup>

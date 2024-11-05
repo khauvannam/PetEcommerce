@@ -1,0 +1,27 @@
+﻿@page "/Profile"
+@using Blazored.LocalStorage
+@using Client_App.DTOs.Identities.Responses
+
+@inject ILocalStorageService LocalStorage;
+@inject NavigationManager NavigationManager;
+
+
+<div class=""></div>
+
+@code {
+    private LoginResponse JwtToken { get; set; } = null!;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var token = await LocalStorage.GetItemAsync<LoginResponse>("jwt");
+
+        if (token is null)
+        {
+            NavigationManager.NavigateTo("/login");
+            return;
+        }
+
+        JwtToken = token;
+    }
+
+}

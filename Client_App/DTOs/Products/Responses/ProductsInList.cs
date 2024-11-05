@@ -12,4 +12,4 @@ public record ProductsInList
     public int Quantity { get; set; }
     public int SoldQuantity { get; set; }
     public decimal TotalRating { get; set; }
-};
+}

@@ -6,9 +6,9 @@ using Identity.API.Repositories;
 using Identity.API.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Shared.Domain.Services;
-using Shared.Extensions;
-using Shared.Extensions.JwtHandlers;
+using Share.Domain.Services;
+using Share.Extensions;
+using Share.Extensions.JwtHandlers;
 
 namespace Identity.API.Extensions;
 

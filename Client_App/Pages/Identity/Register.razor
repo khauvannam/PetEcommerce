@@ -1,12 +1,13 @@
 ﻿@page "/Register"
-@using Client_App.DTOs.Identities.Requests
-@using Client_App.Interfaces
-@using Client_App.Services.Share
+@using Blazored.LocalStorage
 @using Client_App.Components.Share.CustomInputs
+@using Client_App.Interfaces
+@using Client_App.Services.Clients
 
 @inject IIdentityService IdentityService;
-@inject ErrorService ErrorService;
+@inject ErrorModalService ErrorModalService;
 @inject NavigationManager NavigationManager;
+@inject ILocalStorageService LocalStorage;
 
 <div class=" w-full flex justify-center text-main">
     <div class="flex w-full">
@@ -96,34 +97,5 @@
 
 @code {
 
-    [SupplyParameterFromForm] private RegisterFormModel? RegisterModel { get; set; }
-
-    private string FirstName { get; set; } = string.Empty;
-
-    private string LastName { get; set; } = string.Empty;
-
-    protected override void OnInitialized()
-    {
-        RegisterModel ??= RegisterFormModel.Empty;
-    }
-
-    private void HandleUsernameInput()
-    {
-        RegisterModel!.Username = $"{FirstName}{LastName}".Replace(" ", "").ToLower();
-        Console.WriteLine(RegisterModel.Username);
-    }
-
-    private async Task HandleValidSubmit()
-    {
-        var result = await IdentityService.Register(RegisterModel!);
-
-        if (result.IsFailure)
-        {
-            ErrorService.SetErrorMessage(result.ErrorTypes).NavigateTo(default);
-            return;
-        }
-
-        NavigationManager.NavigateTo("/login");
-    }
 
 }

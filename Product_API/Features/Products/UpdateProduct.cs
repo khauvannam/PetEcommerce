@@ -3,8 +3,8 @@ using MediatR;
 using Product_API.Domain.Products;
 using Product_API.DTOs.Products;
 using Product_API.Interfaces;
-using Shared.Errors;
-using Shared.Services;
+using Share.Errors;
+using Share.Services;
 
 namespace Product_API.Features.Products;
 

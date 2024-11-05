@@ -8,7 +8,7 @@ using Identity.API.Errors;
 using Identity.API.Features.Users;
 using Identity.API.Interfaces;
 using Microsoft.AspNetCore.Identity;
-using Shared.Extensions.JwtHandlers;
+using Share.Extensions.JwtHandlers;
 
 namespace Identity.API.Repositories;
 

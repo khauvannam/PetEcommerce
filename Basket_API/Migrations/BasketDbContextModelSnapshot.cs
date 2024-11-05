@@ -22,19 +22,21 @@ namespace Basket_API.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Basket_API.Domains.BasketItems.BasketItem", b =>
+            modelBuilder.Entity("Basket_API.Domain.BasketItems.BasketItem", b =>
                 {
-                    b.Property<string>("BasketItemId")
+                    b.Property<int>("BasketItemId")
+                        .ValueGeneratedOnAdd()
                         .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("BasketItemId"));
 
                     b.Property<DateTime>("AddedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("BasketId")
-                        .IsRequired()
+                    b.Property<int>("BasketId")
                         .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
+                        .HasColumnType("int");
 
                     b.Property<string>("ImageUrl")
                         .IsRequired()
@@ -47,48 +49,52 @@ namespace Basket_API.Migrations
                         .HasColumnType("nvarchar(255)");
 
                     b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal(18, 2)");
 
-                    b.Property<string>("ProductId")
-                        .IsRequired()
+                    b.Property<int>("ProductId")
                         .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
+                        .HasColumnType("int");
 
                     b.Property<int>("Quantity")
                         .HasColumnType("int")
                         .HasColumnName("Quantity");
 
-                    b.Property<string>("VariantId")
-                        .IsRequired()
+                    b.Property<int>("VariantId")
                         .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
+                        .HasColumnType("int");
 
                     b.HasKey("BasketItemId");
+
+                    SqlServerKeyBuilderExtensions.IsClustered(b.HasKey("BasketItemId"));
 
                     b.HasIndex("BasketId");
 
                     b.ToTable("BasketItems");
                 });
 
-            modelBuilder.Entity("Basket_API.Domains.Baskets.Basket", b =>
+            modelBuilder.Entity("Basket_API.Domain.Baskets.Basket", b =>
                 {
-                    b.Property<string>("BasketId")
+                    b.Property<int>("BasketId")
+                        .ValueGeneratedOnAdd()
                         .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
+                        .HasColumnType("int");
 
-                    b.Property<string>("CustomerId")
-                        .IsRequired()
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("BasketId"));
+
+                    b.Property<int>("CustomerId")
                         .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
+                        .HasColumnType("int");
 
                     b.HasKey("BasketId");
+
+                    SqlServerKeyBuilderExtensions.IsClustered(b.HasKey("BasketId"));
 
                     b.ToTable("Baskets");
                 });
 
-            modelBuilder.Entity("Basket_API.Domains.BasketItems.BasketItem", b =>
+            modelBuilder.Entity("Basket_API.Domain.BasketItems.BasketItem", b =>
                 {
-                    b.HasOne("Basket_API.Domains.Baskets.Basket", "Basket")
+                    b.HasOne("Basket_API.Domain.Baskets.Basket", "Basket")
                         .WithMany("BasketItemsList")
                         .HasForeignKey("BasketId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -97,7 +103,7 @@ namespace Basket_API.Migrations
                     b.Navigation("Basket");
                 });
 
-            modelBuilder.Entity("Basket_API.Domains.Baskets.Basket", b =>
+            modelBuilder.Entity("Basket_API.Domain.Baskets.Basket", b =>
                 {
                     b.Navigation("BasketItemsList");
                 });

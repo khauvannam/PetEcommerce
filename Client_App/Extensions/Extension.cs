@@ -1,8 +1,10 @@
-using Client_App.Components.Home;
+using Blazored.LocalStorage;
+using Client_App.Helpers.Jwt;
 using Client_App.Interfaces;
-using Client_App.Services;
 using Client_App.Services.APIs;
+using Client_App.Services.Clients;
 using Client_App.Services.Share;
+using Client_App.Services.States;
 
 namespace Client_App.Extensions;
 
@@ -37,15 +39,25 @@ public static class Extension
 
     public static void AddFetchApiService(this IServiceCollection services)
     {
-        services.AddScoped<ICategoryService, CategoryService>();
-        services.AddScoped<IProductService, ProductService>();
-        services.AddScoped<ICommentService, CommentService>();
-        services.AddScoped<IIdentityService, IdentityService>();
+        services.AddTransient<ICategoryService, CategoryService>();
+        services.AddTransient<IProductService, ProductService>();
+        services.AddTransient<ICommentService, CommentService>();
+        services.AddTransient<IIdentityService, IdentityService>();
+        services.AddTransient<ITokenService, TokenService>();
 
-        services.AddSingleton<ErrorService>();
-        services.AddSingleton<TitleService>();
-        services.AddSingleton<ToggleSearchInputService>();
+        // Modal service
+        services.AddScoped<ErrorModalService>();
+        services.AddScoped<TitleService>();
+        services.AddScoped<ToggleSearchInputService>();
+        services.AddScoped<ProductDetailModalService>();
+        services.AddScoped<AuthStateService>();
 
         services.AddTransient<CustomValidatorService>();
+        services.AddTransient<JwtHelper>();
+    }
+
+    public static void AddPersistenceService(this IServiceCollection services)
+    {
+        services.AddBlazoredLocalStorage();
     }
 }

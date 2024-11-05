@@ -19,9 +19,7 @@ public class CommentService(
         where T : Comment
     {
         if (productId is null)
-        {
             return await GetAllAsync<T>(limit, offset);
-        }
 
         var query = "?limit=" + limit + "&offset=" + offset + "&productId=" + productId;
         var result = await Client.GetAsync($"{Endpoint}{query}");

@@ -1,15 +1,12 @@
-﻿@using Client_App.DTOs.Products.Requests
-@using Client_App.DTOs.Products.Responses
-@using Client_App.DTOs.Share
-@using Client_App.Interfaces
-@using Client_App.Services.Share
-
-@inject IProductService ProductService;
-@inject ErrorService ErrorService;
+﻿@inject IProductService ProductService;
+@inject ErrorModalService ErrorModalService;
 @inject ToggleSearchInputService SearchInputService;
 @inject NavigationManager NavigationManager;
 
-@implements System.IDisposable
+@using Client_App.DTOs.Share
+@using Client_App.Interfaces
+@using Client_App.Services.Clients
+@implements IDisposable
 
 <div class="grid @(!SearchInputService.IsHidden ? "opacity-100 max-h-screen translate-y-0 z-20 visible inset-0" : "opacity-0 max-h-0 -translate-y-full invisible") transition-all ease-in-out fixed">
     <div class="relative mx-auto w-full">
@@ -24,8 +21,8 @@
                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
                         </svg>
                     </div>
-                    <input @bind:get="@Request.SearchText" @bind:set="SearchProductAsync" @bind:event="oninput" class="block w-full p-5 ps-10 text-sm text-gray-900 rounded-lg focus:outline-none focus:border-0 dark:bg-gray-700  dark:placeholder-gray-400 dark:text-white focus:ring-0 " placeholder="Search for the appropriate supplement..."/>
-                    <div @onclick="() => { SearchInputService.SetIsHidden(true); }" id="close-search-input" class="absolute end-2.5 bottom-3.5 cursor-pointer">
+                    <input @ref="_searchInputRef" autofocus @bind:get="@Request.SearchText" @bind:set="SearchProductAsync" @bind:event="oninput" class="block w-full p-5 ps-10 text-sm text-gray-900 rounded-lg focus:outline-none focus:border-0 dark:bg-gray-700  dark:placeholder-gray-400 dark:text-white focus:ring-0 " placeholder="Search for the appropriate supplement..."/>
+                    <div @onclick="OnCloseAsync" id="close-search-input" class="absolute end-2.5 bottom-3.5 cursor-pointer">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
                             <path d="M10.5859 12L2.79297 4.20706L4.20718 2.79285L12.0001 10.5857L19.793 2.79285L21.2072 4.20706L13.4143 12L21.2072 19.7928L19.793 21.2071L12.0001 13.4142L4.20718 21.2071L2.79297 19.7928L10.5859 12Z"></path>
                         </svg>
@@ -42,7 +39,7 @@
                         <div class="w-full grid gap-6 grid-cols-2">
                             @foreach (var data in Pagination.Data)
                             {
-                                <NavLink href="@($"/product/{data.ProductId}")" class="grid grid-cols-[1fr_4fr] gap-6">
+                                <NavLink href="@($"/product/{data.ProductId}")" @onclick="OnCloseAsync" class="grid grid-cols-[1fr_4fr] gap-6">
                                     <div>
                                         <img class="object-contain w-full h-full max-h-[100px] rounded-lg" src="@data.ImageUrl" @onerror="() => data.ImageUrl = ImageUrl.DefaultProduct" alt="">
                                     </div>
@@ -63,57 +60,5 @@
 </div>
 
 @code {
-    private ProductsSearchFilterRequest Request { get; set; } = new();
-    private bool IsLoadingHidden { get; set; } = true;
-    private Pagination<ProductsInList>? Pagination { get; set; }
-
-    private async Task SearchProductAsync(string? value)
-    {
-        Request.SearchText = value;
-        Request.Limit = 4;
-
-        if (Request.SearchText!.Length > 2)
-        {
-            Pagination = new(default!, default);
-
-            IsLoadingHidden = false;
-
-            await Task.Delay(4000);
-
-            var result = await ProductService.GetProductsBySearch<ProductsInList>(Request);
-
-            IsLoadingHidden = true;
-
-            if (result.IsFailure)
-            {
-                ErrorService.SetErrorMessage(result.ErrorTypes).NavigateTo(default);
-                return;
-            }
-
-            Pagination = result.Value;
-        }
-    }
-
-    protected override void OnInitialized()
-    {
-        SearchInputService.SubscribeEvents(StateHasChanged);
-    }
-
-    public void Dispose()
-    {
-        SearchInputService.SetIsHidden(true);
-        Request.SearchText = string.Empty; 
-        SearchInputService.UnsubscribeEvents(StateHasChanged);
-    }
-
-    private void PreventFormSubmit()
-    {
-        if (Pagination!.TotalItems <= 0) return;
-
-        var uri = $"/search/{Request.SearchText}";
-
-        NavigationManager.NavigateTo(uri, true);
-    }
 
 }
-

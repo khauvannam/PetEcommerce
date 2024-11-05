@@ -7,7 +7,7 @@ using Identity.API.Errors;
 using Identity.API.Features.Tokens;
 using Identity.API.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using Shared.Extensions.JwtHandlers;
+using Share.Extensions.JwtHandlers;
 
 namespace Identity.API.Repositories;
 

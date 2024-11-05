@@ -2,8 +2,8 @@ using Microsoft.EntityFrameworkCore;
 using Order.API.Databases;
 using Order.API.Interfaces;
 using Order.API.Repositories;
-using Shared.Domain.Services;
-using Shared.Extensions;
+using Share.Domain.Services;
+using Share.Extensions;
 using IShippingMethodRepository = Order.API.Interfaces.IShippingMethodRepository;
 
 namespace Order.API.Extensions;

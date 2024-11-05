@@ -6,8 +6,8 @@ using Product_API.DTOs.Products;
 using Product_API.Errors;
 using Product_API.Interfaces;
 using Product_API.Services;
-using Shared.Errors;
-using Shared.Services;
+using Share.Errors;
+using Share.Services;
 
 namespace Product_API.Features.Products;
 

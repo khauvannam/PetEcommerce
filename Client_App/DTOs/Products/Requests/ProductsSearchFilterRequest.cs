@@ -2,12 +2,12 @@
 
 public class ProductsSearchFilterRequest
 {
-    public string? SearchText = default;
-    public int Limit = 5;
-    public int Offset = default;
-    public decimal MinPrice = decimal.Zero;
-    public decimal MaxPrice = 10000M;
-    public string? FilerBy = default;
     public bool Available = true;
+    public string? FilerBy = default;
     public bool IsDesc = default;
+    public int Limit = 5;
+    public decimal MaxPrice = 10000M;
+    public decimal MinPrice = decimal.Zero;
+    public int Offset = default;
+    public string? SearchText = default;
 }

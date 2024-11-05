@@ -3,7 +3,7 @@ using Basket_API.Domain.Baskets;
 using Basket_API.Interfaces;
 using Microsoft.Extensions.Caching.Distributed;
 using Newtonsoft.Json;
-using Shared.Domain.Services;
+using Share.Domain.Services;
 
 namespace Basket_API.Repositories;
 

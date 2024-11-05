@@ -1,27 +1,29 @@
-﻿@using Client_App.Components.Share.Helpers
-@using Client_App.Components.Share.ReusableComponents
+﻿@using Client_App.Components.Share
 @using Client_App.Components.Share.CustomInputs
-
-
+@using Client_App.Components.Share.Helpers
 @inherits LayoutComponentBase
 
-<div>
-    <nav>
-        <TopBar/>
-    </nav>
+<AuthStateLayout>
+    <div>
+        <nav>
+            <TopBar/>
+        </nav>
 
-    <main>
-        @Body
-    </main>
+        <main>
+            @Body
+        </main>
 
-    <footer>
-        <BottomBar/>
-    </footer>
-</div>
+        <footer>
+            <BottomBar/>
+        </footer>
+    </div>
+</AuthStateLayout>
 
 <ErrorModal/>
 
 <SearchInput/>
+
+<ProductDetailModal/>
 
 @code {
 

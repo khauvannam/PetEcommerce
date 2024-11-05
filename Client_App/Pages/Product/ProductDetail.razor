@@ -1,21 +1,22 @@
 ﻿@page "/product/{ProductId:int}"
 
-@using Client_App.Interfaces
-@using Client_App.Components.ProductDetail
-@using Client_App.DTOs.Comments.Responses
-@using Client_App.DTOs.Products.Responses
-@using Client_App.DTOs.Share
-@using Client_App.Services.Share
-@using Client_App.Components.Share.ReusableComponents
-
+@inject ProductDetailModalService Service;
 @inject IProductService ProductService;
-@inject  ICommentService CommentService;
-@inject ErrorService ErrorService;
+@inject ICommentService CommentService;
+@inject ErrorModalService ErrorModalService;
 @inject TitleService TitleService;
+@inject IJSRuntime Js;
+
+@using Client_App.Components.ProductDetail
+@using Client_App.Components.Share.Reusable
+@using Client_App.Interfaces
+@using Client_App.Services.Clients
+@implements IAsyncDisposable
 
 @if (ProductById is not null)
 {
     <Breadcump Name="@ProductById.Name" Endpoint="@($"/product/{ProductById.ProductId}")"/>
+
     <ProductSection ProductById="ProductById"/>
 
     <div class="mt-20">
@@ -35,40 +36,5 @@ else
 }
 
 @code {
-    [Parameter] public int ProductId { get; set; }
-
-    private ProductById? ProductById { get; set; }
-    private Pagination<Comment>? Pagination { get; set; }
-    private static int Limit => 8;
-    private int Offset { get; set; }
-
-
-    protected override async Task OnParametersSetAsync()
-    {
-        Offset = 0;
-        var productResult = await ProductService.GetByIdAsync<ProductById>(ProductId);
-        if (productResult.IsFailure)
-        {
-            ErrorService.SetErrorMessage(productResult.ErrorTypes).NavigateTo();
-            await TitleService.SetTitleErrorAsync();
-            return;
-        }
-
-        ProductById = productResult.Value;
-
-        await TitleService.SetTitleAsync(ProductById.Name);
-
-        var commentResult = await CommentService.GetAllByProductIdAsync<Comment>(Limit, Offset * Limit, ProductId);
-
-        if (commentResult.IsFailure)
-        {
-            ErrorService.SetErrorMessage(commentResult.ErrorTypes).NavigateTo();
-            await TitleService.SetTitleErrorAsync();
-            return;
-        }
-
-        Pagination = commentResult.Value;
-    }
-
 
 }

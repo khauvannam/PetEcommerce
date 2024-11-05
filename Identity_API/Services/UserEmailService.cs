@@ -3,7 +3,7 @@ using Identity.API.Domains.Users;
 using Identity.API.Errors;
 using Microsoft.AspNetCore.Identity;
 using MimeKit;
-using Shared.Services;
+using Share.Services;
 
 namespace Identity.API.Services;
 

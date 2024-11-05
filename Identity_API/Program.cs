@@ -1,5 +1,5 @@
 using Identity.API.Extensions;
-using Shared.Extensions;
+using Share.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 

@@ -21,10 +21,10 @@ public class BasketItem : Entity
     public string ImageUrl { get; private set; }
 
     [MaxLength(255)]
-    public string ProductId { get; private set; }
+    public int ProductId { get; private set; }
 
     [MaxLength(255)]
-    public string VariantId { get; private set; }
+    public int VariantId { get; private set; }
 
     [MaxLength(255)]
     public int BasketId { get; init; }
@@ -40,8 +40,8 @@ public class BasketItem : Entity
     public DateTime AddedAt { get; private set; }
 
     public static BasketItem Create(
-        string productId,
-        string variantId,
+        int productId,
+        int variantId,
         string name,
         Quantity quantity,
         decimal price,
@@ -92,7 +92,7 @@ public class Quantity : ValueObject
 
     public void Update(int value)
     {
-        Value = value > 0 ? value : throw new ArgumentException("Quantity can't be negative");
+        Value += value > 0 ? value : throw new ArgumentException("Quantity can't be negative");
     }
 
     protected override IEnumerable<object> GetEqualityComponents()

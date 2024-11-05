@@ -1,11 +1,12 @@
 ﻿@page "/Login"
-@using Client_App.DTOs.Identities.Requests
+@using Blazored.LocalStorage
 @using Client_App.Interfaces
-@using Client_App.Services.Share
+@using Client_App.Services.Clients
 
 @inject IIdentityService IdentityService;
-@inject ErrorService ErrorService;
+@inject ErrorModalService ErrorModalService;
 @inject NavigationManager NavigationManager;
+@inject ILocalStorageService LocalStorage;
 
 <div class=" w-full flex justify-center text-main  ">
     <div class="flex w-full">
@@ -20,7 +21,7 @@
                 <DataAnnotationsValidator/>
 
                 <div class="mb-4">
- 
+
                     <InputText
                         @bind-Value="LoginModel.Email"
                         type="email"
@@ -31,13 +32,13 @@
                 </div>
 
                 <div class="mb-4">
-                    
+
                     <InputText
                         @bind-Value="LoginModel.Password"
                         type="password"
                         placeholder="Password"
                         class="form-control mt-1 block w-full px-6 py-4 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"/>
-                    
+
                     <ValidationMessage class="text-red-500" For="@(() => LoginModel.Password)"/>
                 </div>
 
@@ -66,18 +67,5 @@
 </div>
 
 @code {
-    private LoginFormModel LoginModel { get; } = LoginFormModel.Empty;
-
-    private async Task HandleValidSubmit()
-    {
-        var result = await IdentityService.Login(LoginModel);
-        
-        if (result.IsFailure)
-        {
-            ErrorService.SetErrorMessage(result.ErrorTypes).NavigateTo(default);
-        }
-        
-        NavigationManager.NavigateTo("/");
-    }
 
 }

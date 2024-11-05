@@ -1,6 +1,6 @@
 using Basket_API.Extensions;
 using Newtonsoft.Json;
-using Shared.Extensions;
+using Share.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.AddDatabase();

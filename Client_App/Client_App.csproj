@@ -5,28 +5,32 @@
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Blazored.LocalStorage" Version="4.5.0" />
+        <PackageReference Include="Blazored.LocalStorage" Version="4.5.0"/>
         <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.5"/>
         <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="8.0.5" PrivateAssets="all"/>
         <PackageReference Include="Microsoft.Extensions.Http.Polly" Version="8.0.5"/>
+        <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="7.1.2"/>
+        <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.1.2"/>
     </ItemGroup>
 
     <ItemGroup>
-        <Folder Include="DTOs\Baskets\Requests\" />
-        <Folder Include="DTOs\Categories\Requests\" />
-        <Folder Include="wwwroot\images\identity\" />
+        <Folder Include="DTOs\Baskets\Requests\"/>
+        <Folder Include="DTOs\Categories\Requests\"/>
+        <Folder Include="wwwroot\images\identity\"/>
     </ItemGroup>
 
     <ItemGroup>
-      <Compile Update="Domains\Products\Responses\ProductVariant.cs">
-        <DependentUpon>ProductById.cs</DependentUpon>
-      </Compile>
-      <Compile Update="Domains\Products\Responses\ProductBuyerId.cs">
-        <DependentUpon>ProductById.cs</DependentUpon>
-      </Compile>
+        <Compile Update="Domains\Products\Responses\ProductVariant.cs">
+            <DependentUpon>ProductById.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Domains\Products\Responses\ProductBuyerId.cs">
+            <DependentUpon>ProductById.cs</DependentUpon>
+        </Compile>
     </ItemGroup>
-    
+
 </Project>

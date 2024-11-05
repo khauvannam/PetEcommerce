@@ -31,6 +31,8 @@ public static class Configuration
                 .HasColumnName("Quantity");
 
             builder.HasKey(bi => bi.BasketItemId).IsClustered();
+
+            builder.Property(bi => bi.Price).HasColumnType("decimal(18, 2)");
         }
     }
 }

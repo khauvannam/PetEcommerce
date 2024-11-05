@@ -1,0 +1,37 @@
+﻿@inject ProductDetailModalService Service;
+
+@using Client_App.Services.Clients
+@implements IDisposable
+
+<div class="flex justify-between max-w-[1300px]">
+    <div>Quantity: @Service.Quantity</div>
+    <button @onclick="Increase">123</button>
+</div>
+
+@code {
+
+    protected override Task OnInitializedAsync()
+    {
+        Service.OnObserved += StateHasChanged;
+        Service.OnChangeQuantity += HandleQuantityChange;
+
+        return Task.CompletedTask;
+    }
+
+    private void HandleQuantityChange(int newQuantity)
+    {
+        StateHasChanged();
+    }
+
+    private void Increase()
+    {
+        Service.Quantity++;
+    }
+
+    public void Dispose()
+    {
+        Service.OnObserved -= StateHasChanged;
+        Service.OnChangeQuantity -= HandleQuantityChange;
+    }
+
+}

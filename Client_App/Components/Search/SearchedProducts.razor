@@ -1,10 +1,13 @@
-﻿@using Client_App.DTOs.Products.Responses
-@using Client_App.Components.Share.ReusableComponents
+﻿@using Client_App.Components.Share.Reusable
+@using Client_App.DTOs.Products.Responses
 @using Client_App.DTOs.Share
-
 <div class="w-full flex">
-    <div class="mt-1.5 w-2/12">
+    <div class="mt-1.5 w-2/12 relative">
         <img src="@ProductsInList.ImageUrl" class="shadow-product w-full h-full max-w-[135px] max-h-[135px] rounded-md object-cover" @onerror="() => { ProductsInList.ImageUrl = ImageUrl.DefaultProduct; }" alt="">
+        @if (ProductsInList.SoldQuantity > 100)
+        {
+            <span class="text-main bg-[#FADC6F] absolute h-6 rounded-full flex items-center px-2.5 text-sm font-medium left-2.5 top-2.5">Best Seller</span>
+        }
     </div>
     <div class="w-10/12 pl-6">
         <h3 class="text-xl mb-4 font-thin">@ProductsInList.Name</h3>

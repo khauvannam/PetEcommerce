@@ -4,8 +4,8 @@ using Basket_API.Repositories;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Distributed;
-using Shared.Domain.Services;
-using Shared.Extensions;
+using Share.Domain.Services;
+using Share.Extensions;
 
 namespace Basket_API.Extensions;
 
@@ -14,7 +14,7 @@ public static class Extension
     public static void AddDatabase(this WebApplicationBuilder builder)
     {
         // 172.20.0.2
-        var conn = ConnString.SqlServer();
+        var conn = ConnString.SqlServer("BasketDataBase");
         builder.Services.AddDbContext<BasketDbContext>(opt => opt.UseSqlServer(conn));
     }
 

@@ -1,5 +1,4 @@
 using Client_App.Abstraction;
-using Client_App.Components.Share.ReusableComponents;
 using Client_App.DTOs.Products.Requests;
 using Client_App.DTOs.Products.Responses;
 using Client_App.DTOs.Share;
@@ -29,14 +28,10 @@ public sealed class ProductService(
 
         var query = $"?limit={limit}&offset={offset}";
         if (categoryId is not null)
-        {
             query += $"&categoryId={categoryId}";
-        }
 
         if (isBestSeller)
-        {
             query += $"&isBestSeller={isBestSeller}";
-        }
 
         var baseEndpoint = $"{Endpoint}{query}";
 
@@ -53,26 +48,20 @@ public sealed class ProductService(
             $"{Endpoint}/search?searchtext={request.SearchText}&limit={request.Limit}&offset={request.Offset}";
 
         if (request.MinPrice > 0M)
-        {
             endpointUrl += $"&minPrice={request.MinPrice}";
-        }
 
         if (request.MaxPrice is > 0M and < 10000M)
-        {
             endpointUrl += $"&maxPrice={request.MaxPrice}";
-        }
 
         if (!string.IsNullOrEmpty(request.FilerBy))
-        {
             endpointUrl += $"&filterBy={request.FilerBy}&isDesc={request.IsDesc}";
-        }
+
+        endpointUrl += $"&isDesc={request.IsDesc}";
 
         if (!request.Available)
-        {
             endpointUrl += "&available=false";
-        }
 
         var result = await Client.GetAsync(endpointUrl);
         return await HandleResponse<Pagination<T>>(result);
     }
-};
+}

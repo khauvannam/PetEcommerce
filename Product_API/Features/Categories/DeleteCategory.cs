@@ -1,7 +1,7 @@
 ﻿using Base.Results;
 using MediatR;
 using Product_API.Interfaces;
-using Shared.Services;
+using Share.Services;
 
 namespace Product_API.Features.Categories;
 

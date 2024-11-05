@@ -1,0 +1,31 @@
+<button class="h-[54px] w-full  rounded-full flex justify-center items-center bg-[#00205c] hover:border-[#00205c] hover:border-2 hover:bg-[#FADC6F] group transition-all duration-200"
+        @onclick="HandleClick" disabled="@_isLoading">
+    <p class="text-white group-hover:text-main">
+        @ButtonText
+    </p>
+</button>
+
+@code {
+    [Parameter] public string Value { get; set; } = null!; // Default text
+    [Parameter] public EventCallback OnClickCallback { get; set; }
+
+    private bool _isLoading = false; // Loading state
+    private string ButtonText => _isLoading ? "Loading..." : Value; // Dynamic text based on loading state
+
+    private async Task HandleClick()
+    {
+        _isLoading = true; // Start loading
+        StateHasChanged(); // Update the button text to "Loading..."
+
+        await Task.Delay(TimeSpan.FromMilliseconds(2000));
+        if (OnClickCallback.HasDelegate)
+        {
+            // Invoke the passed callback function asynchronously
+            await OnClickCallback.InvokeAsync();
+        }
+
+        _isLoading = false; // Stop loading after the async operation completes
+        StateHasChanged(); // Update the button text back to original
+    }
+
+}

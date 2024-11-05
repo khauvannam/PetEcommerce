@@ -1,3 +1,7 @@
 ﻿namespace Client_App.DTOs.Identities.Responses;
 
-public record LoginResponse(string AccessToken, string TokenType = "Bearer") { }
+public class LoginResponse(string accessToken, string tokenType = "Bearer")
+{
+    public string AccessToken { get; set; } = accessToken;
+    public string TokenType { get; set; } = tokenType;
+}

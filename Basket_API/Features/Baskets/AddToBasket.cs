@@ -1,19 +1,17 @@
-using Base.Results;
-using Basket_API.Domain.BasketItems;
+﻿using Base.Results;
 using Basket_API.Domain.Baskets;
 using Basket_API.DTOs.BasketItems;
 using Basket_API.Interfaces;
-using FluentValidation;
 using MediatR;
 
 namespace Basket_API.Features.Baskets;
 
 public static class AddToBasket
 {
-    public record Command(int BasketId, int CustomerId, List<BasketItemRequest> BasketItemRequests)
+    public record Command(int CustomerId, UpdateBasketItemRequest UpdateBasketItemRequest)
         : IRequest<Result<Basket>>;
 
-    internal sealed class Handler(IBasketRepository repository, IValidator<Command> validator)
+    public sealed class Handler(IBasketRepository basketRepository)
         : IRequestHandler<Command, Result<Basket>>
     {
         public async Task<Result<Basket>> Handle(
@@ -21,54 +19,20 @@ public static class AddToBasket
             CancellationToken cancellationToken
         )
         {
-            var validationResult = await validator.ValidateAsync(request, cancellationToken);
-
-            if (!validationResult.IsValid)
-                return Result.Failure<Basket>(
-                    new ErrorType("UpdateBasket.Command", validationResult.Errors.ToString()!)
-                );
+            var basketResult = await basketRepository.GetByIdAsync(request.CustomerId);
 
             Basket basket;
-            var result = await repository.GetByIdAsync(request.BasketId);
-            if (result.IsFailure)
+
+            if (basketResult.IsFailure)
             {
                 basket = Basket.Create(request.CustomerId);
-
-                foreach (var basketItemRequest in request.BasketItemRequests)
-                {
-                    var basketItem = BasketItem.Create(
-                        basketItemRequest.ProductId,
-                        basketItemRequest.VariantId,
-                        basketItemRequest.Name,
-                        Quantity.Create(basketItemRequest.Quantity),
-                        basketItemRequest.Price,
-                        basketItemRequest.ImageUrl
-                    );
-
-                    basket.BasketItemsList.Add(basketItem);
-                }
-
-                return await repository.CreateAsync(basket);
+                basket.UpdateBasket(request.UpdateBasketItemRequest);
+                return Result.Success(basket);
             }
 
-            basket = result.Value;
-            if (request.BasketItemRequests.Count == 0)
-                basket.RemoveAllBasketItem();
+            basket = basketResult.Value;
 
-            basket.RemoveAllBasketItemNotExist(request.BasketItemRequests);
-            foreach (var basketItemRequest in request.BasketItemRequests)
-                // CHANGE QUANTITY IF EXIST OR CREATE NEW BASKET ITEM IF NOT
-                basket.UpdateBasket(basketItemRequest);
-
-            return await repository.UpdateAsync(basket);
-        }
-    }
-
-    public sealed class Validator : AbstractValidator<Command>
-    {
-        public Validator()
-        {
-            RuleFor(c => c.BasketId).NotEmpty().WithMessage("BasketId cannot be empty");
+            return Result.Success(basket);
         }
     }
 }

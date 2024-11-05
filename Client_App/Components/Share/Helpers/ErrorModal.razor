@@ -1,12 +1,11 @@
-﻿@using Client_App.DTOs.Share
-@using Client_App.Services.Share
-
-@inject ErrorService ErrorService;
+﻿@inject ErrorModalService ErrorModalService;
 @inject NavigationManager NavigationManager;
 
-@implements System.IDisposable;
+@using Client_App.DTOs.Share
+@using Client_App.Services.Clients
+@implements IDisposable;
 
-@if (ErrorService.ErrorMessage != Errors.None)
+@if (ErrorModalService.ErrorMessage != Errors.None)
 {
     <div class="fixed inset-0 grid place-items-center bg-black bg-opacity-50">
         <div class="relative p-4 w-full max-w-md max-h-full">
@@ -21,8 +20,8 @@
                     <svg class="mx-auto mb-4 text-gray-400 w-12 h-12 dark:text-gray-200" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
                     </svg>
-                    <h3 class="mb-2 text-2xl text-gray-500 font-medium dark:text-gray-400">@ErrorService.ErrorMessage.Code</h3>
-                    <h3 class="mb-5 text-md font-normal text-gray-500 dark:text-gray-400">@ErrorService.ErrorMessage.Description</h3>
+                    <h3 class="mb-2 text-2xl text-gray-500 font-medium dark:text-gray-400">@ErrorModalService.ErrorMessage.Code</h3>
+                    <h3 class="mb-5 text-md font-normal text-gray-500 dark:text-gray-400">@ErrorModalService.ErrorMessage.Description</h3>
                     <button @onclick="OnClick" class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center">
                         Close
                     </button>
@@ -37,24 +36,25 @@
 
     protected override void OnInitialized()
     {
-        ErrorService.SubscribeEvent(StateHasChanged);
+        ErrorModalService.SubscribeEvent(StateHasChanged);
     }
 
     public void Dispose()
     {
-        ErrorService.UnsubscribeEvent(StateHasChanged);
+        ErrorModalService.UnsubscribeEvent(StateHasChanged);
 
-        ErrorService.ClearErrorMessage();
+        ErrorModalService.ClearErrorMessage();
     }
 
     private void OnClick()
     {
-        if (!string.IsNullOrEmpty(ErrorService.Url))
+        if (!string.IsNullOrEmpty(ErrorModalService.Url))
         {
-            NavigationManager.NavigateTo(ErrorService.Url, true);
+            NavigationManager.NavigateTo(ErrorModalService.Url, true);
             return;
         }
-        ErrorService.ClearErrorMessage();
+
+        ErrorModalService.ClearErrorMessage();
     }
 
 }
